@@ -1,2 +1,2 @@
 # foodIdea
-flash, reactJS, food idea system
+flask, reactJS, food idea system
