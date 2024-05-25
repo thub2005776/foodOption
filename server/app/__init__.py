@@ -1,6 +1,5 @@
-from flask import Flask
+from flask import Flask, jsonify
 app = Flask(__name__)
 
-from app.services import *
-from app.controllers import *
 from app.routes import *
+from app.db_connection import *
