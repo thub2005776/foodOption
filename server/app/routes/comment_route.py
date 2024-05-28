@@ -5,25 +5,25 @@ import pymongo
 import json
 from bson import json_util, ObjectId
 from app.db_connection import db
-from app.models import food_model
-food_collection = db['foodDetails']
+from app.models import comment_model
+comment_collection = db['comments']
 
 
-class FoodDetails(MethodView):
+class CommentList(MethodView):
     def get(self):
-        cursor = food_collection.find()
+        cursor = comment_collection.find()
         if cursor:
             return json.loads(json_util.dumps(cursor))
         else:
-            return "Not found any food details."
+            return "Not found any comment details."
 
     def post(self):
         if request.json:
-            query = {"name": request.json.get("name")}
+            query = {"uid": request.json.get("uid"), "fid": request.json.get("fid")}
             update = {
-                "$set": food_model(request=request)
+                "$set": comment_model(request=request)
             }
-            result = food_collection.find_one_and_update(
+            result = comment_collection.find_one_and_update(
                 query, 
                 update=update, 
                 upsert=True, 
@@ -32,27 +32,27 @@ class FoodDetails(MethodView):
             if result:
                 return "successfull"
             else:
-                return "Can't insert the food detail. Try again."
+                return "Can't insert the comment. Try again."
         else:
             return "Body of the request is empty."
 
     def delete(self):
-        result = food_collection.delete_many({})
+        result = comment_collection.delete_many({})
         if result:
             return "successfull"
         else:
-            return "Can't delete all foodDetail. Try again."
+            return "Can't delete all comment. Try again."
     
-class FoodDetail(MethodView):
+class Comment(MethodView):
     def get(self, id):
         try:
             if id and ObjectId(id):
                 query = {"_id": ObjectId(id)}
-                cursor = food_collection.find_one(query)
+                cursor = comment_collection.find_one(query)
                 if cursor:
                     return json.loads(json_util.dumps(cursor))
                 else:
-                    return "The food don't exist."
+                    return "The comment don't exist."
             else:
                 return "ID pamram is empty."
         except:
@@ -65,9 +65,9 @@ class FoodDetail(MethodView):
                 query = {"_id": ObjectId(id)}
                 if request.get_json:
                     update = {
-                        "$set": food_model(request=request)
+                        "$set": comment_model(request=request)
                     }
-                    result = food_collection.find_one_and_update(
+                    result = comment_collection.find_one_and_update(
                         query, 
                         update=update, 
                         upsert=True, 
@@ -76,7 +76,7 @@ class FoodDetail(MethodView):
                     if result:
                         return "successfull"
                     else:
-                        return "Can't update the foodDetail. Try again."
+                        return "Can't update the comment. Try again."
                 else:
                     return "Body of the request is empty."
             else:
@@ -88,15 +88,15 @@ class FoodDetail(MethodView):
         try:
             if id and ObjectId(id):
                 query = {"_id": ObjectId(id)}
-                result = food_collection.delete_one(query)
+                result = comment_collection.delete_one(query)
                 if result:
                     return "successfull"
                 else:
-                    return "Can't delete the foodDetail. Try again."
+                    return "Can't delete the comment. Try again."
             else:
                 return "This is a DELETE request."
         except:
             return "ID (ObjectId) pamram is required."
     
-app.add_url_rule('/api/food', view_func=FoodDetails.as_view("foodDetails"))
-app.add_url_rule('/api/food/<id>', view_func=FoodDetail.as_view("foodDetail"))
+app.add_url_rule('/api/comment', view_func=CommentList.as_view("CommentList"))
+app.add_url_rule('/api/comment/<id>', view_func=Comment.as_view("Comment"))

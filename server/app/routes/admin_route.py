@@ -1,4 +1,4 @@
-from app.models import user_model
+from app.models import admin_model
 from flask import request
 from flask.views import MethodView
 from app import app
@@ -7,21 +7,21 @@ import json
 import bcrypt
 from bson import json_util, ObjectId
 from app.db_connection import db
-user_collection = db['users']
+admin_collection = db['admin']
 
 
-class Users(MethodView):
+class AdminList(MethodView):
     def get(self):
-        cursor = user_collection.find()
+        cursor = admin_collection.find()
         if cursor:
             return json.loads(json_util.dumps(cursor))
         else:
-            return "Not found any user account."
+            return "Not found any admin account."
 
     def post(self):
         if request.json:
             query = {"email": request.json.get("email")}
-            values = user_model(request=request)
+            values = admin_model(request=request)
             password = values["password"]
             hashed = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
             values["password"] = hashed.decode("utf-8")
@@ -30,7 +30,7 @@ class Users(MethodView):
                 "$set": values
             }
 
-            result = user_collection.find_one_and_update(
+            result = admin_collection.find_one_and_update(
                 query,
                 update=update,
                 upsert=True,
@@ -39,28 +39,28 @@ class Users(MethodView):
             if result:
                 return "successfull"
             else:
-                return "Can't insert the user. Try again."
+                return "Can't insert the admin. Try again."
         else:
             return "Body of the request is empty."
 
     def delete(self):
-        result = user_collection.delete_many({})
+        result = admin_collection.delete_many({})
         if result:
             return "successfull"
         else:
-            return "Can't delete all users. Try again."
+            return "Can't delete all admins. Try again."
 
 
-class UserInfo(MethodView):
+class AdminInfo(MethodView):
     def get(self, id):
         try:
             if id and ObjectId(id):
                 query = {"_id": ObjectId(id)}
-                cursor = user_collection.find_one(query)
+                cursor = admin_collection.find_one(query)
                 if cursor:
                     return json.loads(json_util.dumps(cursor))
                 else:
-                    return "The user account don't exist."
+                    return "The admin account don't exist."
             else:
                 return "ID pamram is empty."
         except:
@@ -73,9 +73,9 @@ class UserInfo(MethodView):
                 query = {"_id": ObjectId(id)}
                 if request.get_json:
                     update = {
-                        "$set": user_model(request=request)
+                        "$set": admin_model(request=request)
                     }
-                    result = user_collection.find_one_and_update(
+                    result = admin_collection.find_one_and_update(
                         query,
                         update=update,
                         upsert=True,
@@ -84,7 +84,7 @@ class UserInfo(MethodView):
                     if result:
                         return "successfull"
                     else:
-                        return "Can't update the user info. Try again."
+                        return "Can't update the admin info. Try again."
                 else:
                     return "Body of the request is empty."
             else:
@@ -96,11 +96,11 @@ class UserInfo(MethodView):
         try:
             if id and ObjectId(id):
                 query = {"_id": ObjectId(id)}
-                result = user_collection.delete_one(query)
+                result = admin_collection.delete_one(query)
                 if result:
                     return "successfull"
                 else:
-                    return "Can't delete the user info. Try again."
+                    return "Can't delete the admin info. Try again."
             else:
                 return "This is a DELETE request."
         except:
@@ -118,7 +118,7 @@ class UpdatePassword(MethodView):
                     update = {
                         "$set": {"password": hashed.decode("utf-8")}
                     }
-                    result = user_collection.find_one_and_update(
+                    result = admin_collection.find_one_and_update(
                         query,
                         update=update,
                         upsert=True,
@@ -135,6 +135,6 @@ class UpdatePassword(MethodView):
         except:
             return "ID (ObjectId) pamram is required."
         
-app.add_url_rule('/api/user', view_func=Users.as_view("Users"))
-app.add_url_rule('/api/user/<id>', view_func=UserInfo.as_view("UserInfo"))
-app.add_url_rule('/api/user/pw/<id>', view_func=UpdatePassword.as_view("UpdatePassword"))
+app.add_url_rule('/api/admin', view_func=AdminList.as_view("AdminList"))
+app.add_url_rule('/api/admin/<id>', view_func=AdminInfo.as_view("AdminInfo"))
+app.add_url_rule('/api/admin/pw/<id>', view_func=UpdatePassword.as_view("UpdatePasswordAd"))
