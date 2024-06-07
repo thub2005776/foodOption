@@ -16,6 +16,15 @@ def food_model(request):
     fmodel = {key: value for key, value in fmodel.items() if value is not None}
     return fmodel
 
+# foodGroup model
+def foodGroup_model(request):
+    fmodel = {
+        "name": request.json.get("name"),
+    }
+
+    fmodel = {key: value for key, value in fmodel.items() if value is not None}
+    return fmodel
+
 # favorite food model
 def favorite_model(request):
     model = {
@@ -65,7 +74,7 @@ def admin_model(request):
         "password": request.json.get("password"),
         "role": request.json.get("role"),
         "birth": request.json.get("birth"),
-        "permission": request.get("permission")
+        "permission": request.json.get("permission")
     }
 
     admodel = {key: value for key, value in admodel.items() if value is not None}

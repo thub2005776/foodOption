@@ -4,9 +4,10 @@ from app import app
 import pymongo
 import bcrypt
 import json
-from bson import json_util
+from bson import json_util, ObjectId
 from app.db_connection import db
 user_collection = db['users']
+admin_collection = db['admin']
 
 from datetime import datetime, timedelta
 import jwt
@@ -19,6 +20,10 @@ def generate_token(user_id):
     }
     token = jwt.encode(payload, 'secret-key', algorithm='HS256')
     return token
+
+def verify_token(token):
+    verify = jwt.decode(token, 'secret-key', algorithms=["HS256"])
+    return verify
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -46,6 +51,8 @@ def signup():
     else:
         return "Body of the request is empty."
 
+
+
 @app.route('/login/<auth>', methods=['POST'])
 def login(auth):
     email = request.json.get('email')
@@ -54,7 +61,10 @@ def login(auth):
     if not email or not password:
         return "Missing email or password"
     
-    cursor = user_collection.find_one({'email': email})
+    if auth == 'user':
+        cursor = user_collection.find_one({'email': email})
+    else:
+        cursor = admin_collection.find_one({'email': email})
 
     if not cursor:
         return "User not found"
@@ -63,10 +73,9 @@ def login(auth):
     if bcrypt.checkpw(password.encode("utf-8"), user['password'].encode("utf-8")):
         id = user['_id']
         token = generate_token(user_id=id['$oid'])
-        resp = make_response("Login successfull")
+        resp = make_response("Login successful")
         resp.set_cookie(auth, token)
         return resp
-    
     return 'Invalid email or password'
 
 
@@ -80,3 +89,28 @@ def logout(key):
         return resp
 
     return "Cookie don't exist."
+
+@app.route('/verify/<key>')
+def verify(key):
+    cookie = request.cookies.get(key)
+
+    if cookie:
+        token = verify_token(cookie)
+        id = ObjectId(token['sub'])
+        if key == 'user':
+            cursor = user_collection.find_one({'_id': id})
+        else:
+            cursor = admin_collection.find_one({'_id': id})
+
+        return json.loads(json_util.dumps(cursor))
+    
+    return "Not found token"
+
+@app.route('/cookie', methods=['POST', 'GET'])
+def cookie():
+    # data = request.json.get('data')
+    # print(data)
+    resp = make_response('set cookie')
+    resp.set_cookie('abc', 'acb12345')
+
+    return resp
