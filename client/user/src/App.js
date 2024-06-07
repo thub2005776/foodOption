@@ -1,41 +1,39 @@
 import { Routes, Route } from "react-router-dom"
-import { AccInfo, FoodDetail, FoodForm, Home, Login, RecipeForm } from "./pages"
-import { FoodGroupItems, Navbar } from "./components";
-import { useMutation } from "react-query";
-import { verifyApi } from "./api/authActions";
+import { AccInfo, FoodDetail, Home, Login, SignUp, Play } from "./pages"
+import { Footer, Navbar } from "./components";
 import { useDispatch } from "react-redux";
 import { login } from "./features/userSlice";
 import { useEffect } from "react";
 import axios from "axios";
+import { Trend } from "./pages";
 
 
 function App() {
-  
+
   const dispatch = useDispatch();
   useEffect(() => {
-    
-    axios.get(process.env.REACT_APP_SERVER_URL + '/verify/admin')
+
+    axios.get(process.env.REACT_APP_SERVER_URL + '/verify/user')
       .then(res => {
-        if(res.data !== "Not found token"){
+        if (res.data !== "Not found token") {
           dispatch(login(res.data))
         }
       })
   }, [])
-  
-  
+
+
   return (
     <div className="dark:bg-gray-900 pt-[6rem]">
       <Navbar />
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/admin/:id" element={<Home />} />
-        <Route path="/foodgroup/:id" element={<FoodGroupItems />} />
-        <Route path="/foodgroup/food/add/:id" element={<FoodForm />} />
-        <Route path="/food/add" element={<FoodForm />} />
-        <Route path="/food/:id" element={<FoodDetail />} />
-        <Route path="/recipe/add" element={<RecipeForm />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/acc/:id" element={<AccInfo />} />
+        <Route path="/foodopt" element={<Play />} />
+        <Route path="/trend" element={<Trend />} />
       </Routes>
+      <Footer />
     </div>
   );
 }
