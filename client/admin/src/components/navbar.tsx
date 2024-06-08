@@ -9,6 +9,7 @@ import { logoutApi } from "../api/authActions";
 
 export default function Navbar() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const logoutQuery = useMutation(
         logoutApi, {
             onSuccess: (data) => {
@@ -23,7 +24,7 @@ export default function Navbar() {
         });
 
     const user = useSelector(selectUser);
-    const dispatch = useDispatch();
+    
     const handleLogout = () => {
        logoutQuery.mutate()
     }

@@ -35,30 +35,22 @@ export default function FoodForm() {
         }
 
     };
-
-    console.log(gid);
     
-
-    const Client_ID = "471884981742-opmhce94p5h8l0jrhjbhu1g6ad5medgl.apps.googleusercontent.com"
-    const Client_secret = "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"
-    const apiKey = "AIzaSyD9gaEk3ywb_U_1grX6ss1h6fv9zAqAi1U"; // KEY_API của bạn
     const handleImageLink = (e: React.ChangeEvent) => {
         const target = e.target as HTMLInputElement;
         const fileId =  target.value
-        
-
-        setImageLink(`https://www.googleapis.com/drive/v3/files/${fileId}?key=${apiKey}`)
     }
     return (
         <div className=''>
             <div className="fixed ml-5 mb-3">
                 <BackButton />
             </div>
-
+            
             <form className="flex gap-5 mx-24 dark:bg-gray-800 p-4 rounded-md">
                 <div className="">
                     <div className="flex items-center justify-center w-full">
-                    <img src={`https://www.googleapis.com/drive/v3/files/1jUIOPuhZmnl7hacmna1Tnl__2_RHD1-6?key=${apiKey}`} className="w-64 lg:w-96 rounded-lg" alt="Uploaded Image" />
+                    {/* <img src={``} className="w-64 lg:w-96 rounded-lg" alt="Uploaded Image" /> */}
+                    
                         {imageLink.length > 0 ?
                             <div>
                                 <img src={imageLink} className="w-64 lg:w-96 rounded-lg" alt="Uploaded Image" />

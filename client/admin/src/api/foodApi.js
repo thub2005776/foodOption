@@ -10,6 +10,11 @@ export const getFoodGroup = async () => {
     return res.data;
 }
 
+export const getFoodGroupById = async (id) => {
+    const res = await foodApi.get(`/api/foodgroup/${id}`);
+    return res.data;
+}
+
 export const addFoodGroup = async (foodgroup) => {
     const res = await foodApi.post('/api/foodgroup', foodgroup);
     return res.data;
@@ -32,16 +37,17 @@ export const deleteAllFoodGroup = async () => {
 
 // food api
 export const getFood = async () => {
-    const res = await foodApi.get('/api/Food');
+    const res = await foodApi.get('/api/food');
     return res.data;
 }
 
 export const addFood = async () => {
-    const res = await foodApi.post('/api/Food');
+    const res = await foodApi.post('/api/food');
     return res.data;
 }
 
 export const updateFood = async (Food) => {
-    const res = await foodApi.post(`/api/Food/${Food._id}`, Food);
+    const res = await foodApi.post(`/api/food/${Food._id}`, Food);
     return res.data;
 }
+
