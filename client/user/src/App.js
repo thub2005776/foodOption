@@ -1,11 +1,10 @@
 import { Routes, Route } from "react-router-dom"
-import { AccInfo, FoodDetail, Home, Login, SignUp, Play } from "./pages"
+import { AccInfo, FoodDetail, Home, Login, SignUp, Play, Trend, Menu } from "./pages"
 import { Footer, Navbar } from "./components";
 import { useDispatch } from "react-redux";
 import { login } from "./features/userSlice";
 import { useEffect } from "react";
 import axios from "axios";
-import { Trend } from "./pages";
 
 
 function App() {
@@ -32,6 +31,8 @@ function App() {
         <Route path="/acc/:id" element={<AccInfo />} />
         <Route path="/foodopt" element={<Play />} />
         <Route path="/trend" element={<Trend />} />
+        <Route path="/menu" element={<Menu />} />
+        <Route path="/food/:id" element={<FoodDetail />} />
       </Routes>
       <Footer />
     </div>
