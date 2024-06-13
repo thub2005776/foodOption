@@ -36,17 +36,17 @@ export const deleteAllFoodGroup = async () => {
 }
 
 // food api
-export const getFood = async () => {
+export const getFoodApi = async () => {
     const res = await foodApi.get('/api/food');
     return res.data;
 }
 
-export const addFood = async () => {
-    const res = await foodApi.post('/api/food');
+export const addFoodApi = async (food) => {
+    const res = await foodApi.post('/api/food', food);
     return res.data;
 }
 
-export const updateFood = async (Food) => {
+export const updateFoodApi = async (Food) => {
     const res = await foodApi.post(`/api/food/${Food._id}`, Food);
     return res.data;
 }

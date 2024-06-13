@@ -8,3 +8,4 @@ from app.routes.favorite_route import *
 from app.routes.comment_route import *
 from app.routes.foodIdea_route import *
 from app.routes.foodGroup_route import *
+from app.routes.upload_file_route import *

@@ -1,6 +1,9 @@
 import React, { useState } from "react";
-import { BackButton, TagBage } from "../../components";
+import { BackButton, TagBage, VideoPlayer } from "../../components";
 import { useLocation } from "react-router-dom";
+import { useMutation } from "react-query";
+import { addFoodApi } from "../../api/foodApi";
+import { uploadApi } from "../../api/uploadFileApi";
 
 export default function FoodForm() {
     const location = useLocation();
@@ -13,6 +16,7 @@ export default function FoodForm() {
     const [video, setVideo] = useState('');
     const [nutri, setNutri] = useState('');
     const [tag, setTag] = useState<Array<string>>([]);
+    const [uploaded, setUploaded] = useState(false)
 
     const tagList: Array<string> = ["Món chính", "Đồ uống", "Ăn vặt", "Miền Nam", "Miền Bắc", "Miền Trung", "Đồ chay", "Tim mạch", "Tiểu đường", "Tiêu hoá"]
 
@@ -35,30 +39,67 @@ export default function FoodForm() {
         }
 
     };
-    
-    const handleImageLink = (e: React.ChangeEvent) => {
-        const target = e.target as HTMLInputElement;
-        const fileId =  target.value
+
+    // const handleImageLink = (e: React.ChangeEvent) => {
+    //     const target = e.target as HTMLInputElement;
+    //     const fileId =  target.value
+    // }
+
+    const upload = useMutation(uploadApi)
+    const addFood = useMutation({
+        mutationFn: addFoodApi,
+        onSuccess(data) {
+            alert(data);
+            if(data === 'successfull') {
+                document.location.reload();
+            }else {alert(data)}
+        },
+        onError: (err) => {console.log(err)}
+    })
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        const formData = new FormData()
+        formData.append('file', file!)
+        const values = {
+            name: name,
+            intro: intro,
+            image: file?.name,
+            video: video,
+            nutri: nutri,
+            tag: tag
+        }
+
+        upload.mutate(formData, {
+            onSuccess: (data) => {
+                if(data === "uploaded") {
+                    addFood.mutate(values);
+                } else alert(data)
+            },
+            onError: (err) => console.log(err)
+        });
+        
     }
     return (
         <div className=''>
             <div className="fixed ml-5 mb-3">
                 <BackButton />
             </div>
-            
-            <form className="flex gap-5 mx-24 dark:bg-gray-800 p-4 rounded-md">
+
+            <form
+                onSubmit={handleSubmit}
+                className="flex gap-5 mx-24 dark:bg-gray-800 p-4 rounded-md">
                 <div className="">
-                    <div className="flex items-center justify-center w-full">
-                    {/* <img src={``} className="w-64 lg:w-96 rounded-lg" alt="Uploaded Image" /> */}
-                    
+                    <div className="">
                         {imageLink.length > 0 ?
                             <div>
-                                <img src={imageLink} className="w-64 lg:w-96 rounded-lg" alt="Uploaded Image" />
+                                <img src={imageLink} className="w-64 h-80 lg:w-96 lg:h-96 rounded-lg" alt="UploadedImage" />
                                 <input
                                     onChange={handleFileChange}
+                                    name="file"
                                     id="dropzone-file"
                                     type="file"
-                                    className=""
                                     accept="image/*" />
                             </div>
 
@@ -74,10 +115,23 @@ export default function FoodForm() {
                                 <input
                                     onChange={handleFileChange}
                                     id="dropzone-file"
+                                    name="file"
                                     type="file"
                                     className="hidden"
-                                    accept="image/*" />
+                                    accept="image/*"
+                                    required />
                             </label>}
+                        
+                        <p className="text-gray-600">Video preview</p>
+                        {video?
+                        <VideoPlayer videoId={video}/>
+                        :<div role="status" className="flex items-center justify-center h-56 max-w-sm bg-gray-300 rounded-lg animate-pulse dark:bg-gray-700">
+                            <svg className="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+                                <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z" />
+                                <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM9 13a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2Zm4 .382a1 1 0 0 1-1.447.894L10 13v-2l1.553-1.276a1 1 0 0 1 1.447.894v2.764Z" />
+                            </svg>
+                            <span className="sr-only">Loading...</span>
+                        </div>}
                     </div>
 
 
@@ -85,7 +139,7 @@ export default function FoodForm() {
                 </div>
 
                 <div className="w-2/3">
-                    <div className="mb-5">
+                    {/* <div className="mb-5">
                         <label htmlFor="drive" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                             Link Google Drive
                         </label>
@@ -95,7 +149,7 @@ export default function FoodForm() {
                             id="drive"
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                         />
-                    </div>
+                    </div> */}
                     <div className="mb-5">
                         <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                             Tên món ăn
@@ -115,8 +169,8 @@ export default function FoodForm() {
                             onChange={(e) => setIntro(e.target.value)}
                             id="introduce"
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            required
                         >
-
                         </textarea>
                     </div>
                     <div className="mb-5">
@@ -147,15 +201,13 @@ export default function FoodForm() {
                             onChange={(e) => setNutri(e.target.value)}
                             id="nutri"
                             className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        >
-
+                            required>
                         </textarea>
                     </div>
                     <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                     >Submit
                     </button>
                 </div>
-
             </form>
         </div>
     );

@@ -4,7 +4,7 @@ def food_model(request):
         "gid": request.json.get("gid"),
         "fid": request.json.get("fid"),
         "name": request.json.get("name"),
-        "introduce": request.json.get("introduce"),
+        "intro": request.json.get("introduce"),
         "image": request.json.get("image"),
         "video": request.json.get("video"),
         "tag": request.json.get("tag"),

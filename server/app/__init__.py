@@ -3,6 +3,8 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 
+app = Flask(__name__, static_folder='static/uploads')
+
 CORS = CORS(app, resources={
     r"/*": {
         "origins": ["http://localhost:3000"],
