@@ -1,51 +1,33 @@
-import React, { RefCallback, useState } from "react";
+import React, { useState } from "react";
 import { useMutation } from "react-query";
-import { addFoodGroup } from "../../api/foodApi";
+import { addTopic } from "../../api/foodApi";
+import { useNavigate } from "react-router-dom";
 
-export default function FoodGroupModal({ foodgroup, tid, getGid }: { foodgroup:Array<Object>,tid: string, getGid: RefCallback<string> }) {
-
-  const [openModal, setOpenModal] = useState(false);
-  const [gid, setGid] = useState('');
-  const [name, setName] = useState('');
-  const [error, setError] = useState('');
-
+export default function TopicModal() {
+  const navigate = useNavigate();
   const { mutate } = useMutation(
-    addFoodGroup, {
+    addTopic, {
     onSuccess: (data) => {
-      if(data !== "Can't insert the food group. Try again." && data !== "Body of the request is empty.") {
-        getGid(data)
-        setOpenModal(false)
-        document.location.reload()
-      } else alert(data)
+      navigate(`/foodgroup/food/add/${data.$oid}`)
     },
     onError: (err) => {
       console.log(err);
 
     }
   })
-  
+  const [openModal, setOpenModal] = useState(false);
+  const [name, setName] = useState('');
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const gidExisted = foodgroup.find(f => f['gid'] === gid)
-    if(gidExisted) {
-      setError('Mã nhóm đã tồn tại')
-    } else {
-      const values = {
-        topicId: tid,
-        gid: gid,
-        name: name
-      }
-      mutate(values)
-    }
+    mutate({ "name": name })
   }
 
   return (
     <>
-      <div onClick={() => setOpenModal(true)}
-        className="p-2 w-fit rounded-md hover:bg-white dark:hover:bg-gray-600">
-        <svg className="w-4 h-4 cursor-pointer text-blue-500 hover:text-blue-800 dark:text-gray-400 dark:hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-          <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14m-7 7V5" />
+      <div onClick={() => setOpenModal(true)}>
+        <svg className="w-8 h-8 cursor-pointer text-blue-400 dark:text-gray-600 hover:text-blue-800 dark:hover:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 17h6m-3 3v-6M4.857 4h4.286c.473 0 .857.384.857.857v4.286a.857.857 0 0 1-.857.857H4.857A.857.857 0 0 1 4 9.143V4.857C4 4.384 4.384 4 4.857 4Zm10 0h4.286c.473 0 .857.384.857.857v4.286a.857.857 0 0 1-.857.857h-4.286A.857.857 0 0 1 14 9.143V4.857c0-.473.384-.857.857-.857Zm-10 10h4.286c.473 0 .857.384.857.857v4.286a.857.857 0 0 1-.857.857H4.857A.857.857 0 0 1 4 19.143v-4.286c0-.473.384-.857.857-.857Z" />
         </svg>
       </div>
 
@@ -58,13 +40,13 @@ export default function FoodGroupModal({ foodgroup, tid, getGid }: { foodgroup:A
 
               <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  Thêm nhóm món ăn
+                  Thêm chủ đề
                 </h3>
                 <button onClick={() => setOpenModal(false)}
                   type="button"
                   className="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="authentication-modal">
                   <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" strokeWidth="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
                   </svg>
                   <span className="sr-only">Close modal</span>
                 </button>
@@ -72,22 +54,9 @@ export default function FoodGroupModal({ foodgroup, tid, getGid }: { foodgroup:A
 
               <div className="p-4 md:p-5">
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="mb-6">
-                    <label htmlFor="gid" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >Mã nhóm
-                    </label>
-                    <input
-                      type="text"
-                      name="gid"
-                      id="dig"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                      onChange={(e) => setGid(e.target.value)}
-                      required />
-                      <p className="text-xs text-red-900 dark:text-red-400">{error}</p>
-                  </div>
-                  <div className="mb-6">
+                  <div>
                     <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >Tên nhóm
+                    >Tên chủ đề
                     </label>
                     <input
                       type="text"

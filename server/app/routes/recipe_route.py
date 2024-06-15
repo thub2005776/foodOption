@@ -19,7 +19,7 @@ class recipeList(MethodView):
 
     def post(self):
         if request.json:
-            query = {"name": request.json.get("name")}
+            query = {"foodId": request.json.get("foodId")}
             update = {
                 "$set": recipe_model(request=request)
             }

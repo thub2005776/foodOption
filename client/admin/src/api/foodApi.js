@@ -5,6 +5,37 @@ const foodApi = axios.create({
 });
 
 // foodGrou api
+export const getTopic = async () => {
+    const res = await foodApi.get('/api/topic');
+    return res.data;
+}
+
+export const getTopicById = async (id) => {
+    const res = await foodApi.get(`/api/topic/${id}`);
+    return res.data;
+}
+
+export const addTopic = async (topic) => {
+    const res = await foodApi.post('/api/topic', topic);
+    return res.data;
+}
+
+export const updateTopic = async (topic) => {
+    const res = await foodApi.post(`/api/topic/${topic._id}`, topic);
+    return res.data;
+}
+
+export const deleteTopic= async (id) => {
+    const res = await foodApi.delete(`/api/topic/${id}`);
+    return res.data;
+}
+
+export const deleteAllTopic = async () => {
+    const res = await foodApi.delete(`/api/topic`);
+    return res.data;
+}
+
+// foodGrou api
 export const getFoodGroup = async () => {
     const res = await foodApi.get('/api/foodgroup');
     return res.data;
@@ -12,6 +43,11 @@ export const getFoodGroup = async () => {
 
 export const getFoodGroupById = async (id) => {
     const res = await foodApi.get(`/api/foodgroup/${id}`);
+    return res.data;
+}
+
+export const getFoodGroupByTid = async (id) => {
+    const res = await foodApi.get(`/api/foodgroup/tid/${id}`);
     return res.data;
 }
 

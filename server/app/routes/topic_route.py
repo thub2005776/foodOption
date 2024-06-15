@@ -5,54 +5,55 @@ import pymongo
 import json
 from bson import json_util, ObjectId
 from app.db_connection import db
-from app.models import food_model
-food_collection = db['foodDetails']
+from app.models import topic_model
+topic_collection = db['topics']
 
 
-class FoodDetails(MethodView):
+class Topics(MethodView):
     def get(self):
-        cursor = food_collection.find()
+        cursor = topic_collection.find()
         if cursor:
             return json.loads(json_util.dumps(cursor))
         else:
-            return "Not found any food details."
+            return "Not found any topic group."
 
     def post(self):
         if request.json:
             query = {"name": request.json.get("name")}
             update = {
-                "$set": food_model(request=request)
+                "$set": topic_model(request=request)
             }
-            result = food_collection.find_one_and_update(
+            result = topic_collection.find_one_and_update(
                 query, 
                 update=update, 
                 upsert=True, 
                 return_document=pymongo.ReturnDocument.AFTER
             )
+
             if result:
-                return json.loads(json_util.dumps(result))
+                return json.loads(json_util.dumps(result['_id']))
             else:
-                return "Can't insert the food detail. Try again."
+                return "Can't insert the topic group. Try again."
         else:
             return "Body of the request is empty."
 
     def delete(self):
-        result = food_collection.delete_many({})
+        result = topic_collection.delete_many({})
         if result:
             return "successfull"
         else:
-            return "Can't delete all foodDetail. Try again."
+            return "Can't delete all topic. Try again."
     
-class FoodDetail(MethodView):
+class Topic(MethodView):
     def get(self, id):
         try:
             if id and ObjectId(id):
                 query = {"_id": ObjectId(id)}
-                cursor = food_collection.find_one(query)
+                cursor = topic_collection.find_one(query)
                 if cursor:
                     return json.loads(json_util.dumps(cursor))
                 else:
-                    return "The food don't exist."
+                    return "The topic don't exist."
             else:
                 return "ID pamram is empty."
         except:
@@ -65,9 +66,9 @@ class FoodDetail(MethodView):
                 query = {"_id": ObjectId(id)}
                 if request.get_json:
                     update = {
-                        "$set": food_model(request=request)
+                        "$set": topic_model(request=request)
                     }
-                    result = food_collection.find_one_and_update(
+                    result = topic_collection.find_one_and_update(
                         query, 
                         update=update, 
                         upsert=True, 
@@ -76,7 +77,7 @@ class FoodDetail(MethodView):
                     if result:
                         return "successfull"
                     else:
-                        return "Can't update the foodDetail. Try again."
+                        return "Can't update the topic. Try again."
                 else:
                     return "Body of the request is empty."
             else:
@@ -88,15 +89,15 @@ class FoodDetail(MethodView):
         try:
             if id and ObjectId(id):
                 query = {"_id": ObjectId(id)}
-                result = food_collection.delete_one(query)
+                result = topic_collection.delete_one(query)
                 if result:
                     return "successfull"
                 else:
-                    return "Can't delete the foodDetail. Try again."
+                    return "Can't delete the topic. Try again."
             else:
                 return "This is a DELETE request."
         except:
             return "ID (ObjectId) pamram is required."
     
-app.add_url_rule('/api/food', view_func=FoodDetails.as_view("foodDetails"))
-app.add_url_rule('/api/food/<id>', view_func=FoodDetail.as_view("foodDetail"))
+app.add_url_rule('/api/topic', view_func=Topics.as_view("topics"))
+app.add_url_rule('/api/topic/<id>', view_func=Topic.as_view("topic"))

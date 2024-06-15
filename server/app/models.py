@@ -1,12 +1,11 @@
 # food model
 def food_model(request):
     fmodel = {
-        "gid": request.json.get("gid"),
-        "fid": request.json.get("fid"),
+        "topicId": request.json.get("topicId"), 
+        "gid": request.json.get("gid"), 
         "name": request.json.get("name"),
         "intro": request.json.get("introduce"),
         "image": request.json.get("image"),
-        "video": request.json.get("video"),
         "tag": request.json.get("tag"),
         "nutri": request.json.get("nutri"),
         "like": request.json.get("like"),
@@ -16,9 +15,20 @@ def food_model(request):
     fmodel = {key: value for key, value in fmodel.items() if value is not None}
     return fmodel
 
+# topic model
+def topic_model(request):
+    fmodel = {
+        "name": request.json.get("name"),
+    }
+
+    fmodel = {key: value for key, value in fmodel.items() if value is not None}
+    return fmodel
+
 # foodGroup model
 def foodGroup_model(request):
     fmodel = {
+        "topicId": request.json.get("topicId"),
+        "gid": request.json.get("gid"),
         "name": request.json.get("name"),
     }
 
@@ -40,9 +50,8 @@ def favorite_model(request):
 # recipe model
 def recipe_model(request):
     fmodel = {
-        "gid": request.json.get("gid"),
-        "fid": request.json.get("fid"),
-        "name": request.json.get("name"),
+        "foodId": request.json.get("foodId"),
+        "video": request.json.get("video"),
         "ingredients": request.json.get("ingredients"),
         "processing": request.json.get("processing"),
     }
