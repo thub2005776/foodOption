@@ -66,6 +66,7 @@ export default function FoodForm() {
             nutri: nutri,
             tag: tag,
             like: 0,
+            dislike: 0,
             vote: 0,
         }
 

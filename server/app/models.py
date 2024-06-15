@@ -9,6 +9,7 @@ def food_model(request):
         "tag": request.json.get("tag"),
         "nutri": request.json.get("nutri"),
         "like": request.json.get("like"),
+        "dislike": request.json.get("dislike"),
         "vote": request.json.get("vote"),
     }
 
