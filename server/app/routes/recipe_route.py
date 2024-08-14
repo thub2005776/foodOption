@@ -97,6 +97,36 @@ class recipeDetail(MethodView):
                 return "This is a DELETE request."
         except:
             return "ID (ObjectId) pamram is required."
-    
+
+class Recipe(MethodView):
+    def get(self, id):
+        try:
+            if id and ObjectId(id):
+                query = {"foodId": id}
+                cursor = recipe_collection.find(query)
+                if cursor:
+                    return json.loads(json_util.dumps(cursor))
+                else:
+                    return "The food don't exist."
+            else:
+                return "ID pamram is empty."
+        except:
+            return "ID (ObjectId) pamram is required."
+
+    def delete(self, id):
+        try:
+            if id and ObjectId(id):
+                query = {"foodId": id}
+                result = recipe_collection.delete_many(query)
+                if result:
+                    return "successfull"
+                else:
+                    return "Can't delete the foodGroupItem. Try again."
+            else:
+                return "This is a DELETE request."
+        except:
+            return "ID (ObjectId) pamram is required."
+        
 app.add_url_rule('/api/recipe', view_func=recipeList.as_view("recipeList"))
 app.add_url_rule('/api/recipe/<id>', view_func=recipeDetail.as_view("recipeDetail"))
+app.add_url_rule('/api/recipe/fid/<id>', view_func=Recipe.as_view("recipe"))

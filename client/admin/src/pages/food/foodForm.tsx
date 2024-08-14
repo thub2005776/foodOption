@@ -7,15 +7,17 @@ import { uploadApi } from "../../api/uploadFileApi";
 
 export default function FoodForm() {
     const location = useLocation();
-    const tid = location.pathname.split('/')[4];
+    const tid = location.pathname.split('/')[3];
     const { data: foodGroup } = useQuery('foodgroup', () => getFoodGroupByTid(tid))
 
     const [gid, setGid] = useState('')
     const [imageLink, setImageLink] = useState('');
     const [file, setFile] = useState<File | null>();
     const [name, setName] = useState('');
-    const [intro, setIntro] = useState('');
-    const [nutri, setNutri] = useState('');
+    const [info, setInfo] = useState('');
+    const [cost, setCost] = useState('');
+    const [price, setPrice] = useState('');
+    const [quantity, setQuantity] = useState('');
     const [tag, setTag] = useState<Array<string>>([]);
 
     const tagList: Array<string> = ["Món chính", "Đồ uống", "Ăn vặt", "Miền Nam", "Miền Bắc", "Miền Trung", "Đồ chay", "Tim mạch", "Tiểu đường", "Tiêu hoá"]
@@ -46,7 +48,7 @@ export default function FoodForm() {
         mutationFn: addFoodApi,
         onSuccess(data) {
             if (data !== "Can't insert the food detail. Try again." && data !== "Body of the request is empty.") {
-                navigate(`/food/recipe/add/${data['_id'].$oid}`)
+                navigate(-1)
             } else alert(data)
         },
         onError: (err) => { console.log(err) }
@@ -58,16 +60,19 @@ export default function FoodForm() {
         const formData = new FormData()
         formData.append('file', file!)
         const values = {
-            topicId: tid,
-            gid: gid,
+            topicID: tid,
+            groupID: gid,
             name: name,
-            intro: intro,
+            info: info,
             image: file?.name,
-            nutri: nutri,
+            cost: cost,
+            price: price,
+            quantity: quantity, 
             tag: tag,
-            like: 0,
-            dislike: 0,
-            vote: 0,
+            rating: 0,
+            createdAt: Date(),
+            updatedAt: Date(),
+            stated: true,
         }
 
         upload.mutate(formData, {
@@ -100,9 +105,9 @@ export default function FoodForm() {
                     </span>
                 </li>
                 <li className={`flex md:w-full items-center sm:after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 dark:after:border-gray-700
-                    ${nutri.length > 0 && " text-blue-600 dark:text-blue-500"}`}>
+                    ${quantity.length > 0 && " text-blue-600 dark:text-blue-500"}`}>
                     <span className="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500">
-                        {nutri.length > 0 &&
+                        {quantity.length > 0 &&
                             <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
                             </svg>}
@@ -176,17 +181,6 @@ export default function FoodForm() {
                     </div>
 
                     <div className="sm:w-2/3 ">
-                        {/* <div className="mb-5">
-                        <label htmlFor="drive" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                            Link Google Drive
-                        </label>
-                        <input
-                            onChange={handleImageLink}
-                            type="drive"
-                            id="drive"
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        />
-                    </div> */}
                         <div className="mb-5">
                             <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Tên món ăn
@@ -199,16 +193,40 @@ export default function FoodForm() {
                                 required />
                         </div>
                         <div className="mb-5">
-                            <label htmlFor="introduce" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                Giới thiệu sơ lược
+                            <label htmlFor="info" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Thông tin
                             </label>
                             <textarea
-                                onChange={(e) => setIntro(e.target.value)}
-                                id="introduce"
+                                onChange={(e) => setInfo(e.target.value)}
+                                id="info"
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 required
                             >
                             </textarea>
+                        </div>
+
+                        <div className="mb-5">
+                            <label htmlFor="cost" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Giá gốc
+                            </label>
+                            <input
+                                onChange={(e) => setCost(e.target.value)}
+                                type="text"
+                                id="cost"
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                required />
+                        </div>
+
+                        <div className="mb-5">
+                            <label htmlFor="price" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Giá bán
+                            </label>
+                            <input
+                                onChange={(e) => setPrice(e.target.value)}
+                                type="text"
+                                id="price"
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                required />
                         </div>
 
                         <div className="mb-5 flex flex-wrap gap-1">
@@ -221,15 +239,15 @@ export default function FoodForm() {
 
                         </div>
                         <div className="mb-5">
-                            <label htmlFor="nutri" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                Giá trị dinh dưỡng
+                            <label htmlFor="quantity" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Số lượng
                             </label>
-                            <textarea
-                                onChange={(e) => setNutri(e.target.value)}
-                                id="nutri"
+                            <input
+                                onChange={(e) => setQuantity(e.target.value)}
+                                type="text"
+                                id="quantity"
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                required>
-                            </textarea>
+                                required />
                         </div>
                         <button type="submit" className="w-fit text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                         >Submit

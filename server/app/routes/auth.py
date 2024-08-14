@@ -1,5 +1,5 @@
 from app.models import user_model
-from flask import request, jsonify, make_response
+from flask import request, make_response
 from app import app
 import pymongo
 import bcrypt
@@ -7,14 +7,14 @@ import json
 from bson import json_util, ObjectId
 from app.db_connection import db
 user_collection = db['users']
-admin_collection = db['admin']
+staff_collection = db['admin']
 
 from datetime import datetime, timedelta
 import jwt
 
 def generate_token(user_id):
     payload = {
-        'exp': datetime.utcnow() + timedelta(days=1),  # Token hết hạn sau 1 giờ
+        'exp': datetime.utcnow() + timedelta(days=1),
         'iat': datetime.utcnow(),
         'sub': str(user_id)
     }
@@ -28,7 +28,7 @@ def verify_token(token):
 @app.route('/signup', methods=['POST'])
 def signup():
     if request.json:
-            query = {"email": request.json.get("email")}
+            query = {"phone": request.json.get("phone")}
             values = user_model(request=request)
             password = values["password"]
             hashed = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
@@ -55,16 +55,17 @@ def signup():
 
 @app.route('/login/<auth>', methods=['POST'])
 def login(auth):
+    phone = request.json.get('phone')
     email = request.json.get('email')
     password = request.json.get('password')
     
     if not email or not password:
-        return "Missing email or password"
+        return "Missing phone or password"
     
     if auth == 'user':
-        cursor = user_collection.find_one({'email': email})
+        cursor = user_collection.find_one({'phone': phone})
     else:
-        cursor = admin_collection.find_one({'email': email})
+        cursor = staff_collection.find_one({'email': email})
 
     if not cursor:
         return "User not found"
@@ -100,17 +101,8 @@ def verify(key):
         if key == 'user':
             cursor = user_collection.find_one({'_id': id})
         else:
-            cursor = admin_collection.find_one({'_id': id})
+            cursor = staff_collection.find_one({'_id': id})
 
         return json.loads(json_util.dumps(cursor))
     
     return "Not found token"
-
-@app.route('/cookie', methods=['POST', 'GET'])
-def cookie():
-    # data = request.json.get('data')
-    # print(data)
-    resp = make_response('set cookie')
-    resp.set_cookie('abc', 'acb12345')
-
-    return resp

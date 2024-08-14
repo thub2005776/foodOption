@@ -5,7 +5,7 @@ import pymongo
 import json
 from bson import json_util, ObjectId
 from app.db_connection import db
-from app.models import favorite_model
+from app.models import favorited_model
 favorite_collection = db['favorites']
 
 
@@ -21,7 +21,7 @@ class FavoriteList(MethodView):
         if request.json:
             query = {"uid": request.json.get("uid"), "fid": request.json.get("fid")}
             update = {
-                "$set": favorite_model(request=request)
+                "$set": favorited_model(request=request)
             }
             result = favorite_collection.find_one_and_update(
                 query, 
@@ -65,7 +65,7 @@ class Favorite(MethodView):
                 query = {"_id": ObjectId(id)}
                 if request.get_json:
                     update = {
-                        "$set": favorite_model(request=request)
+                        "$set": favorited_model(request=request)
                     }
                     result = favorite_collection.find_one_and_update(
                         query, 

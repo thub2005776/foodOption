@@ -22,8 +22,8 @@ export default function Delete({ name, res }: { name: string, res: RefCallback<b
             </div>
 
             {openModal &&
-                <div id="popup-modal" tabIndex={-1} className="bg-gray-100 z-50 justify-center items-center">
-                    <div className="fixed top-20 lg:top-32 right-0 left-[30%] lg:left-[40%] p-4 w-full max-w-md max-h-full ">
+                <div id="popup-modal" tabIndex={-1} className="bg-gray-100 z-[5000] justify-center items-center">
+                    <div className="fixed top-20 lg:top-32 right-0 left-[10%] sm:left-[30%] lg:left-[40%] p-4 w-full max-w-md max-h-full ">
                         <div className="relative bg-red-200 rounded-lg shadow dark:bg-gray-900 dark:border dark:border-gray-600">
                             <button type="button" className="absolute top-3 end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-modal"
                                 onClick={onCloseModal}>

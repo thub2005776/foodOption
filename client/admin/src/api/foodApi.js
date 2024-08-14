@@ -4,7 +4,7 @@ const foodApi = axios.create({
     baseURL: process.env.REACT_APP_SERVER_URL
 });
 
-// foodGrou api
+// Topic api
 export const getTopic = async () => {
     const res = await foodApi.get('/api/topic');
     return res.data;
@@ -15,27 +15,27 @@ export const getTopicById = async (id) => {
     return res.data;
 }
 
-export const addTopic = async (topic) => {
+export const addTopicApi = async (topic) => {
     const res = await foodApi.post('/api/topic', topic);
     return res.data;
 }
 
-export const updateTopic = async (topic) => {
+export const updateTopicApi = async (topic) => {
     const res = await foodApi.post(`/api/topic/${topic._id}`, topic);
     return res.data;
 }
 
-export const deleteTopic= async (id) => {
+export const deleteTopicApi= async (id) => {
     const res = await foodApi.delete(`/api/topic/${id}`);
     return res.data;
 }
 
-export const deleteAllTopic = async () => {
+export const deleteAllTopicApi = async () => {
     const res = await foodApi.delete(`/api/topic`);
     return res.data;
 }
 
-// foodGrou api
+// foodGroup api
 export const getFoodGroup = async () => {
     const res = await foodApi.get('/api/foodgroup');
     return res.data;
@@ -77,6 +77,11 @@ export const getFoodApi = async () => {
     return res.data;
 }
 
+export const getFoodByTopicIdApi = async (topicId) => {
+    const res = await foodApi.get(`/api/food/tid/${topicId}`);
+    return res.data;
+}
+
 export const addFoodApi = async (food) => {
     const res = await foodApi.post('/api/food', food);
     return res.data;
@@ -86,4 +91,3 @@ export const updateFoodApi = async (Food) => {
     const res = await foodApi.post(`/api/food/${Food._id}`, Food);
     return res.data;
 }
-

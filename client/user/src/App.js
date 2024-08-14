@@ -11,12 +11,14 @@ function App() {
 
   const dispatch = useDispatch();
   useEffect(() => {
-
     axios.get(process.env.REACT_APP_SERVER_URL + '/verify/user')
       .then(res => {
         if (res.data !== "Not found token") {
           dispatch(login(res.data))
         }
+      })
+      .catch(err => {
+        console.log(err);
       })
   }, [])
 

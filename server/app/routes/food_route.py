@@ -6,6 +6,7 @@ import json
 from bson import json_util, ObjectId
 from app.db_connection import db
 from app.models import food_model
+from app.routes.recipe_route import Recipe
 food_collection = db['foodDetails']
 
 
@@ -88,8 +89,10 @@ class FoodDetail(MethodView):
         try:
             if id and ObjectId(id):
                 query = {"_id": ObjectId(id)}
-                result = food_collection.delete_one(query)
-                if result:
+
+                result1 = food_collection.delete_one(query)
+                result2 = Recipe.delete(id=id)
+                if result1 and result2:
                     return "successfull"
                 else:
                     return "Can't delete the foodDetail. Try again."
@@ -97,6 +100,38 @@ class FoodDetail(MethodView):
                 return "This is a DELETE request."
         except:
             return "ID (ObjectId) pamram is required."
+        
+class FoodMany(MethodView):
+    def get(self, id):
+        try:
+            if id and ObjectId(id):
+                query = {"topicID": id}
+                cursor = food_collection.find(query)
+                if cursor:
+                    return json.loads(json_util.dumps(cursor))
+                else:
+                    return "The food don't exist."
+            else:
+                return "ID pamram is empty."
+        except:
+            return "ID (ObjectId) pamram is required."
+
+    def delete(self, id):
+        try:
+            if id and ObjectId(id):
+                query1 = {"topicID": id}
+                result = food_collection.delete_many(query1)
+                if result:
+                    for i in result:
+                        print(i)
+                    return "successfull"
+                else:
+                    return "Can't delete the foodGroupItem. Try again."
+            else:
+                return "This is a DELETE request."
+        except:
+            return "ID (ObjectId) pamram is required."
     
 app.add_url_rule('/api/food', view_func=FoodDetails.as_view("foodDetails"))
 app.add_url_rule('/api/food/<id>', view_func=FoodDetail.as_view("foodDetail"))
+app.add_url_rule('/api/food/tid/<id>', view_func=FoodMany.as_view("foodMany"))

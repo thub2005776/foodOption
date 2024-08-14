@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router-dom"
-import { AccInfo, FoodDetail, FoodForm, Home, Login, RecipeForm } from "./pages"
+import { AccInfo, FoodDetail, FoodForm, Home, Login } from "./pages"
 import { FoodGroupItems, Navbar } from "./components";
-import { useMutation } from "react-query";
-import { verifyApi } from "./api/authActions";
+// import { useMutation } from "react-query";
+// import { verifyApi } from "./api/authActions";
 import { useDispatch } from "react-redux";
 import { login } from "./features/userSlice";
 import { useEffect } from "react";
@@ -20,6 +20,7 @@ function App() {
           dispatch(login(res.data))
         }
       })
+      .catch(err => console.log(err))
   }, [])
   
   
@@ -30,10 +31,8 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/admin/:id" element={<Home />} />
         <Route path="/foodgroup/:id" element={<FoodGroupItems />} />
-        <Route path="/foodgroup/food/add/:id" element={<FoodForm />} />
-        <Route path="/food/add" element={<FoodForm />} />
+        <Route path="/food/add/:id" element={<FoodForm />} />
         <Route path="/food/:id" element={<FoodDetail />} />
-        <Route path="/food/recipe/add/:id" element={<RecipeForm />} />
         <Route path="/acc/:id" element={<AccInfo />} />
       </Routes>
     </div>

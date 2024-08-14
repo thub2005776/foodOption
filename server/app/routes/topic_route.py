@@ -6,8 +6,10 @@ import json
 from bson import json_util, ObjectId
 from app.db_connection import db
 from app.models import topic_model
-topic_collection = db['topics']
+from app.routes.foodGroup_route import FoodGroupMany, FoodGroup
+from app.routes.food_route import FoodMany, FoodDetails
 
+topic_collection = db['topics']
 
 class Topics(MethodView):
     def get(self):
@@ -38,8 +40,10 @@ class Topics(MethodView):
             return "Body of the request is empty."
 
     def delete(self):
-        result = topic_collection.delete_many({})
-        if result:
+        result1 = topic_collection.delete_many({})
+        result2 = FoodGroup.delete()
+        result3 = FoodDetails.delete()
+        if result1 and result2 and result3:
             return "successfull"
         else:
             return "Can't delete all topic. Try again."
@@ -89,8 +93,10 @@ class Topic(MethodView):
         try:
             if id and ObjectId(id):
                 query = {"_id": ObjectId(id)}
-                result = topic_collection.delete_one(query)
-                if result:
+                result1 = topic_collection.delete_one(query)
+                # result2 = FoodGroupMany.delete(id=id)
+                # result3 = FoodMany.delete(id=id)
+                if result1 :
                     return "successfull"
                 else:
                     return "Can't delete the topic. Try again."

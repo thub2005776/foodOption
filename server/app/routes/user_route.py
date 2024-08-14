@@ -7,7 +7,7 @@ import json
 import bcrypt
 from bson import json_util, ObjectId
 from app.db_connection import db
-user_collection = db['users']
+user_collection = db['user']
 
 
 class Users(MethodView):
@@ -20,7 +20,7 @@ class Users(MethodView):
 
     def post(self):
         if request.json:
-            query = {"email": request.json.get("email")}
+            query = {"phone": request.json.get("phone")}
             values = user_model(request=request)
             password = values["password"]
             hashed = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())

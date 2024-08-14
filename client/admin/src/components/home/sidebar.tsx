@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout, selectUser } from "../../features/userSlice";
 import { useMutation } from "react-query";
 import { logoutApi } from "../../api/authActions";
-import { Main, FoodGroupList, FoodList, AccList, CommList } from '../../components';
+import { Main, FoodGroupList, AccList, CommList } from '../../components';
 
 export default function Sidebar() {
 
@@ -18,21 +18,21 @@ export default function Sidebar() {
     const navigate = useNavigate();
     const logoutQuery = useMutation(
         logoutApi, {
-            onSuccess: (data) => {
-                if(data !== "Cookie don't exist.") {
-                    dispatch(logout());
-                    navigate('/');
-                } else alert(data)
-            },
-            onError: (err) => {
-                console.log(err);
-            },
-        });
+        onSuccess: (data) => {
+            if (data !== "Cookie don't exist.") {
+                dispatch(logout());
+                navigate('/');
+            } else alert(data)
+        },
+        onError: (err) => {
+            console.log(err);
+        },
+    });
 
     const user = useSelector(selectUser);
     const dispatch = useDispatch();
     const handleLogout = () => {
-       logoutQuery.mutate()
+        logoutQuery.mutate()
     }
 
     const TabItem = ({ title, icon, tabName }: { title: String, icon: ReactNode, tabName: String }) => {
@@ -67,7 +67,7 @@ export default function Sidebar() {
                                 </svg>
                             } />
                         <TabItem
-                            title={'Nhóm món ăn'}
+                            title={'Món ăn'}
                             tabName={'tab2'}
                             icon={
                                 <svg className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
@@ -76,12 +76,13 @@ export default function Sidebar() {
                             } />
 
                         <TabItem
-                            title={'Món ăn'}
+                            title={'Đơn hàng'}
                             tabName={'tab3'}
                             icon={
                                 <svg className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                                    <path fillRule="evenodd" d="M5.617 2.076a1 1 0 0 1 1.09.217L8 3.586l1.293-1.293a1 1 0 0 1 1.414 0L12 3.586l1.293-1.293a1 1 0 0 1 1.414 0L16 3.586l1.293-1.293A1 1 0 0 1 19 3v18a1 1 0 0 1-1.707.707L16 20.414l-1.293 1.293a1 1 0 0 1-1.414 0L12 20.414l-1.293 1.293a1 1 0 0 1-1.414 0L8 20.414l-1.293 1.293A1 1 0 0 1 5 21V3a1 1 0 0 1 .617-.924ZM9 7a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2H9Zm0 4a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2H9Zm0 4a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2H9Z" clipRule="evenodd" />
+                                    <path fillRule="evenodd" d="M4 4a1 1 0 0 1 1-1h1.5a1 1 0 0 1 .979.796L7.939 6H19a1 1 0 0 1 .979 1.204l-1.25 6a1 1 0 0 1-.979.796H9.605l.208 1H17a3 3 0 1 1-2.83 2h-2.34a3 3 0 1 1-4.009-1.76L5.686 5H5a1 1 0 0 1-1-1Z" clipRule="evenodd" />
                                 </svg>
+
                             } />
 
                         <TabItem
@@ -100,6 +101,17 @@ export default function Sidebar() {
                                     <path fillRule="evenodd" d="M3.559 4.544c.355-.35.834-.544 1.33-.544H19.11c.496 0 .975.194 1.33.544.356.35.559.829.559 1.331v9.25c0 .502-.203.981-.559 1.331-.355.35-.834.544-1.33.544H15.5l-2.7 3.6a1 1 0 0 1-1.6 0L8.5 17H4.889c-.496 0-.975-.194-1.33-.544A1.868 1.868 0 0 1 3 15.125v-9.25c0-.502.203-.981.559-1.331ZM7.556 7.5a1 1 0 1 0 0 2h8a1 1 0 0 0 0-2h-8Zm0 3.5a1 1 0 1 0 0 2H12a1 1 0 1 0 0-2H7.556Z" clipRule="evenodd" />
                                 </svg>
                             } />
+
+                        <TabItem
+                            title={'Thống kê'}
+                            tabName={'tab6'}
+                            icon={
+                                <svg className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M13.5 2c-.178 0-.356.013-.492.022l-.074.005a1 1 0 0 0-.934.998V11a1 1 0 0 0 1 1h7.975a1 1 0 0 0 .998-.934l.005-.074A7.04 7.04 0 0 0 22 10.5 8.5 8.5 0 0 0 13.5 2Z" />
+                                    <path d="M11 6.025a1 1 0 0 0-1.065-.998 8.5 8.5 0 1 0 9.038 9.039A1 1 0 0 0 17.975 13H11V6.025Z" />
+                                </svg>
+
+                            } />
                         <li onClick={handleLogout}>
                             <div className="flex items-center p-2 cursor-pointer text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                                 <svg className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
@@ -115,9 +127,10 @@ export default function Sidebar() {
             <div className="p-4 sm:ml-64 pt-[3rem]">
                 {tab === 'tab1' && <Main />}
                 {tab === 'tab2' && <FoodGroupList />}
-                {tab === 'tab3' && <FoodList/>}
+                {tab === 'tab3' && "Đơn hàng"}
                 {tab === 'tab4' && <AccList />}
                 {tab === 'tab5' && <CommList />}
+                {tab === 'tab6' && "thống kê"}
             </div>
         </div>
     )

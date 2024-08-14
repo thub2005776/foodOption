@@ -1,4 +1,4 @@
-from app.models import admin_model
+from app.models import staff_model
 from flask import request
 from flask.views import MethodView
 from app import app
@@ -21,7 +21,7 @@ class AdminList(MethodView):
     def post(self):
         if request.json:
             query = {"email": request.json.get("email")}
-            values = admin_model(request=request)
+            values = staff_model(request=request)
             password = values["password"]
             hashed = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
             values["password"] = hashed.decode("utf-8")
@@ -73,7 +73,7 @@ class AdminInfo(MethodView):
                 query = {"_id": ObjectId(id)}
                 if request.get_json:
                     update = {
-                        "$set": admin_model(request=request)
+                        "$set": staff_model(request=request)
                     }
                     result = admin_collection.find_one_and_update(
                         query,

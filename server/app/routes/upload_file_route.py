@@ -1,6 +1,6 @@
 import os
 from app import app
-from flask import request
+from flask import request, send_from_directory
 from werkzeug.utils import secure_filename
 
 UPLOAD_FOLDER = './static/uploads'
@@ -26,3 +26,7 @@ def upload_file():
         filename = secure_filename(file.filename)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         return "uploaded"
+
+@app.route('/images/<path:path>')
+def send_image(path):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], path, as_attachment=True)
