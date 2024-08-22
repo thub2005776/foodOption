@@ -82,12 +82,17 @@ export const getFoodByTopicIdApi = async (topicId) => {
     return res.data;
 }
 
+export const getFoodByIdApi = async (Id) => {
+    const res = await foodApi.get(`/api/food/${Id}`);
+    return res.data;
+}
+
 export const addFoodApi = async (food) => {
     const res = await foodApi.post('/api/food', food);
     return res.data;
 }
 
 export const updateFoodApi = async (Food) => {
-    const res = await foodApi.post(`/api/food/${Food._id}`, Food);
+    const res = await foodApi.post(`/api/food/${Food.id}`, Food);
     return res.data;
 }

@@ -31,7 +31,7 @@ class FoodDetails(MethodView):
                 return_document=pymongo.ReturnDocument.AFTER
             )
             if result:
-                return json.loads(json_util.dumps(result))
+                return 'successfull'
             else:
                 return "Can't insert the food detail. Try again."
         else:

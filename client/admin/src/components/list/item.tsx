@@ -11,7 +11,7 @@ export default function Item({ name, image, link, voted }
     return (
         <div className="flex justify-between rounded-md hover:bg-blue-200 dark:hover:bg-gray-800">
             <div className="flex-1">
-                <Link to={`/food/${link}`}>
+                <Link to={`/food/detail/${link}`}>
                     <div className="p-2 h-full  cursor-pointer">
                         <div className="flex items-center gap-4">
                             <div className="flex-shrink-0">

@@ -11,6 +11,7 @@ def food_model(request):
         "image": request.json.get("image"),
         "tag": request.json.get("tag"),
         "rating": request.json.get("rating"),
+        "sold": request.json.get("sold"),
         "createdAt": request.json.get("createdAt"),
         "updatedAt": request.json.get("updatedAt"),
         "stated": request.json.get("stated"),

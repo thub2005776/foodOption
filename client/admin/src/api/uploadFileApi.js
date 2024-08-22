@@ -4,8 +4,23 @@ const uploadFileApi = axios.create({
     baseURL: process.env.REACT_APP_SERVER_URL
 });
 
-// foodGrou api
 export const uploadApi = async (file) => {
-    const res = await uploadFileApi.post('/api/upload', file);
-    return res.data;
-}
+    try {
+        const res = await uploadFileApi.post('/api/upload', file);
+        return res.data;
+    } catch (error) {
+        throw new Error('Upload failed');
+    }
+};
+
+export const downloadApi = async (path) => {
+    try {
+        const response = await uploadFileApi.get(`/images/${path}`, {
+            responseType: 'blob', // Chỉ định responseType là 'blob' để nhận dữ liệu dưới dạng blob
+        });
+
+        return response.data; 
+    } catch (error) {
+        throw new Error('Download failed');
+    }
+};

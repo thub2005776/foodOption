@@ -2,23 +2,28 @@ import React, { useState } from "react";
 import { BackButton, FGroupList, TagBage, FoodGroupModal } from "../../components";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
-import { addFoodApi, getFoodGroupByTid } from "../../api/foodApi";
-import { uploadApi } from "../../api/uploadFileApi";
+import { addFoodApi, getFoodGroupByTid, getFoodByIdApi, updateFoodApi } from "../../api/foodApi";
+import { uploadApi, downloadApi } from "../../api/uploadFileApi";
 
 export default function FoodForm() {
     const location = useLocation();
-    const tid = location.pathname.split('/')[3];
-    const { data: foodGroup } = useQuery('foodgroup', () => getFoodGroupByTid(tid))
+    const id = location.pathname.split('/')[3];
+    const { data: foodDetail } = useQuery('food', () => getFoodByIdApi(id))
+    const { data: imageFile } = useQuery('imageFile', async () => await downloadApi(foodDetail && foodDetail['image']? foodDetail['image']: 'goicuon.jpg'))
+    const { data: foodGroup } = useQuery('foodgroup', () => getFoodGroupByTid(foodDetail && foodDetail['topicID']? foodDetail['topicID'] : id))
 
-    const [gid, setGid] = useState('')
-    const [imageLink, setImageLink] = useState('');
+
+    const [gid, setGid] = useState(foodDetail ? foodDetail['groupID'] : '')
+    const [imageLink, setImageLink] = useState(imageFile ? URL.createObjectURL(imageFile) : '');
     const [file, setFile] = useState<File | null>();
-    const [name, setName] = useState('');
-    const [info, setInfo] = useState('');
-    const [cost, setCost] = useState('');
-    const [price, setPrice] = useState('');
-    const [quantity, setQuantity] = useState('');
+    const [name, setName] = useState(foodDetail ? foodDetail['name'] : '');
+    const [info, setInfo] = useState(foodDetail ? foodDetail['info'] : '');
+    const [cost, setCost] = useState(foodDetail ? foodDetail['cost'] : '');
+    const [price, setPrice] = useState(foodDetail ? foodDetail['price'] : '');
     const [tag, setTag] = useState<Array<string>>([]);
+    const [stated, setStated] = useState(foodDetail ? foodDetail['stated'] : true);
+    const [open, setOpen] = useState(false);
+
 
     const tagList: Array<string> = ["Món chính", "Đồ uống", "Ăn vặt", "Miền Nam", "Miền Bắc", "Miền Trung", "Đồ chay", "Tim mạch", "Tiểu đường", "Tiêu hoá"]
 
@@ -47,8 +52,18 @@ export default function FoodForm() {
     const addFood = useMutation({
         mutationFn: addFoodApi,
         onSuccess(data) {
-            if (data !== "Can't insert the food detail. Try again." && data !== "Body of the request is empty.") {
-                navigate(-1)
+            if (data === 'successfull') {
+                document.location.reload()
+            } else alert(data)
+        },
+        onError: (err) => { console.log(err) }
+    })
+
+    const editFood = useMutation({
+        mutationFn: updateFoodApi,
+        onSuccess(data) {
+            if (data === 'successfull') {
+                document.location.reload()
             } else alert(data)
         },
         onError: (err) => { console.log(err) }
@@ -60,43 +75,54 @@ export default function FoodForm() {
         const formData = new FormData()
         formData.append('file', file!)
         const values = {
-            topicID: tid,
+            id: foodDetail && foodDetail['_id']?.$oid,
+            topicID: foodDetail ? foodDetail['topicID'] : id,
             groupID: gid,
             name: name,
             info: info,
             image: file?.name,
             cost: cost,
             price: price,
-            quantity: quantity, 
             tag: tag,
-            rating: 0,
-            createdAt: Date(),
+            rating: foodDetail?.rating? foodDetail?.rating : 0,
+            sold: foodDetail?.sold? foodDetail?.sold : 0,
+            createdAt: foodDetail?.createdAt ? foodDetail['createdAt'] : Date(),
             updatedAt: Date(),
-            stated: true,
+            stated: stated,
         }
 
-        upload.mutate(formData, {
-            onSuccess: (data) => {
-                if (data === "uploaded") {
-                    addFood.mutate(values);
-                } else alert(data)
-            },
-            onError: (err) => console.log(err)
-        });
+        if (file) {
+            upload.mutate(formData, {
+                onSuccess: (data) => {
+                    if (data === "uploaded") {
+                        if (foodDetail && foodDetail['name']) {
+                            editFood.mutate(values)
+                        } else {
+                            addFood.mutate(values)
+                        }
 
+                    } else alert(data)
+                },
+                onError: (err) => console.log(err)
+            });
+        } else if (foodDetail && foodDetail['name']) {
+            editFood.mutate(values)
+        }
     }
 
+
     return (
-        <div className='h-screen sm:mx-10 mx-4'>
+        foodDetail && id && foodGroup &&
+        <div className='sm:mx-10 mx-4'>
             <div className="fixed ml-1 top-32">
                 <BackButton />
             </div>
             {/* tepper  */}
             <ol className="mb-10 flex items-center w-full text-sm font-medium text-center text-gray-500 dark:text-gray-400 sm:text-base">
                 <li className={`flex md:w-full items-center sm:after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 dark:after:border-gray-700
-                    ${gid.length > 0 && " text-blue-600 dark:text-blue-500"}`}>
+                    ${gid?.length > 0 && " text-blue-600 dark:text-blue-500"}`}>
                     <span className="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500">
-                        {gid.length > 0 &&
+                        {gid?.length > 0 &&
                             <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
                             </svg>}
@@ -105,9 +131,9 @@ export default function FoodForm() {
                     </span>
                 </li>
                 <li className={`flex md:w-full items-center sm:after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 dark:after:border-gray-700
-                    ${quantity.length > 0 && " text-blue-600 dark:text-blue-500"}`}>
+                    ${price?.length > 0 && " text-blue-600 dark:text-blue-500"}`}>
                     <span className="flex items-center after:content-['/'] sm:after:hidden after:mx-2 after:text-gray-200 dark:after:text-gray-500">
-                        {quantity.length > 0 &&
+                        {price?.length > 0 &&
                             <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 me-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
                                 <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
                             </svg>}
@@ -122,18 +148,66 @@ export default function FoodForm() {
                 <div className="mt-20">
                     <div className="flex justify-between">
                         <p className="text-blue-700 font-semibold dark:text-white">
-                            Nhóm món ăn <span className="text-blue-950 dark:text-gray-400">--- {gid ? gid : 'mã nhóm'}---</span>
+                            Nhóm món ăn <span className="text-blue-950 dark:text-gray-400">
+                                [{gid ? gid : foodDetail['groupID'] ? foodDetail['groupID'] : 'mã nhóm'}] 
+                            </span>
                         </p>
                         <FoodGroupModal
                             foodgroup={foodGroup}
-                            tid={tid}
+                            tid={foodDetail['topicID'] ? foodDetail['topicID'] : id}
                             getGid={(id: string) => setGid(id)} />
                     </div>
                     <FGroupList
                         foodGroup={foodGroup}
-                        tid={tid!}
                         gid={(id: string) => setGid(id)} />
+
+                    <div className="mb-5">
+                        <label htmlFor="stated" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Trạng thái
+                        </label>
+                        <div
+                            onClick={() => setOpen(!open)}
+                            id="stated"
+                            className="flex justify-between cursor-pointer text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 shadow-lg shadow-cyan-500/50 dark:shadow-lg dark:shadow-cyan-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                        >
+                            <p className="text-lg">{stated ? 'Đang bán' : 'Hết hàng'}</p>
+                            {!open ?
+                                <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 9-7 7-7-7" />
+                                </svg>
+                                : <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m5 15 7-7 7 7" />
+                                </svg>}
+
+                        </div>
+                        {open &&
+                            <div>
+                                <ul className="py-2 text-sm text-gray-700 bg-blue-200 dark:bg-gray-700 dark:text-gray-200 rounded-md">
+                                    <li
+                                        onClick={() => {
+                                            setStated(true)
+                                            setOpen(false)
+                                        }}
+                                    >
+                                        <div className="block px-4 py-2 hover:bg-blue-300 dark:hover:bg-gray-600 dark:hover:text-white">
+                                            Đang bán
+                                        </div>
+                                    </li>
+                                    <li
+                                        onClick={() => {
+                                            setStated(false)
+                                            setOpen(false)
+                                        }}
+                                    >
+                                        <div className="block px-4 py-2 hover:bg-blue-300 dark:hover:bg-gray-600 dark:hover:text-white">
+                                            Hết hàng
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>}
+                    </div>
                 </div>
+
                 <form
                     onSubmit={handleSubmit}
                     className="sm:flex gap-5 dark:bg-gray-800 p-4 rounded-md">
@@ -174,7 +248,7 @@ export default function FoodForm() {
                                         type="file"
                                         className="hidden"
                                         accept="image/*"
-                                        required />
+                                    />
                                 </label>}
                         </div>
 
@@ -187,6 +261,7 @@ export default function FoodForm() {
                             </label>
                             <input
                                 onChange={(e) => setName(e.target.value)}
+                                defaultValue={foodDetail['name'] ? foodDetail['name'] : ''}
                                 type="text"
                                 id="name"
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -198,6 +273,7 @@ export default function FoodForm() {
                             </label>
                             <textarea
                                 onChange={(e) => setInfo(e.target.value)}
+                                defaultValue={foodDetail['info'] ? foodDetail['info'] : ''}
                                 id="info"
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 required
@@ -211,6 +287,7 @@ export default function FoodForm() {
                             </label>
                             <input
                                 onChange={(e) => setCost(e.target.value)}
+                                defaultValue={foodDetail['cost'] ? foodDetail['cost'] : ''}
                                 type="text"
                                 id="cost"
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -223,11 +300,30 @@ export default function FoodForm() {
                             </label>
                             <input
                                 onChange={(e) => setPrice(e.target.value)}
+                                defaultValue={foodDetail['price'] ? foodDetail['price'] : ''}
                                 type="text"
                                 id="price"
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 required />
                         </div>
+
+                        {foodDetail['tag'] &&
+                            <div className="mb-5">
+                                <label htmlFor="price" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Đã chọn
+                                </label>
+                                <div className="flex flex-wrap gap-1">
+                                    {foodDetail['tag'].map((tag, i) => (
+                                        <TagBage
+                                            key={i}
+                                            name={tag}
+                                            cancel={handleCancel} />
+                                    ))}
+                                </div>
+                                <label htmlFor="price" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Thêm
+                                </label>
+                            </div>}
 
                         <div className="mb-5 flex flex-wrap gap-1">
                             {tagList.map((tag, i) => (
@@ -239,15 +335,15 @@ export default function FoodForm() {
 
                         </div>
                         <div className="mb-5">
-                            <label htmlFor="quantity" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                                Số lượng
+                            <label htmlFor="sold" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Đã bán
                             </label>
-                            <input
-                                onChange={(e) => setQuantity(e.target.value)}
-                                type="text"
-                                id="quantity"
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                required />
+                            <button
+                                disabled
+                                id="sold"
+                                className="text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 shadow-lg shadow-cyan-500/50 dark:shadow-lg dark:shadow-cyan-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                                {foodDetail['sold'] ? foodDetail['sold'] : 0}
+                            </button>
                         </div>
                         <button type="submit" className="w-fit text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                         >Submit

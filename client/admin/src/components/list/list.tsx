@@ -19,7 +19,7 @@ export default function List({ title, data, type, id }: { title: Array<string>, 
             </div>
 
             <ul className="divide-y p-2 rounded-b-md divide-gray-200 dark:divide-gray-700 bg-blue-50 dark:bg-gray-700 dark:border dark:border-gray-600">
-                {data && data.map((item, i) => (
+                {Array.isArray(data) && data.map((item, i) => (
                     <Item
                         key={i}
                         name={item['name']}

@@ -5,7 +5,6 @@ import { addFoodGroup } from "../../api/foodApi";
 export default function FoodGroupModal({ foodgroup, tid, getGid }: { foodgroup:Array<Object>,tid: string, getGid: RefCallback<string> }) {
 
   const [openModal, setOpenModal] = useState(false);
-  const [gid, setGid] = useState('');
   const [name, setName] = useState('');
   const [error, setError] = useState('');
 
@@ -13,9 +12,9 @@ export default function FoodGroupModal({ foodgroup, tid, getGid }: { foodgroup:A
     addFoodGroup, {
     onSuccess: (data) => {
       if(data !== "Can't insert the food group. Try again." && data !== "Body of the request is empty.") {
-        getGid(data)
         setOpenModal(false)
-        document.location.reload()
+        getGid(data)
+        // document.location.reload()
       } else alert(data)
     },
     onError: (err) => {
@@ -27,14 +26,15 @@ export default function FoodGroupModal({ foodgroup, tid, getGid }: { foodgroup:A
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const gidExisted = foodgroup.find(f => f['gid'] === gid)
+    const gidExisted = Array.isArray(foodgroup) && foodgroup.find(f => f['name'] === name)
     if(gidExisted) {
-      setError('Mã nhóm đã tồn tại')
+      setError('Nhóm đã tồn tại')
     } else {
       const values = {
-        topicId: tid,
-        gid: gid,
-        name: name
+        topicID: tid,
+        name: name,
+        createdAt: Date(),
+        updatedAt: Date()
       }
       mutate(values)
     }
@@ -72,19 +72,6 @@ export default function FoodGroupModal({ foodgroup, tid, getGid }: { foodgroup:A
 
               <div className="p-4 md:p-5">
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="mb-6">
-                    <label htmlFor="gid" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >Mã nhóm
-                    </label>
-                    <input
-                      type="text"
-                      name="gid"
-                      id="dig"
-                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                      onChange={(e) => setGid(e.target.value)}
-                      required />
-                      <p className="text-xs text-red-900 dark:text-red-400">{error}</p>
-                  </div>
                   <div className="mb-6">
                     <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                     >Tên nhóm

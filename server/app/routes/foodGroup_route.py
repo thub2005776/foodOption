@@ -19,7 +19,7 @@ class FoodGroup(MethodView):
 
     def post(self):
         if request.json:
-            query = {"gid": request.json.get("gid")}
+            query = {"name": request.json.get("name")}
             update = {
                 "$set": foodGroup_model(request=request)
             }
@@ -31,7 +31,8 @@ class FoodGroup(MethodView):
             )
 
             if result:
-                return json.loads(json_util.dumps(result['gid']))
+                print(result)
+                return json.loads(json_util.dumps(result['_id']))
             else:
                 return "Can't insert the food group. Try again."
         else:
@@ -104,7 +105,7 @@ class FoodGroupMany(MethodView):
     def get(self, id):
         try:
             if id and ObjectId(id):
-                query = {"topicId": id}
+                query = {"topicID": id}
                 cursor = food_collection.find(query)
                 if cursor:
                     return json.loads(json_util.dumps(cursor))
@@ -118,7 +119,7 @@ class FoodGroupMany(MethodView):
     def delete(self, id):
         try:
             if id and ObjectId(id):
-                query = {"topicId": id}
+                query = {"topicID": id}
                 result = food_collection.delete_many(query)
                 if result:
                     return "successfull"

@@ -3,7 +3,7 @@ from app import app
 from flask import request, send_from_directory
 from werkzeug.utils import secure_filename
 
-UPLOAD_FOLDER = './static/uploads'
+UPLOAD_FOLDER = os.path.join(app.root_path, 'static\\uploads')
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
@@ -14,12 +14,9 @@ def allowed_file(filename):
 
 @app.route('/api/upload', methods=['POST'])
 def upload_file():
-    # check if the post request has the file part
     if 'file' not in request.files:
         return 'No file part'
     file = request.files['file']
-    # if user does not select file, browser also
-    # submit an empty part without filename
     if file.filename == '':
         return 'No selected file'
     if file and allowed_file(file.filename):
@@ -29,4 +26,8 @@ def upload_file():
 
 @app.route('/images/<path:path>')
 def send_image(path):
+    full_path = os.path.join(app.config['UPLOAD_FOLDER'], path)
+    if not os.path.exists(full_path):
+        app.logger.error(f"File not found: {full_path}")
+        return "File not found", 404
     return send_from_directory(app.config['UPLOAD_FOLDER'], path, as_attachment=True)

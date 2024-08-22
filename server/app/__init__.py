@@ -3,7 +3,7 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 
-app = Flask(__name__, static_folder='static')
+# app = Flask(__name__, static_folder='static')
 
 CORS = CORS(app, resources={
     r"/*": {

@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom"
-import { AccInfo, FoodDetail, FoodForm, Home, Login } from "./pages"
+import { AccInfo, FoodForm, Home, Login } from "./pages"
 import { FoodGroupItems, Navbar } from "./components";
 // import { useMutation } from "react-query";
 // import { verifyApi } from "./api/authActions";
@@ -30,9 +30,9 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/admin/:id" element={<Home />} />
-        <Route path="/foodgroup/:id" element={<FoodGroupItems />} />
+        <Route path="/topic/:id" element={<FoodGroupItems />} />
         <Route path="/food/add/:id" element={<FoodForm />} />
-        <Route path="/food/:id" element={<FoodDetail />} />
+        <Route path="/food/detail/:id" element={<FoodForm />} />
         <Route path="/acc/:id" element={<AccInfo />} />
       </Routes>
     </div>
