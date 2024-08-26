@@ -57,12 +57,17 @@ export const addFoodGroup = async (foodgroup) => {
 }
 
 export const updateFoodGroup = async (foodGroup) => {
-    const res = await foodApi.post(`/api/foodgroup/${foodGroup._id}`, foodGroup);
+    const res = await foodApi.post(`/api/foodgroup/${foodGroup.id}`, foodGroup);
     return res.data;
 }
 
-export const deleteFoodGroupItem = async (fid) => {
-    const res = await foodApi.delete(`/api/foodgroup/${fid}`);
+export const deleteFoodGroupItem = async (gid) => {
+    const res = await foodApi.delete(`/api/foodgroup/${gid}`);
+    return res.data;
+}
+
+export const deleteFoodGroupByTidApi = async (id) => {
+    const res = await foodApi.delete(`/api/foodgroup/tid/${id}`);
     return res.data;
 }
 
@@ -94,5 +99,15 @@ export const addFoodApi = async (food) => {
 
 export const updateFoodApi = async (Food) => {
     const res = await foodApi.post(`/api/food/${Food.id}`, Food);
+    return res.data;
+}
+
+export const deleteFoodApi = async (id) => {
+    const res = await foodApi.delete(`/api/food/${id}`);
+    return res.data;
+}
+
+export const deleteFoodByTidApi = async (id) => {
+    const res = await foodApi.delete(`/api/food/tid/${id}`);
     return res.data;
 }

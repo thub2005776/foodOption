@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout, selectUser } from "../../features/userSlice";
 import { useMutation } from "react-query";
 import { logoutApi } from "../../api/authActions";
-import { Main, FoodGroupList, AccList, CommList } from '../../components';
+import { Main, FoodGroupList, AccList, CommList, OrderList } from '../../components';
 
 export default function Sidebar() {
 
@@ -127,7 +127,7 @@ export default function Sidebar() {
             <div className="p-4 sm:ml-64 pt-[3rem]">
                 {tab === 'tab1' && <Main />}
                 {tab === 'tab2' && <FoodGroupList />}
-                {tab === 'tab3' && "Đơn hàng"}
+                {tab === 'tab3' && <OrderList/>}
                 {tab === 'tab4' && <AccList />}
                 {tab === 'tab5' && <CommList />}
                 {tab === 'tab6' && "thống kê"}

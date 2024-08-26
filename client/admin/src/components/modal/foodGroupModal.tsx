@@ -11,17 +11,16 @@ export default function FoodGroupModal({ foodgroup, tid, getGid }: { foodgroup:A
   const { mutate } = useMutation(
     addFoodGroup, {
     onSuccess: (data) => {
-      if(data !== "Can't insert the food group. Try again." && data !== "Body of the request is empty.") {
+      if(data === 'successfull') {
         setOpenModal(false)
         getGid(data)
-        // document.location.reload()
+        document.location.reload()
       } else alert(data)
     },
     onError: (err) => {
       console.log(err);
 
-    }
-  })
+    }})
   
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -58,7 +57,7 @@ export default function FoodGroupModal({ foodgroup, tid, getGid }: { foodgroup:A
 
               <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  Thêm nhóm món ăn
+                  Nhóm món ăn
                 </h3>
                 <button onClick={() => setOpenModal(false)}
                   type="button"
@@ -84,8 +83,9 @@ export default function FoodGroupModal({ foodgroup, tid, getGid }: { foodgroup:A
                       onChange={(e) => setName(e.target.value)}
                       required />
                   </div>
+                  {error.length > 0 && <p className="text-red-700 text-xs">{error}</p>}
                   <button type="submit" className="w-fit text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                  >Thêm
+                  >submit
                   </button>
                 </form>
               </div>

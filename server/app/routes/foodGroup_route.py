@@ -6,6 +6,7 @@ import json
 from bson import json_util, ObjectId
 from app.db_connection import db
 from app.models import foodGroup_model
+from app.routes.food_route import FoodManyByGid
 food_collection = db['foodGroup']
 
 
@@ -32,7 +33,7 @@ class FoodGroup(MethodView):
 
             if result:
                 print(result)
-                return json.loads(json_util.dumps(result['_id']))
+                return 'successfull'
             else:
                 return "Can't insert the food group. Try again."
         else:
@@ -90,9 +91,10 @@ class FoodGroupItem(MethodView):
         try:
             if id and ObjectId(id):
                 query = {"_id": ObjectId(id)}
-                result = food_collection.delete_one(query)
-                if result:
-                    return "successfull"
+                result1 = food_collection.delete_one(query)
+                result2 = FoodManyByGid.delete(id)
+                if result1:
+                    return result2
                 else:
                     return "Can't delete the foodGroupItem. Try again."
             else:
@@ -121,6 +123,7 @@ class FoodGroupMany(MethodView):
             if id and ObjectId(id):
                 query = {"topicID": id}
                 result = food_collection.delete_many(query)
+
                 if result:
                     return "successfull"
                 else:
@@ -128,7 +131,7 @@ class FoodGroupMany(MethodView):
             else:
                 return "This is a DELETE request."
         except:
-            return "ID (ObjectId) pamram is required."
+            return "Error."
     
 app.add_url_rule('/api/foodgroup', view_func=FoodGroup.as_view("foodGroup"))
 app.add_url_rule('/api/foodgroup/<id>', view_func=FoodGroupItem.as_view("foodGroupItem"))

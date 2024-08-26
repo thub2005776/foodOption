@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { BackButton, FGroupList, TagBage, FoodGroupModal } from "../../components";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
 import { addFoodApi, getFoodGroupByTid, getFoodByIdApi, updateFoodApi } from "../../api/foodApi";
 import { uploadApi, downloadApi } from "../../api/uploadFileApi";
@@ -9,19 +9,19 @@ export default function FoodForm() {
     const location = useLocation();
     const id = location.pathname.split('/')[3];
     const { data: foodDetail } = useQuery('food', () => getFoodByIdApi(id))
-    const { data: imageFile } = useQuery('imageFile', async () => await downloadApi(foodDetail && foodDetail['image']? foodDetail['image']: 'goicuon.jpg'))
-    const { data: foodGroup } = useQuery('foodgroup', () => getFoodGroupByTid(foodDetail && foodDetail['topicID']? foodDetail['topicID'] : id))
+    const { data: imageFile } = useQuery('imageFile', () => downloadApi(foodDetail?.image? foodDetail['image']: 'food.jpg'))
+    const { data: foodGroup } = useQuery('foodgroup', () => getFoodGroupByTid(foodDetail?.topicID? foodDetail['topicID'] : id))
 
 
-    const [gid, setGid] = useState(foodDetail ? foodDetail['groupID'] : '')
-    const [imageLink, setImageLink] = useState(imageFile ? URL.createObjectURL(imageFile) : '');
+    const [gid, setGid] = useState(foodDetail?.groupID ? foodDetail['groupID'] : '')
+    const [imageLink, setImageLink] = useState('');
     const [file, setFile] = useState<File | null>();
-    const [name, setName] = useState(foodDetail ? foodDetail['name'] : '');
-    const [info, setInfo] = useState(foodDetail ? foodDetail['info'] : '');
-    const [cost, setCost] = useState(foodDetail ? foodDetail['cost'] : '');
-    const [price, setPrice] = useState(foodDetail ? foodDetail['price'] : '');
-    const [tag, setTag] = useState<Array<string>>([]);
-    const [stated, setStated] = useState(foodDetail ? foodDetail['stated'] : true);
+    const [name, setName] = useState(foodDetail?.name? foodDetail['name'] : '');
+    const [info, setInfo] = useState(foodDetail?.info ? foodDetail['info'] : '');
+    const [cost, setCost] = useState(foodDetail?.cost ? foodDetail['cost'] : '');
+    const [price, setPrice] = useState(foodDetail?.price ? foodDetail['price'] : '');
+    const [tag, setTag] = useState<Array<string>>(foodDetail?.tag ? foodDetail['tag'] :[]);
+    const [stated, setStated] = useState(foodDetail?.stated?  foodDetail['stated'] : true);
     const [open, setOpen] = useState(false);
 
 
@@ -47,7 +47,6 @@ export default function FoodForm() {
 
     };
 
-    const navigate = useNavigate();
     const upload = useMutation(uploadApi)
     const addFood = useMutation({
         mutationFn: addFoodApi,
@@ -76,7 +75,7 @@ export default function FoodForm() {
         formData.append('file', file!)
         const values = {
             id: foodDetail && foodDetail['_id']?.$oid,
-            topicID: foodDetail ? foodDetail['topicID'] : id,
+            topicID: foodDetail?.topicID? foodDetail['topicID'] : id,
             groupID: gid,
             name: name,
             info: info,
@@ -213,9 +212,9 @@ export default function FoodForm() {
                     className="sm:flex gap-5 dark:bg-gray-800 p-4 rounded-md">
                     <div className="">
                         <div className="">
-                            {imageLink.length > 0 ?
+                            {imageLink.length > 0 || imageFile ?
                                 <div>
-                                    <img src={imageLink} className="w-64 h-80 lg:w-96 lg:h-96 rounded-lg" alt="UploadedImage" />
+                                    <img src={imageLink || URL.createObjectURL(imageFile)} className="w-64 h-80 lg:w-96 lg:h-96 rounded-lg" alt="UploadedImage" />
                                     <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
                                         <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                             <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>

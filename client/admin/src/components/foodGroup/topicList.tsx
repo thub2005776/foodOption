@@ -15,10 +15,10 @@ export default function FoodGroupList() {
         <div>
             <div className="flex gap-4">
                 <SearchModal />
-                <TopicModal type="add"/>
+                <TopicModal type="add" topic={{}}/>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 p-1">
-                {topics.map((element: Object, i:React.Key) => (
+                { topics.map((element: Object, i:React.Key) => (
                     <FoodGroupItem key={i} link={element['_id'].$oid} title={element['name']} />
                 ))}
             </div>

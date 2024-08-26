@@ -10,6 +10,7 @@ export {default as FoodGroupItems} from './foodGroup/foodGroupItems.tsx'
 export {default as TagBage} from './food/tagBage.tsx'
 export {default as VideoPlayer} from './food/videoPlayer.tsx'
 export {default as FGroupList} from './foodGroup/fgroupList.tsx'
+export {default as FGroupTable} from './foodGroup/foodGroupTable.tsx'
 
 // export {default as AreaChart} from './chart.tsx'
 
@@ -17,6 +18,8 @@ export {default as FGroupList} from './foodGroup/fgroupList.tsx'
 export {default as List} from './list/list.tsx'
 export {default as Item} from './list/item.tsx'
 export {default as FoodList} from './food/foodList.tsx'
+export {default as Rankings} from './home/rankings.tsx'
+export {default as RankingsItem} from './home/RankingsItem.tsx'
 
 // accounts
 export {default as AccList} from './acc/accList.tsx'
@@ -43,3 +46,8 @@ export {default as Reply} from './modal/replyModal.tsx'
 export {default as AccForm} from './acc/accForm.tsx'
 export {default as ChangPassword} from './modal/changPasswordModal.tsx'
 export {default as FoodGroupModal} from './modal/foodGroupModal.tsx'
+export {default as FGroupEditForm} from './modal/foodGroupModalEdit.tsx'
+
+// order
+export {default as OrderList} from './order/orderList.tsx'
+export {default as OrderTable} from './order/orderTable.tsx'
