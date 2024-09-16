@@ -7,20 +7,20 @@ import json
 import bcrypt
 from bson import json_util, ObjectId
 from app.db_connection import db
-user_collection = db['user']
+deliveryMan_collection = db['deliveryMan']
 
 
-class Users(MethodView):
+class DeliveryManList(MethodView):
     def get(self):
-        cursor = user_collection.find()
+        cursor = deliveryMan_collection.find()
         if cursor:
             return json.loads(json_util.dumps(cursor))
         else:
-            return "Not found any user account."
+            return "Not found any deliveryMan account."
 
     def post(self):
         if request.json:
-            query = {"phone": request.json.get("phone")}
+            query = {"email": request.json.get("email")}
             values = user_model(request=request)
             password = values["password"]
             hashed = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
@@ -30,7 +30,7 @@ class Users(MethodView):
                 "$set": values
             }
 
-            result = user_collection.find_one_and_update(
+            result = deliveryMan_collection.find_one_and_update(
                 query,
                 update=update,
                 upsert=True,
@@ -39,28 +39,28 @@ class Users(MethodView):
             if result:
                 return "successfull"
             else:
-                return "Can't insert the user. Try again."
+                return "Can't insert the deliveryMan. Try again."
         else:
             return "Body of the request is empty."
 
     def delete(self):
-        result = user_collection.delete_many({})
+        result = deliveryMan_collection.delete_many({})
         if result:
             return "successfull"
         else:
-            return "Can't delete all users. Try again."
+            return "Can't delete all deliveryMans. Try again."
 
 
-class UserInfo(MethodView):
+class DeliveryManInfo(MethodView):
     def get(self, id):
         try:
             if id and ObjectId(id):
                 query = {"_id": ObjectId(id)}
-                cursor = user_collection.find_one(query)
+                cursor = deliveryMan_collection.find_one(query)
                 if cursor:
                     return json.loads(json_util.dumps(cursor))
                 else:
-                    return "The user account don't exist."
+                    return "The deliveryMan account don't exist."
             else:
                 return "ID pamram is empty."
         except:
@@ -75,7 +75,7 @@ class UserInfo(MethodView):
                     update = {
                         "$set": user_model(request=request)
                     }
-                    result = user_collection.find_one_and_update(
+                    result = deliveryMan_collection.find_one_and_update(
                         query,
                         update=update,
                         upsert=True,
@@ -84,7 +84,7 @@ class UserInfo(MethodView):
                     if result:
                         return "successfull"
                     else:
-                        return "Can't update the user info. Try again."
+                        return "Can't update the deliveryMan info. Try again."
                 else:
                     return "Body of the request is empty."
             else:
@@ -96,11 +96,11 @@ class UserInfo(MethodView):
         try:
             if id and ObjectId(id):
                 query = {"_id": ObjectId(id)}
-                result = user_collection.delete_one(query)
+                result = deliveryMan_collection.delete_one(query)
                 if result:
                     return "successfull"
                 else:
-                    return "Can't delete the user info. Try again."
+                    return "Can't delete the deliveryMan info. Try again."
             else:
                 return "This is a DELETE request."
         except:
@@ -118,7 +118,7 @@ class UpdatePassword(MethodView):
                     update = {
                         "$set": {"password": hashed.decode("utf-8")}
                     }
-                    result = user_collection.find_one_and_update(
+                    result = deliveryMan_collection.find_one_and_update(
                         query,
                         update=update,
                         upsert=True,
@@ -135,6 +135,6 @@ class UpdatePassword(MethodView):
         except:
             return "ID (ObjectId) pamram is required."
         
-app.add_url_rule('/api/acc/user', view_func=Users.as_view("Users"))
-app.add_url_rule('/api/acc/user/<id>', view_func=UserInfo.as_view("UserInfo"))
-app.add_url_rule('/api/acc/user/pw/<id>', view_func=UpdatePassword.as_view("UpdatePassword"))
+app.add_url_rule('/api/acc/deliveryMan', view_func=DeliveryManList.as_view("deliveryManList"))
+app.add_url_rule('/api/acc/deliveryMan/<id>', view_func=DeliveryManInfo.as_view("deliveryManInfo"))
+app.add_url_rule('/api/acc/deliveryMan/pw/<id>', view_func=UpdatePassword.as_view("UpdatePasswordDeliveryMan"))

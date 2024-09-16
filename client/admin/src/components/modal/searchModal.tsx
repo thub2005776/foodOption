@@ -6,12 +6,19 @@ export default function SearchModal() {
 
     return (
         <div className="">
-            <div onClick={() => setOpenModal(true)}>
-                <svg className="w-8 h-8 cursor-pointer text-blue-400 dark:text-gray-600 hover:text-blue-800 dark:hover:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" strokeLinecap="round" strokeWidth="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
-                </svg>
-            </div>
-
+            
+            <button
+                onClick={() => setOpenModal(true)}
+                className="relative float-end mb-4">
+                <div className="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none">
+                    <svg className="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                    </svg>
+                </div>
+                <div
+                    className="block cursor-pointer pt-2 ps-10 p-2 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50  dark:bg-gray-700 dark:border-gray-600"
+                >Search for users</div>
+            </button>
 
             {openModal &&
                 <div id="static-modal" data-modal-backdrop="static" tabIndex={-1} aria-hidden="true" className="fixed top-32 right-0 lg:left-[30%] z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">

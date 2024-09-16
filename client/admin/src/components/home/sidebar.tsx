@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout, selectUser } from "../../features/userSlice";
 import { useMutation } from "react-query";
 import { logoutApi } from "../../api/authActions";
-import { Main, FoodGroupList, AccList, CommList, OrderList } from '../../components';
+import { Main, FoodGroupList, AccList, CommList, OrderList, ImportCouponList } from '../../components';
 
 export default function Sidebar() {
 
@@ -86,8 +86,17 @@ export default function Sidebar() {
                             } />
 
                         <TabItem
-                            title={'Tài khoản'}
+                            title={'Nhập hàng'}
                             tabName={'tab4'}
+                            icon={
+                                <svg className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                                    <path fillRule="evenodd" d="M4 4a2 2 0 1 0 0 4h16a2 2 0 1 0 0-4H4Zm0 6h16v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8Zm10.707 5.707a1 1 0 0 0-1.414-1.414l-.293.293V12a1 1 0 1 0-2 0v2.586l-.293-.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l2-2Z" clipRule="evenodd" />
+                                </svg>
+                            } />
+
+                        <TabItem
+                            title={'Tài khoản'}
+                            tabName={'tab5'}
                             icon={
                                 <svg className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
                                     <path d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z" />
@@ -95,7 +104,7 @@ export default function Sidebar() {
                             } />
                         <TabItem
                             title={'Bình luận'}
-                            tabName={'tab5'}
+                            tabName={'tab6'}
                             icon={
                                 <svg className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                                     <path fillRule="evenodd" d="M3.559 4.544c.355-.35.834-.544 1.33-.544H19.11c.496 0 .975.194 1.33.544.356.35.559.829.559 1.331v9.25c0 .502-.203.981-.559 1.331-.355.35-.834.544-1.33.544H15.5l-2.7 3.6a1 1 0 0 1-1.6 0L8.5 17H4.889c-.496 0-.975-.194-1.33-.544A1.868 1.868 0 0 1 3 15.125v-9.25c0-.502.203-.981.559-1.331ZM7.556 7.5a1 1 0 1 0 0 2h8a1 1 0 0 0 0-2h-8Zm0 3.5a1 1 0 1 0 0 2H12a1 1 0 1 0 0-2H7.556Z" clipRule="evenodd" />
@@ -104,7 +113,7 @@ export default function Sidebar() {
 
                         <TabItem
                             title={'Thống kê'}
-                            tabName={'tab6'}
+                            tabName={'tab7'}
                             icon={
                                 <svg className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M13.5 2c-.178 0-.356.013-.492.022l-.074.005a1 1 0 0 0-.934.998V11a1 1 0 0 0 1 1h7.975a1 1 0 0 0 .998-.934l.005-.074A7.04 7.04 0 0 0 22 10.5 8.5 8.5 0 0 0 13.5 2Z" />
@@ -127,10 +136,11 @@ export default function Sidebar() {
             <div className="p-4 sm:ml-64 pt-[3rem]">
                 {tab === 'tab1' && <Main />}
                 {tab === 'tab2' && <FoodGroupList />}
-                {tab === 'tab3' && <OrderList/>}
-                {tab === 'tab4' && <AccList />}
-                {tab === 'tab5' && <CommList />}
-                {tab === 'tab6' && "thống kê"}
+                {tab === 'tab3' && <OrderList />}
+                {tab === 'tab4' && <ImportCouponList />}
+                {tab === 'tab5' && <AccList />}
+                {tab === 'tab6' && <CommList />}
+                {tab === 'tab7' && "thống kê"}
             </div>
         </div>
     )

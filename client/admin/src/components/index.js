@@ -11,8 +11,9 @@ export {default as TagBage} from './food/tagBage.tsx'
 export {default as VideoPlayer} from './food/videoPlayer.tsx'
 export {default as FGroupList} from './foodGroup/fgroupList.tsx'
 export {default as FGroupTable} from './foodGroup/foodGroupTable.tsx'
+export {default as FoodCard} from './food/foodCard.tsx'
 
-// export {default as AreaChart} from './chart.tsx'
+
 
 // components
 export {default as List} from './list/list.tsx'
@@ -23,7 +24,13 @@ export {default as RankingsItem} from './home/RankingsItem.tsx'
 
 // accounts
 export {default as AccList} from './acc/accList.tsx'
+export {default as AccTable} from './acc/accTable.tsx'
+export {default as AccItem} from './acc/accItem.tsx'
+export {default as Comments} from './acc/comments.tsx'
+export {default as RoleItem} from './acc/roleItem.tsx'
+export {default as SearchAccount} from './acc/searchAcc.tsx'
 
+// comments
 export {default as CommItem} from './com/commItem.tsx'
 export {default as CommList} from './com/commList.tsx'
 
@@ -41,13 +48,20 @@ export {default as TopicModal} from './modal/topicModal.tsx'
 export {default as SearchModal} from './modal/searchModal.tsx'
 export {default as Delete} from './modal/deleteModal.tsx'
 export {default as Reply} from './modal/replyModal.tsx'
+export {default as AddressModal} from './modal/addressModal.tsx'
+export {default as RoleModal} from './modal/roleModal.tsx'
 
 // formes
-export {default as AccForm} from './acc/accForm.tsx'
 export {default as ChangPassword} from './modal/changPasswordModal.tsx'
 export {default as FoodGroupModal} from './modal/foodGroupModal.tsx'
 export {default as FGroupEditForm} from './modal/foodGroupModalEdit.tsx'
+export {default as OrderForm} from './order/orderForm.tsx'
+export {default as UserForm} from './order/userForm.tsx'
 
 // order
 export {default as OrderList} from './order/orderList.tsx'
-export {default as OrderTable} from './order/orderTable.tsx'
+export {default as OrderItem} from './order/orderItem.tsx'
+
+// import coupon
+export {default as ImportCouponList} from './importCoupon/importCouponList.tsx'
+export {default as ImportCouponItem} from './importCoupon/importCouponItem.tsx'

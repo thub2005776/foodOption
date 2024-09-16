@@ -1,11 +1,11 @@
 import React from "react";
-import { List } from '../../components';
+// import { List } from '../../components';
 
 export default function FoodList({food}:{food: Array<Object>}) {
     return(
         <div>
             <p></p>
-            <List
+            {/* <List
                 title={["Món chính", "Đồ uống", "Ăn vặt"]}
                 data={[
                     {name:"Trà trái cây",
@@ -16,7 +16,7 @@ export default function FoodList({food}:{food: Array<Object>}) {
                     }
                 ]}
                 type="food"
-            />
+            /> */}
         </div>
     )
 }

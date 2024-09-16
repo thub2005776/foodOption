@@ -1,4 +1,4 @@
-from app.models import staff_model
+from app.models import user_model
 from flask import request
 from flask.views import MethodView
 from app import app
@@ -21,7 +21,7 @@ class AdminList(MethodView):
     def post(self):
         if request.json:
             query = {"email": request.json.get("email")}
-            values = staff_model(request=request)
+            values = user_model(request=request)
             password = values["password"]
             hashed = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
             values["password"] = hashed.decode("utf-8")
@@ -73,7 +73,7 @@ class AdminInfo(MethodView):
                 query = {"_id": ObjectId(id)}
                 if request.get_json:
                     update = {
-                        "$set": staff_model(request=request)
+                        "$set": user_model(request=request)
                     }
                     result = admin_collection.find_one_and_update(
                         query,
@@ -135,6 +135,6 @@ class UpdatePassword(MethodView):
         except:
             return "ID (ObjectId) pamram is required."
         
-app.add_url_rule('/api/admin', view_func=AdminList.as_view("AdminList"))
-app.add_url_rule('/api/admin/<id>', view_func=AdminInfo.as_view("AdminInfo"))
-app.add_url_rule('/api/admin/pw/<id>', view_func=UpdatePassword.as_view("UpdatePasswordAd"))
+app.add_url_rule('/api/acc/admin', view_func=AdminList.as_view("AdminList"))
+app.add_url_rule('/api/acc/admin/<id>', view_func=AdminInfo.as_view("AdminInfo"))
+app.add_url_rule('/api/acc/admin/pw/<id>', view_func=UpdatePassword.as_view("UpdatePasswordAdmin"))

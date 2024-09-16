@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useMutation } from "react-query";
-import { addTopicApi, updateTopicApi } from "../../api/foodApi";
+import { addRoleApi, updateRoleApi } from "../../api/user";
 
-export default function TopicModal({ type, topic }: { type: string, topic:Object }) {
+export default function RoleModal({ type, roleItem, roles }: { type: string, roleItem:Object, roles:Object }) {
   const { mutate } = useMutation(
-    addTopicApi, {
+    addRoleApi, {
     onSuccess: (data) => {
       if(type === 'add') {
         document.location.reload()
@@ -16,8 +16,8 @@ export default function TopicModal({ type, topic }: { type: string, topic:Object
     }
   })
 
-  const updateTopic = useMutation(
-    updateTopicApi,
+  const updaterole = useMutation(
+    updateRoleApi,
     {
       onSuccess: (data) => {
         if(data === 'successfull') {
@@ -31,13 +31,15 @@ export default function TopicModal({ type, topic }: { type: string, topic:Object
     }
   )
   const [openModal, setOpenModal] = useState(false);
-  const [name, setName] = useState(topic['name']? topic['name']:'');
+  const [role, setRole] = useState(roleItem['role']? roleItem['role']:'');
+  const [description, setDescription] = useState(roleItem['description']? roleItem['description']:'');
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const values = {
-      "_id": type !== 'add' ? type:null,
-      "name": name,
+      "_id": type !== 'add' ? roleItem['_id'].$oid:null,
+      "role" : role,
+      "description": description,
       "createdAt": type === "add" ? Date(): null,
       "updatedAt": Date(),
     }
@@ -45,7 +47,7 @@ export default function TopicModal({ type, topic }: { type: string, topic:Object
     if(type === 'add') {
       mutate(values)
     } else {
-      updateTopic.mutate(values)
+      updaterole.mutate(values)
     }
     
   }
@@ -73,7 +75,7 @@ export default function TopicModal({ type, topic }: { type: string, topic:Object
 
               <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  Tạo chủ đề
+                  Chức vụ
                 </h3>
                 <button onClick={() => setOpenModal(false)}
                   type="button"
@@ -87,17 +89,30 @@ export default function TopicModal({ type, topic }: { type: string, topic:Object
 
               <div className="p-4 md:p-5">
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                    >Tên chủ đề
+                  <div className="mb-5">
+                    <label htmlFor="role" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >Tên chức vụ
                     </label>
                     <input
                       type="text"
-                      name="name"
-                      id="name"
+                      name="role"
+                      id="role"
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                      onChange={(e) => setName(e.target.value)}
-                      defaultValue={name} />
+                      onChange={(e) => setRole(e.target.value)}
+                      defaultValue={role} />
+                  </div>
+                  <div className="mb-5">
+                    <label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    >Mô tả
+                    </label>
+                    <textarea
+                      rows={3}
+                      name="description"
+                      id="description"
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                      onChange={(e) => setDescription(e.target.value)}
+                      defaultValue={description}
+                      ></textarea>
                   </div>
                   <button type="submit" className="w-fit text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                   >submit

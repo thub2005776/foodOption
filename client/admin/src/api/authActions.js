@@ -6,14 +6,12 @@ const authApi = axios.create({
 });
 
 export const loginApi = async (auth) => {
-    const key = 'admin';
-    const res = await authApi.post(`/login/${key}`, auth);
+    const res = await authApi.post(`/login/admin`, auth);
     return res.data;
 }
 
 export const verifyApi = async () => {
-    const key = 'admin';
-    const res = await authApi.get(`/verify/${key}`);
+    const res = await authApi.get(`/verify/admin`);
     return res.data;
 }
 

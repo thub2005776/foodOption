@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import { BackButton, FGroupList, TagBage, FoodGroupModal } from "../../components";
 import { useLocation } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../features/userSlice";
 import { addFoodApi, getFoodGroupByTid, getFoodByIdApi, updateFoodApi } from "../../api/foodApi";
 import { uploadApi, downloadApi } from "../../api/uploadFileApi";
 
 export default function FoodForm() {
+    const user = useSelector(selectUser);
     const location = useLocation();
     const id = location.pathname.split('/')[3];
     const { data: foodDetail } = useQuery('food', () => getFoodByIdApi(id))
@@ -111,7 +114,7 @@ export default function FoodForm() {
 
 
     return (
-        foodDetail && id && foodGroup &&
+        foodDetail && id && foodGroup && user &&
         <div className='sm:mx-10 mx-4'>
             <div className="fixed ml-1 top-32">
                 <BackButton />

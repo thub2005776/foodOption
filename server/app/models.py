@@ -67,25 +67,6 @@ def recipe_model(request):
     fmodel = {key: value for key, value in fmodel.items() if value is not None}
     return fmodel
 
-# user account model
-def user_model(request):
-    umodel = {
-        "name": request.json.get("name"),
-        "image": request.json.get("image"),
-        "gender": request.json.get("gender"),
-        "birthday": request.json.get("birthday"),
-        "phone": request.json.get("phone"),
-        "address": request.json.get("address"),
-        "email": request.json.get("email"),
-        "password": request.json.get("password"),
-        "createdAt": request.json.get("createdAt"),
-        "updatedAt": request.json.get("updatedAt"),
-        "actived": request.json.get("actived"),
-    }
-
-    umodel = {key: value for key, value in umodel.items() if value is not None}
-    return umodel
-
 # user address model
 def address_model(request):
     model = {
@@ -100,7 +81,7 @@ def address_model(request):
     return model
 
 # admin account model
-def staff_model(request):
+def user_model(request):
     model = {
         "name": request.json.get("name"),
         "gender": request.json.get("gender"),
@@ -160,23 +141,6 @@ def rate_model(request):
     model = {key: value for key, value in model.items() if value is not None}
     return model
 
-# supplier model
-def supplier_model(request):
-    model = {
-        "represent": request.json.get("represent"),
-        "name": request.json.get("name"),
-        "address": request.json.get("address"),
-        "phone": request.json.get("phone"),
-        "email": request.json.get("email"),
-        "password": request.json.get("password"),
-        "createdAt": request.json.get("createdAt"),
-        "updatedAt": request.json.get("updatedAt"),
-        "actived": request.json.get("actived"),
-    }
-
-    model = {key: value for key, value in model.items() if value is not None}
-    return model
-
 #  import coupon model
 def importCoupon_model(request):
     model = {
@@ -214,19 +178,6 @@ def payment_model(request):
         "description": request.json.get("description"),
         "createdAt": request.json.get("createdAt"),
         "updatedAt": request.json.get("updatedAt"),
-    }
-
-    model = {key: value for key, value in model.items() if value is not None}
-    return model
-
-#  delivery model
-def delivery_model(request):
-    model = {
-        "name": request.json.get("name"),
-        "deliveryMan": request.json.get("deliveryMan"),
-        "createdAt": request.json.get("createdAt"),
-        "updatedAt": request.json.get("updatedAt"),
-        "actived": request.json.get("actived"),
     }
 
     model = {key: value for key, value in model.items() if value is not None}

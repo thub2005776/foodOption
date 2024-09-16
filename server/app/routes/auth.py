@@ -7,7 +7,8 @@ import json
 from bson import json_util, ObjectId
 from app.db_connection import db
 user_collection = db['users']
-staff_collection = db['admin']
+admin_collection = db['admin']
+staff_collection = db['staff']
 
 from datetime import datetime, timedelta
 import jwt
@@ -65,8 +66,14 @@ def login(auth):
     if auth == 'user':
         cursor = user_collection.find_one({'phone': phone})
     else:
-        cursor = staff_collection.find_one({'email': email})
+        cursorAdmin = admin_collection.find_one({'email': email})
+        cursorStaff = staff_collection.find_one({'email': email})
 
+        if (cursorAdmin):
+            cursor = cursorAdmin
+        else:
+            cursor = cursorStaff
+            
     if not cursor:
         return "User not found"
     user = json.loads(json_util.dumps(cursor))
@@ -101,8 +108,16 @@ def verify(key):
         if key == 'user':
             cursor = user_collection.find_one({'_id': id})
         else:
-            cursor = staff_collection.find_one({'_id': id})
-
+            cursorAdmin = admin_collection.find_one({'_id': id})
+            cursorStaff = staff_collection.find_one({'_id': id})
+            
+            if (cursorAdmin):
+                cursor = cursorAdmin
+                
+            else:
+                cursor = cursorStaff
+        
+        print(json.loads(json_util.dumps(cursorStaff)))
         return json.loads(json_util.dumps(cursor))
     
     return "Not found token"
