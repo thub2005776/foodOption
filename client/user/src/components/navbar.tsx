@@ -36,22 +36,24 @@ export default function Navbar() {
                 <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
                     <Link to={'/'} className="flex items-center space-x-3 rtl:space-x-reverse">
                         <img src="https://flowbite.com/docs/images/logo.svg" className="h-8" alt="Flowbite Logo" />
-                        <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">FoodOpt</span>
+                        <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
+                            FoodOpt
+                        </span>
                     </Link>
                     <div className="me-10 lg:me-0 flex space-x-10 rtl:space-x-reverse">
                         <Link to={'/foodopt'}>
                             <p className="text-lg font-bold cursor-pointer text-gray-900 hover:text-blue-800 dark:text-gray-600 dark:hover:text-gray-400">
-                                Play
+                                Gợi ý
                             </p>
                         </Link>
                         <Link to={'/trend'}>
                             <p className="text-lg font-bold cursor-pointer text-gray-900 hover:text-blue-800 dark:text-gray-600 dark:hover:text-gray-400">
-                                Hot Trend
+                                Món ăn
                             </p>
                         </Link>
-                        <Link to={'/menu'}>
+                        <Link to={'/topseller'}>
                             <p className="text-lg font-bold cursor-pointer text-gray-900 hover:text-blue-800 dark:text-gray-600 dark:hover:text-gray-400">
-                                Menu
+                                Top Bán Chạy
                             </p>
                         </Link>
                     </div>

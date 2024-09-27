@@ -14,7 +14,7 @@ export default function FoodGroupItems() {
     const code = location.pathname.split('/')[2];
 
     const { data: topic } = useQuery('topic', () => getTopicById(code));
-    const { data: foodgroup } = useQuery('foodgroup', () => getFoodGroupByTid(code));
+    const { data: foodgroup } = useQuery(`${code}_foodgroup`, () => getFoodGroupByTid(code));
     const { data: food } = useQuery('food', () => getFoodByTopicIdApi(code))
 
     const deleteFoodByTid = useMutation(

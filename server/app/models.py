@@ -24,6 +24,7 @@ def food_model(request):
 def topic_model(request):
     fmodel = {
         "name": request.json.get("name"),
+        "image": request.json.get("image"),
         "createdAt": request.json.get("createdAt"),
         "updatedAt": request.json.get("updatedAt"),
     }

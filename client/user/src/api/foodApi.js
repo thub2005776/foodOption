@@ -4,6 +4,17 @@ const foodApi = axios.create({
     baseURL: process.env.REACT_APP_SERVER_URL
 });
 
+// Topic api
+export const getTopic = async () => {
+    const res = await foodApi.get('/api/topic');
+    return res.data;
+}
+
+export const getTopicById = async (id) => {
+    const res = await foodApi.get(`/api/topic/${id}`);
+    return res.data;
+}
+
 // foodGrou api
 export const getFoodGroup = async () => {
     const res = await foodApi.get('/api/foodgroup');
@@ -31,17 +42,27 @@ export const deleteAllFoodGroup = async () => {
 }
 
 // food api
-export const getFood = async () => {
-    const res = await foodApi.get('/api/Food');
+export const getFoodApi = async () => {
+    const res = await foodApi.get('/api/food');
     return res.data;
 }
 
-export const addFood = async () => {
-    const res = await foodApi.post('/api/Food');
+export const getFoodByTopicIdApi = async (topicId) => {
+    const res = await foodApi.get(`/api/food/tid/${topicId}`);
     return res.data;
 }
 
-export const updateFood = async (Food) => {
-    const res = await foodApi.post(`/api/Food/${Food._id}`, Food);
+export const getFoodByIdApi = async (Id) => {
+    const res = await foodApi.get(`/api/food/${Id}`);
+    return res.data;
+}
+
+export const addFoodApi = async (food) => {
+    const res = await foodApi.post('/api/Food', food);
+    return res.data;
+}
+
+export const updateFoodApi = async (Food) => {
+    const res = await foodApi.post(`/api/Food/${Food.id}`, Food);
     return res.data;
 }

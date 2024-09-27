@@ -86,13 +86,13 @@ export default function Home() {
                             <svg className="w-2.5 h-2.5 me-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M5 3a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H5Zm14 18a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h4ZM5 11a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-6a2 2 0 0 0-2-2H5Zm14 2a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h4Z" />
                             </svg>
-                            menu
+                            Best Seller
                         </div>
                         <h2 className="text-gray-900 dark:text-white text-3xl font-extrabold mb-2">
-                            Thực đơn hấp dẫn
+                            Top bán chạy
                         </h2>
                         <p className="text-lg font-normal text-gray-500 dark:text-gray-400 mb-4">
-                            Thực đơn cho một ngày khoẻ mạnh, tận hưởng niềm vui cùng gia đình.
+                            Top món ăn best seller của chúng tôi, được mọi người yêu thích.
                         </p>
                         <Link to={'/trend'}>
                             <div className="text-blue-600 dark:text-white hover:underline font-medium text-lg inline-flex items-center">

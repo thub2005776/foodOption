@@ -4,7 +4,7 @@ import { CommentInput } from '../../components'
 export default function Comments({ com }: { com: Array<Object> }) {
     return (
         com &&
-        <div className="mx-10">
+        <div className="">
             <p className="text-lg font-semibold text-gray-800 dark:text-white mb-6">{com.length} Bình luận</p>
             <CommentInput />
             {com.map((item: Object, i: React.Key) => (
