@@ -22,16 +22,15 @@ export default function FoodDetail() {
 
 
     }
-
-    console.log(food);
     
+    const image = 'https://i.pinimg.com/564x/e0/62/8b/e0628ba2516d4000328adfe8d0ca2088.jpg';
     return (
         food && imageFile &&
         <div className="lg:mx-20 mx-10">
-            <div className="mb-6 lg:flex gap-10">
-                <div className="relative">
-                    <img className="w-80 rounded-md"
-                        src={URL.createObjectURL(imageFile)} alt="food"
+            <div className="mb-6 lg:flex justify-center gap-10">
+                <div className="relative flex-auto w-[30rem]">
+                    <img className=" rounded-md"
+                        src={imageFile instanceof Blob? URL.createObjectURL(imageFile) : image} alt="food"
                     />
                     <div className="absolute top-5 right-4">
                         <FavoritedButton liked={handleLiked} />
@@ -69,7 +68,7 @@ export default function FoodDetail() {
                             </span>
                         </button>
                         <div className="flex gap-2 m-2">
-                            {food['tag'].map((item, i) => (
+                            {Array.isArray(food['tag']) && food['tag'].map((item, i) => (
                                 <TagBage key={i} name={item} />
                             ))}
                         </div>

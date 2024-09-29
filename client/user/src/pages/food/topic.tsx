@@ -14,7 +14,7 @@ export default function Topic() {
     const image = 'https://i.pinimg.com/564x/be/97/8e/be978ee2cde8a1a72402e1af513a5f9f.jpg';
     return (
         topic && food &&
-        <div className="h-screen lg:mx-20 mx-10">
+        <div className="lg:mx-20 mx-10">
             <div className="p-4 m-3 flex gap-5 shadow-md dark:bg-gray-800">
                 <img
                     className="w-44"
@@ -26,7 +26,7 @@ export default function Topic() {
                     <p className="text-gray-500">{food.length} món ăn</p>
                 </div>
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 ms-4">
                     {Array.isArray(food) && food.map((item, i) => (
                         <FoodCard key={i} food={item} /> ))}
                 </div>
