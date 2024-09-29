@@ -8,7 +8,7 @@ import { useNavigate, Link } from 'react-router-dom';
 
 
 export default function Login() {
-    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
@@ -22,7 +22,7 @@ export default function Login() {
                 dispatch(
                     login(data)
                 );
-                navigate('/admin/tab1')
+                navigate('/')
             } 
         },
         onError: (err) => {
@@ -35,13 +35,13 @@ export default function Login() {
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const credentials = {
-            email: email,
-            password: password
+            phone: phone,
+            password: password,
         };
 
         mutate(credentials, {
             onSuccess: (data) => {
-                if (data !== 'Invalid email or password') {
+                if (data === "Login successful") {
                     verify.mutate()
                 } else alert(data)
 
@@ -54,18 +54,21 @@ export default function Login() {
 
     return (
         <div className='pt-32 h-screen'>
+            <p className='text-2xl text-gray-900 dark:text-white text-center font-bold m-3'>
+                Log In
+            </p>
             <form onSubmit={handleSubmit}
                 className="max-w-sm mx-auto bg-blue-100 dark:bg-gray-800 p-4 rounded-md dark:border dark:border-gray-600">
                 <div className="mb-5">
-                    <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                        Your email
+                    <label htmlFor="phone" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Your Phone
                     </label>
                     <input
-                        type="email"
-                        id="email"
+                        type="number"
+                        id="phone"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
                         required
                     />
                 </div>

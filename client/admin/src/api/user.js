@@ -34,56 +34,56 @@ export const deleteUserApi = async (user) => {
 // admin
 
 
-export const addAdminApi = async (admin) => {
-    const res = await userApi.post('/api/admin', admin);
-    return res.data;
-}
+// export const addAdminApi = async (admin) => {
+//     const res = await userApi.post('/api/admin', admin);
+//     return res.data;
+// }
 
-export const updateAdminApi = async (admin) => {
-    const res = await userApi.post(`/api/admin/${admin.id}`, admin);
-    return res.data;
-}
+// export const updateAdminApi = async (admin) => {
+//     const res = await userApi.post(`/api/admin/${admin.id}`, admin);
+//     return res.data;
+// }
 
-export const deleteAdminApi = async (id) => {
-    const res = await userApi.delete(`/api/admin/${id}`);
-    return res.data;
-}
+// export const deleteAdminApi = async (id) => {
+//     const res = await userApi.delete(`/api/admin/${id}`);
+//     return res.data;
+// }
 
 // Supplier
 
 
-export const addSupplierApi = async (supplier) => {
-    const res = await userApi.post('/api/supplier', supplier);
-    return res.data;
-}
+// export const addSupplierApi = async (supplier) => {
+//     const res = await userApi.post('/api/supplier', supplier);
+//     return res.data;
+// }
 
-export const updateSupplierApi = async (supplier) => {
-    const res = await userApi.post(`/api/supplier/${supplier.id}`, supplier);
-    return res.data;
-}
+// export const updateSupplierApi = async (supplier) => {
+//     const res = await userApi.post(`/api/supplier/${supplier.id}`, supplier);
+//     return res.data;
+// }
 
-export const deleteSupplierApi = async (id) => {
-    const res = await userApi.delete(`/api/supplier/${id}`);
-    return res.data;
-}
+// export const deleteSupplierApi = async (id) => {
+//     const res = await userApi.delete(`/api/supplier/${id}`);
+//     return res.data;
+// }
 
 // Staff
 
 
-export const addStaffApi = async (staff) => {
-    const res = await userApi.post('/api/staff', staff);
-    return res.data;
-}
+// export const addStaffApi = async (staff) => {
+//     const res = await userApi.post('/api/staff', staff);
+//     return res.data;
+// }
 
-export const updateStaffApi = async (staff) => {
-    const res = await userApi.post(`/api/staff/${staff.id}`, staff);
-    return res.data;
-}
+// export const updateStaffApi = async (staff) => {
+//     const res = await userApi.post(`/api/staff/${staff.id}`, staff);
+//     return res.data;
+// }
 
-export const deleteStaffApi = async (id) => {
-    const res = await userApi.delete(`/api/staff/${id}`);
-    return res.data;
-}
+// export const deleteStaffApi = async (id) => {
+//     const res = await userApi.delete(`/api/staff/${id}`);
+//     return res.data;
+// }
 
 // role
 export const getRoleApi = async () => {

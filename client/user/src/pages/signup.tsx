@@ -7,9 +7,8 @@ import { useNavigate } from 'react-router-dom';
 
 export default function SignUp() {
     const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
-    const [birth, setBirth] = useState('');
     const navigate = useNavigate();
     const { mutate } = useMutation(signUpApi);
 
@@ -17,14 +16,19 @@ export default function SignUp() {
         e.preventDefault();
         const credentials = {
             name: name,
-            email: email,
+            phone: phone,
             password: password,
-            birth: birth
+            image: 'avatar.jpg',
+            role: 'User',
+            actived: true,
+            createdAt: Date(),
+            updatedAt: Date(),
+            type: 'user',
         };
 
         mutate(credentials, {
             onSuccess: (data) => {
-                if (data !== "Can't sign up this account. Try again." && data !== "Body of the request is empty.") {
+                if (data === "Sign up successfull" ) {
                     navigate('/login')
                 } else alert(data)
             },
@@ -35,7 +39,10 @@ export default function SignUp() {
     };
 
     return (
-        <div className='pt-32 h-screen'>
+        <div className='h-screen'>
+            <p className='text-2xl text-gray-900 dark:text-white text-center font-bold m-3'>
+                Sign Up
+            </p>
             <form onSubmit={handleSubmit}
                 className="max-w-sm mx-auto bg-blue-100 dark:bg-gray-800 p-4 rounded-md dark:border dark:border-gray-600">
                 <div className="mb-5">
@@ -51,15 +58,15 @@ export default function SignUp() {
                     />
                 </div>
                 <div className="mb-5">
-                    <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                        Your email
+                    <label htmlFor="phone" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        Your phone
                     </label>
                     <input
-                        type="email"
-                        id="email"
+                        type="number"
+                        id="phone"
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
                         required
                     />
                 </div>
@@ -75,18 +82,7 @@ export default function SignUp() {
                         onChange={(e) => setPassword(e.target.value)}
                         required />
                 </div>
-                <div className="mb-5">
-                    <label htmlFor="birth" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                        Your birth (full year)
-                    </label>
-                    <input
-                        type="number"
-                        id="birth"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        onChange={(e) => setBirth(e.target.value)}
-                        required
-                    />
-                </div>
+                
                 <button type="submit" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 >Submit
                 </button>

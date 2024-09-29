@@ -6,7 +6,7 @@ import bcrypt
 import json
 from bson import json_util, ObjectId
 from app.db_connection import db
-user_collection = db['users']
+user_collection = db['user']
 admin_collection = db['admin']
 staff_collection = db['staff']
 
@@ -60,8 +60,6 @@ def login(auth):
     email = request.json.get('email')
     password = request.json.get('password')
     
-    if not email or not password:
-        return "Missing phone or password"
     
     if auth == 'user':
         cursor = user_collection.find_one({'phone': phone})
@@ -117,7 +115,6 @@ def verify(key):
             else:
                 cursor = cursorStaff
         
-        print(json.loads(json_util.dumps(cursorStaff)))
         return json.loads(json_util.dumps(cursor))
     
     return "Not found token"
