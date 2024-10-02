@@ -4,32 +4,27 @@ from flask.views import MethodView
 from app import app
 import pymongo
 import json
-import bcrypt
 from bson import json_util, ObjectId
 from app.db_connection import db
-user_collection = db['user']
+address_collection = db['address']
 
-class Users(MethodView):
+class UserAddresses(MethodView):
     def get(self):
-        cursor = user_collection.find()
+        cursor = address_collection.find()
         if cursor:
             return json.loads(json_util.dumps(cursor))
         else:
-            return "Not found any user account."
+            return "Not found any address."
 
     def post(self):
         if request.json:
-            query = {"phone": request.json.get("phone")}
-            values = user_model(request=request)
-            password = values["password"]
-            hashed = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
-            values["password"] = hashed.decode("utf-8")
-            print(values)
+            values = address_model(request=request)
+            query = {"address": values['address']}
             update = {
                 "$set": values
             }
 
-            result = user_collection.find_one_and_update(
+            result = address_collection.find_one_and_update(
                 query,
                 update=update,
                 upsert=True,
@@ -38,28 +33,28 @@ class Users(MethodView):
             if result:
                 return "successfull"
             else:
-                return "Can't insert the user. Try again."
+                return "Can't insert the address. Try again."
         else:
             return "Body of the request is empty."
 
     def delete(self):
-        result = user_collection.delete_many({})
+        result = address_collection.delete_many({})
         if result:
             return "successfull"
         else:
-            return "Can't delete all users. Try again."
+            return "Can't delete all addresses. Try again."
 
-
-class UserInfo(MethodView):
+       
+class UserAddress(MethodView):
     def get(self, id):
         try:
             if id and ObjectId(id):
                 query = {"_id": ObjectId(id)}
-                cursor = user_collection.find_one(query)
+                cursor = address_collection.find_one(query)
                 if cursor:
                     return json.loads(json_util.dumps(cursor))
                 else:
-                    return "The user account don't exist."
+                    return "The address don't exist."
             else:
                 return "ID pamram is empty."
         except:
@@ -72,9 +67,9 @@ class UserInfo(MethodView):
                 query = {"_id": ObjectId(id)}
                 if request.get_json:
                     update = {
-                        "$set": user_model(request=request)
+                        "$set": address_model(request=request)
                     }
-                    result = user_collection.find_one_and_update(
+                    result = address_collection.find_one_and_update(
                         query,
                         update=update,
                         upsert=True,
@@ -83,7 +78,7 @@ class UserInfo(MethodView):
                     if result:
                         return "successfull"
                     else:
-                        return "Can't update the user info. Try again."
+                        return "Can't update the address. Try again."
                 else:
                     return "Body of the request is empty."
             else:
@@ -95,48 +90,76 @@ class UserInfo(MethodView):
         try:
             if id and ObjectId(id):
                 query = {"_id": ObjectId(id)}
-                result = user_collection.delete_one(query)
+                result = address_collection.delete_one(query)
                 if result:
                     return "successfull"
                 else:
-                    return "Can't delete the user info. Try again."
+                    return "Can't delete the address. Try again."
             else:
                 return "This is a DELETE request."
         except:
             return "ID (ObjectId) pamram is required."
 
 
-class UpdatePassword(MethodView):
-    def post(self, id):
+
+class UserAddressByUid(MethodView):
+    def get(self, id):
         try:
             if id and ObjectId(id):
-                query = {"_id": ObjectId(id)}
-                if request.json.get("password"):
-                    password = request.json.get("password")
-                    hashed = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
-                    update = {
-                        "$set": {"password": hashed.decode("utf-8")}
-                    }
-                    result = user_collection.find_one_and_update(
-                        query,
-                        update=update,
-                        upsert=True,
-                        return_document=pymongo.ReturnDocument.AFTER
-                    )
-                    if result:
-                        return "successfull"
-                    else:
-                        return "Can't update new your password. Try again."
+                query = {"userID": id}
+                cursor = address_collection.find(query)
+                if cursor:
+                    return json.loads(json_util.dumps(cursor))
                 else:
-                    return "Body of the request is empty."
+                    return "The address don't exist."
             else:
                 return "ID pamram is empty."
         except:
             return "ID (ObjectId) pamram is required."
 
+    def post(self, id):
+        try:
+            if id and ObjectId(id):
+                print(id)
+                query = {"userID": id}
+                
+                if request.get_json:
+                    update = {
+                        "$set": address_model(request=request)
+                    }
+
+                    result = address_collection.update_many(
+                        query,
+                        update=update,
+                    )
+
+                    print(result)
+                    if result:
+                        return "successfull"
+                    else:
+                        return "not"
+                else:
+                    return "Body of the request is empty."
+            else:
+                return "ID (ObjectId) pamram is required."
+        except:
+            return "Error"
+
+    def delete(self, id):
+        try:
+            if id and ObjectId(id):
+                query = {"userID": ObjectId(id)}
+                result = address_collection.delete_many(query)
+                if result:
+                    return "successfull"
+                else:
+                    return "Can't delete the address. Try again."
+            else:
+                return "This is a DELETE request."
+        except:
+            return "ID (ObjectId) pamram is required."
 
 
-        
-app.add_url_rule('/api/acc/user', view_func=Users.as_view("Users"))
-app.add_url_rule('/api/acc/user/<id>', view_func=UserInfo.as_view("UserInfo"))
-app.add_url_rule('/api/acc/user/pw/<id>', view_func=UpdatePassword.as_view("UpdatePassword"))
+app.add_url_rule('/api/acc/user/address', view_func=UserAddresses.as_view("UserAddresses"))
+app.add_url_rule('/api/acc/user/address/<id>', view_func=UserAddress.as_view("UserAddress"))
+app.add_url_rule('/api/acc/user/address/uid/<id>', view_func=UserAddressByUid.as_view("UserAddressByUid"))

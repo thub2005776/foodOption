@@ -3,8 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { SearchModal } from "../components";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, selectUser } from "../features/userSlice";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { logoutApi } from "../api/authActions";
+import { downloadApi } from "../api/uploadFileApi";
 
 
 export default function Navbar() {
@@ -27,6 +28,8 @@ export default function Navbar() {
     const handleLogout = () => {
         logoutQuery.mutate()
     }
+
+    const { data: imageFile } = useQuery(user? user['phone'] : 'userAvatar', () => downloadApi(user && user['image']))
 
     const imageLink = "https://i.pinimg.com/564x/26/bc/2d/26bc2d1c56c34124378a5a853e26627a.jpg"
 
@@ -65,8 +68,8 @@ export default function Navbar() {
                                 Đăng xuất
                             </button>
                             <Link to={`/acc/${user['_id'].$oid}`}>
-                                <img src={user['imageLink'] ? user['imageLink'] : imageLink}
-                                    className=" h-8 w-8 rounded-full" alt="Flowbite Logo" />
+                                <img src={imageFile instanceof Blob? URL.createObjectURL(imageFile) : imageLink}
+                                    className=" h-8 w-8 rounded-full" alt="avatar" />
                             </Link>
                         </div>
                         : <div className="me-10 lg:me-0 flex space-x-3 rtl:space-x-reverse">

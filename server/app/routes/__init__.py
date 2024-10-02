@@ -14,3 +14,4 @@ from app.routes.foodGroup_route import *
 from app.routes.upload_file_route import *
 from app.routes.topic_route import *
 from app.routes.role_route import *
+from app.routes.address_route import *

@@ -30,6 +30,8 @@ export {default as ForwardButton} from './button/ForwardButton.tsx'
 
 // Accounts
 export {default as AccList} from './acc/accList.tsx'
+export {default as Address} from './acc/address.tsx'
+export {default as AddressItem} from './acc/addressItem.tsx'
 
 // Comments
 export {default as CommItem} from './com/commItem.tsx'

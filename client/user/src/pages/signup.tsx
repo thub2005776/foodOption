@@ -18,6 +18,7 @@ export default function SignUp() {
             name: name,
             phone: phone,
             password: password,
+            gender: 'Nam',
             image: 'avatar.jpg',
             role: 'User',
             actived: true,
