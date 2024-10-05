@@ -1,10 +1,11 @@
 import { Routes, Route } from "react-router-dom"
-import { AccInfo, FoodDetail, Home, Login, SignUp, Play, Trend, TopSeller, Topic, Cart, Order} from "./pages"
+import { AccInfo, FoodDetail, Home, Login, SignUp, Play, Trend, TopSeller, Topic, Cart, Order, Ordered} from "./pages"
 import { Footer, Navbar } from "./components";
 import { useDispatch } from "react-redux";
 import { login } from "./features/userSlice";
 import { useEffect } from "react";
 import axios from "axios";
+
 
 
 function App() {
@@ -38,7 +39,9 @@ function App() {
         <Route path="/food/:id" element={<FoodDetail />} />
         <Route path="/topic/:id" element={<Topic />} />
         <Route path="/cart/:id" element={<Cart />} />
+
         <Route path="/order/:id" element={<Order />} />
+        <Route path="/ordered/:id" element={<Ordered />} />
       </Routes>
       <Footer />
     </div>

@@ -18,7 +18,7 @@ export default function Address({ account }: { account: Object }) {
             <ul className="p-2">
                 {Array.isArray(addresses) &&
                     addresses.map((item, i) => (
-                        <AddressItem key={i} account={account} item={item} />
+                        <AddressItem key={i} item={item} />
                     ))}
             </ul>
         </div>

@@ -7,7 +7,7 @@ def food_model(request):
         "info": request.json.get("info"),
         "cost": request.json.get("cost"),
         "price": request.json.get("price"),
-        "quantity": request.json.get("quantity"),
+        "stored": request.json.get("stored"),
         "image": request.json.get("image"),
         "tag": request.json.get("tag"),
         "rating": request.json.get("rating"),
@@ -72,6 +72,8 @@ def recipe_model(request):
 def address_model(request):
     model = {
         "userID": request.json.get("userID"),
+        "username": request.json.get("username"),
+        "phone": request.json.get("phone"),
         "address": request.json.get("address"),
         "createdAt": request.json.get("createdAt"),
         "updatedAt": request.json.get("updatedAt"),
@@ -160,10 +162,12 @@ def order_model(request):
     model = {
         "userID": request.json.get("userID"),
         "staffID": request.json.get("staffID"),
+        "address": request.json.get("address"),
         "detail": request.json.get("detail"), #json type
         "deliveryMan": request.json.get("deliveryMan"),
         "deliveryTime": request.json.get("deliveryTime"),
         "payment": request.json.get("payment"),
+        "total": request.json.get("total"),
         "createdAt": request.json.get("createdAt"),
         "updatedAt": request.json.get("updatedAt"),
         "stated": request.json.get("stated"),

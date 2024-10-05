@@ -1,6 +1,6 @@
 import React, { RefCallback, useState } from "react";
 
-export default function FavoritedButton({ liked }: { liked: RefCallback<boolean> }) {
+export default function FavoritedButton({ login, liked }: { login: boolean, liked: RefCallback<boolean> }) {
     const [like, setLike] = useState(false);
     const handleremoved = () => {
         setLike(!like);
@@ -8,11 +8,14 @@ export default function FavoritedButton({ liked }: { liked: RefCallback<boolean>
     }
 
     const handleAdd = () => {
-        setLike(!like);
-        liked(false);
+        if (login) {
+            setLike(!like);
+            liked(false);
+        } else { alert('Hãy đăng nhập trước khi thêm vào yêu thích.')}
+
     }
     return (
-        <div className="p-2 rounded-full bg-gray-100/20">
+        <div className="p-2 rounded-full bg-gray-100/35">
             {like ?
                 <div onClick={handleremoved}>
                     <svg

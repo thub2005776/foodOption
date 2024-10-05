@@ -1,26 +1,113 @@
-import React from "react";
-import { AddressModal, CartItem } from "../../components";
+import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Statistic } from 'antd';
+
+import { selectUser } from "../../features/userSlice";
+import { getOrderByIdApi, updateOrderApi } from "../../api/orderApi";
+
+import { AddressModal, CartItem, DateTimeDisplay, SelectAddressModal } from "../../components";
+import { useMutation, useQuery } from "react-query";
+import { getAddressByUidApi } from "../../api/user";
+
 
 export default function Order() {
+    const user = useSelector(selectUser);
+    const location = useLocation();
+    const id = location.pathname.split('/')[2];
+    const navigate = useNavigate();
+
+    const { data: order } = useQuery(id, () => getOrderByIdApi(id));
+    const { data: address } = useQuery(`${id}_address`, () => getAddressByUidApi(user && user['_id'].$oid, 'user'))
+
+    const foodList = order && order['detail'];
+    const [selectedAddress, setSelectedAddress] = useState(Array.isArray(address) && address.find(f => f['actived']))
+    const [payment, setPayMent] = useState('cash');
+
+    const total = () => {
+        var t = 0;
+        if (Array.isArray(foodList)) {
+            foodList.map((item, i) => {
+                t += Number(item['food'].price) * item['quantity']
+            })
+        }
+        return t;
+    }
+
+    const handleUpdated = (res: string) => {
+        setSelectedAddress(Array.isArray(address) && address.find(f => f['_id'].$oid === res))
+    }
+
+    const processing = useMutation(
+        updateOrderApi, {
+            onSuccess(data, variables, context) {
+                if (data['acknowledged']) {
+                    navigate(`/ordered/${data['inserted_id']}`)
+                }
+            }, onError(error, variables, context) {
+                console.log(error);
+                
+            },
+        }
+    )
+
+    const handlePay = () => {
+        const orderValues = {
+            address: selectedAddress,
+            total: total(),
+            payment: payment,
+            updatedAt: Date(),
+            stated: payment === 'cach' ? 'pending' : 'processing',
+        }
+
+        if (payment === 'cash') {
+            processing.mutate(orderValues)
+        }
+        
+    }
+
+
     return (
+        user && order && address &&
         <div className="lg:mx-20 mx-10">
             {/* address */}
-            <div className="mb-10">
-                <div className="flex gap-5">
-                    <svg className="w-10 h-10 text-red-600 dark:text-red-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                        <path fillRule="evenodd" d="M11.906 1.994a8.002 8.002 0 0 1 8.09 8.421 7.996 7.996 0 0 1-1.297 3.957.996.996 0 0 1-.133.204l-.108.129c-.178.243-.37.477-.573.699l-5.112 6.224a1 1 0 0 1-1.545 0L5.982 15.26l-.002-.002a18.146 18.146 0 0 1-.309-.38l-.133-.163a.999.999 0 0 1-.13-.202 7.995 7.995 0 0 1 6.498-12.518ZM15 9.997a3 3 0 1 1-5.999 0 3 3 0 0 1 5.999 0Z" clipRule="evenodd" />
-                    </svg>
-                    <p className="text-gray-900 font-bold text-2xl dark:text-white">
-                        Địa chỉ nhận hàng
-                    </p>
+            <div className="mb-10 shadow-md">
+                <div className="flex justify-between">
+                    <div className="flex gap-5">
+                        <svg className="w-10 h-10 text-red-600 dark:text-red-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path fillRule="evenodd" d="M11.906 1.994a8.002 8.002 0 0 1 8.09 8.421 7.996 7.996 0 0 1-1.297 3.957.996.996 0 0 1-.133.204l-.108.129c-.178.243-.37.477-.573.699l-5.112 6.224a1 1 0 0 1-1.545 0L5.982 15.26l-.002-.002a18.146 18.146 0 0 1-.309-.38l-.133-.163a.999.999 0 0 1-.13-.202 7.995 7.995 0 0 1 6.498-12.518ZM15 9.997a3 3 0 1 1-5.999 0 3 3 0 0 1 5.999 0Z" clipRule="evenodd" />
+                        </svg>
+                        <p className="text-gray-900 font-bold text-2xl dark:text-white">
+                            Địa chỉ nhận hàng
+                        </p>
+                    </div>
+                    {!selectedAddress && <AddressModal type="add" addressItem={{}} />}
                 </div>
-                <div className="p-4 shadow-md flex justify-between">
-                    <p className="text-gray-600">
-                        124/11B, Đ.Mạc Thiên Tích, P.Xuân Khánh, Q.Ninh Kiều, Tp.Cần Thơ
-                    </p>
-                    <AddressModal />
-                </div>
+
+                {/* edit address */}
+                {selectedAddress &&
+                    <div
+                        className="shadow-sm m-6 p-4">
+                        <div>
+                            <p className="text-gray-900 dark:text-white font-bold">{selectedAddress['username']} |
+                                <span className="text-gray-600 font-bold">(+84) {selectedAddress['phone']}</span>
+                            </p>
+                        </div>
+                        <div className="flex justify-between">
+                            <div>
+                                <p className="text-gray-600">{selectedAddress['address']}</p>
+                                <p className="text-green-500 ">
+                                    {selectedAddress['actived'] ? 'Mặc định' : ''}
+                                </p>
+                            </div>
+                            <div className="relative flex ">
+                                <SelectAddressModal address={address} updated={handleUpdated} />
+                            </div>
+                        </div>
+                    </div>}
+
             </div>
+
             {/* Food list */}
             <div className="mb-10">
                 <div className="flex gap-5 mb-3">
@@ -32,21 +119,53 @@ export default function Order() {
                     </p>
                 </div>
                 <div className="">
-                    <CartItem item={{
-                        food: {
-                            price: '25.000',
-                            name: 'abc'
-                        },
-                        quantity: 2,
-                        note: 'abc',
-                    }} />
-
+                    {foodList.map((item: Object, i: React.Key) => (
+                        <CartItem key={i} orderID={order['_id'].$oid} item={item} index={i} />
+                    ))}
                 </div>
             </div>
 
+            {/* Payment */}
+            <div className="mb-10">
+                <div className="flex gap-5">
+                    <svg className="w-10 h-10 text-orange-500 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M18.045 3.007 12.31 3a1.965 1.965 0 0 0-1.4.585l-7.33 7.394a2 2 0 0 0 0 2.805l6.573 6.631a1.957 1.957 0 0 0 1.4.585 1.965 1.965 0 0 0 1.4-.585l7.409-7.477A2 2 0 0 0 21 11.479v-5.5a2.972 2.972 0 0 0-2.955-2.972Zm-2.452 6.438a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z" />
+                    </svg>
+
+                    <p className="text-gray-900 font-bold text-2xl dark:text-white">
+                        Phương thức thanh toán
+                    </p>
+                </div>
+                <div className="p-4 shadow-md">
+                    <ul className="grid w-full gap-6 md:grid-cols-2">
+                        <li>
+                            <input
+                                onChange={() => setPayMent('cash')}
+                                checked={payment === 'cash'}
+                                type="radio" id="hosting-small" name="hosting" value="cash" className="hidden peer" />
+                            <label htmlFor="hosting-small" className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                                <div className="block">
+                                    <div className="w-full text-lg font-semibold">Tiền mặt</div>
+                                    <div className="w-full">Thanh toán sau khi nhận hàng</div>
+                                </div>
+                            </label>
+                        </li>
+                        <li>
+                            <input
+                                onChange={() => setPayMent('transfer')}
+                                type="radio" id="hosting-big" name="hosting" value="transfer" className="hidden peer" />
+                            <label htmlFor="hosting-big" className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                                <div className="block">
+                                    <div className="w-full text-lg font-semibold">Chuyển khoản</div>
+                                    <div className="w-full"></div>
+                                </div>
+                            </label>
+                        </li>
+                    </ul>
+                </div>
+            </div>
 
             {/* Delivery */}
-            {/* address */}
             <div className="mb-10">
                 <div className="flex gap-5">
                     <svg className="w-10 h-10 text-orange-500 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
@@ -57,11 +176,18 @@ export default function Order() {
                         Thông tin giao hàng
                     </p>
                 </div>
-                <div className="p-4 shadow-md flex justify-between">
-                    <p className="text-gray-600">
-                        124/11B, Đ.Mạc Thiên Tích, P.Xuân Khánh, Q.Ninh Kiều, Tp.Cần Thơ
+                <div className="p-4 shadow-md">
+                    <p className="text-gray-600 dark:text-white">
+                        Thời gian chuẩn bị món ăn: Khoảng 10 phút
                     </p>
-                    <AddressModal />
+                    <p className="text-gray-600 dark:text-white">
+                        Thời gian đặt hàng:
+                        <DateTimeDisplay datetime={order['createdAt']} />
+                    </p>
+                    <p className="text-gray-600 dark:text-white">
+                        Đơn vị giao hàng: Nhân viên gần bạn nhất của Foodopt
+                    </p>
+
                 </div>
             </div>
             {/* Total */}
@@ -77,16 +203,17 @@ export default function Order() {
                     </p>
                 </div>
                 <div className="p-4 shadow-md flex justify-between">
-                    <p className="text-gray-600">
-                        124/11B, Đ.Mạc Thiên Tích, P.Xuân Khánh, Q.Ninh Kiều, Tp.Cần Thơ
+                    <p className="mb-3 font-bold text-red-600 dark:text-red-500">
+                        <Statistic valueStyle={{ color: '#e02424' }} value={total()} suffix="đ" />
                     </p>
-                    <button type="button" className="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                    <button
+                    onClick={handlePay}
+                        type="button"
+                        className="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
                         Thanh toán
-                        </button>
+                    </button>
                 </div>
             </div>
-
-
         </div>
     );
 };

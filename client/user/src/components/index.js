@@ -46,6 +46,11 @@ export {default as Delete} from './modal/deleteModal.tsx'
 export {default as Reply} from './modal/replyModal.tsx'
 export {default as ChangPassword} from './modal/changPasswordModal.tsx'
 export {default as AddressModal} from './modal/addressModal.tsx'
+export {default as SelectAddressModal} from './modal/selectAddressModal.tsx'
 
 // Formes
 export {default as AccForm} from './acc/accForm.tsx'
+
+
+// DateTime display
+export {default as DateTimeDisplay} from './dateTimeDisplay.tsx'

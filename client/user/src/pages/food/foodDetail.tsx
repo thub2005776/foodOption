@@ -1,18 +1,24 @@
 import React, { useState } from "react";
 import { Rate } from 'antd';
-import { useQuery } from "react-query";
-import { useLocation } from "react-router-dom";
+import { useMutation, useQuery } from "react-query";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getFoodByIdApi } from "../../api/foodApi";
 import { Comments, FavoritedButton, Rating, TagBage } from "../../components";
 import { downloadApi } from "../../api/uploadFileApi";
 
+import { useSelector } from "react-redux";
+import { selectUser } from "../../features/userSlice";
+import { addOrderApi } from "../../api/orderApi";
+
 export default function FoodDetail() {
+    const user = useSelector(selectUser);
     const location = useLocation();
     const id = location.pathname.split('/')[2];
 
     const { data: food } = useQuery(id, () => getFoodByIdApi(id));
     const {data: imageFile } = useQuery(`${id}_food`, () => downloadApi(food['image']? food['image']:'food.jpg'));
     const [rating, setRating] = useState(0);
+    const navigate = useNavigate();
 
     const handleRated = (num: number) => {
         setRating(num);
@@ -22,18 +28,51 @@ export default function FoodDetail() {
 
 
     }
+
+    const addOrder = useMutation(
+        addOrderApi, {
+            onSuccess(data, variables, context) {
+                if (data['acknowledged']) {
+                    navigate(`/order/${data['inserted_id']}`)
+                    
+                }
+            }, onError(error, variables, context) {
+                console.log(error);
+                
+            },
+        }
+    )
+
+    const handleOrdered = () => {
+        if (user) {
+
+        const values = {
+            userID: user['_id'].$oid,
+            detail: [{
+                food:food,
+                quantity: 1,
+                note: '',
+            }],
+            createdAt: Date(),
+            stated: 'pre-pending',
+        }
+
+        addOrder.mutate(values)
+
+        } else { alert('Hãy đăng nhập trước khi đặt món.')}
+    }
     
     const image = 'https://i.pinimg.com/564x/e0/62/8b/e0628ba2516d4000328adfe8d0ca2088.jpg';
     return (
         food && imageFile &&
         <div className="lg:mx-20 mx-10">
-            <div className="mb-6 lg:flex justify-center gap-10">
+            <div className="mb-6 md:flex justify-center gap-10">
                 <div className="relative flex-auto w-[30rem]">
                     <img className=" rounded-md"
                         src={imageFile instanceof Blob? URL.createObjectURL(imageFile) : image} alt="food"
                     />
                     <div className="absolute top-5 right-4">
-                        <FavoritedButton liked={handleLiked} />
+                        <FavoritedButton login={user} liked={handleLiked} />
                     </div>
                 </div>
 
@@ -62,7 +101,10 @@ export default function FoodDetail() {
                             </div>
 
                         </dl>
-                        <button className="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
+                        <button 
+                        onClick={handleOrdered}
+                        type="button"
+                        className="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-green-400 to-blue-600 group-hover:from-green-400 group-hover:to-blue-600 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800">
                             <span className="relative px-8 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
                                 Order
                             </span>

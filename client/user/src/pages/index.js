@@ -8,4 +8,6 @@ export {default as Play} from './food/play.tsx'
 export {default as Trend} from './food/trend.tsx'
 export {default as TopSeller} from './food/topSeller.tsx'
 export {default as Cart} from './cart/cart.tsx'
+
 export {default as Order} from './order/order.tsx'
+export {default as Ordered} from './order/ordered.tsx'

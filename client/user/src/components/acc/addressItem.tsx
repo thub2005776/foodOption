@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { AddressModal, Delete } from "../../components";
 
-export default function AddressItem({ account,item }: { account:Object, item: Object }) {
+export default function AddressItem({ item }: { item: Object }) {
 
     const handleDelete = (res: boolean) => {
 
@@ -10,10 +10,9 @@ export default function AddressItem({ account,item }: { account:Object, item: Ob
         <li
             className="shadow-sm m-6 p-4">
             <div>
-                <p className="text-gray-900 dark:text-white">{account['name']} |
-                    <span className="text-gray-600">(+84) {account['phone']}</span>
+                <p className="text-gray-900 dark:text-white font-bold">{item['username']} |
+                    <span className="text-gray-600 font-bold">(+84) {item['phone']}</span>
                 </p>
-                <p className="text-gray-600">{account['address']}</p>
             </div>
             <div className="flex justify-between">
                 <div>
