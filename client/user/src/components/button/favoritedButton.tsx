@@ -1,22 +1,29 @@
 import React, { RefCallback, useState } from "react";
+import { getFavoritedFoodByUidApi } from "../../api/favoritedFoodApi";
+import { useQuery } from "react-query";
 
-export default function FavoritedButton({ login, liked }: { login: boolean, liked: RefCallback<boolean> }) {
+export default function FavoritedButton({ login,foodID,  liked }: { login: boolean, foodID:string, liked: RefCallback<boolean> }) {
+    const {data: favorites} = useQuery(foodID, () => getFavoritedFoodByUidApi(login['_id'].$oid))
+
+    const favorited = Array.isArray(favorites) && favorites.find(f => f['foodID'] === foodID);
+
     const [like, setLike] = useState(false);
+
     const handleremoved = () => {
         setLike(!like);
-        liked(true);
+        liked(false);
     }
 
     const handleAdd = () => {
         if (login) {
             setLike(!like);
-            liked(false);
+            liked(true);
         } else { alert('Hãy đăng nhập trước khi thêm vào yêu thích.')}
 
     }
     return (
         <div className="p-2 rounded-full bg-gray-100/35">
-            {like ?
+            {like || favorited?
                 <div onClick={handleremoved}>
                     <svg
                         className="w-7 h-7 text-red-600 " aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">

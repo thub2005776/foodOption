@@ -7,7 +7,6 @@ from app.routes.supplier_route import *
 from app.routes.deliveryMan_route import *
 from app.routes.food_route import *
 from app.routes.recipe_route import *
-from app.routes.favorite_route import *
 from app.routes.comment_route import *
 from app.routes.foodIdea_route import *
 from app.routes.foodGroup_route import *
@@ -16,3 +15,4 @@ from app.routes.topic_route import *
 from app.routes.role_route import *
 from app.routes.address_route import *
 from app.routes.order_route import *
+from app.routes.favorited_food_route import *

@@ -9,6 +9,7 @@ import { downloadApi } from "../../api/uploadFileApi";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../features/userSlice";
 import { addOrderApi } from "../../api/orderApi";
+import { addFavoritedFoodApi, deleteFavoritedFoodApi } from "../../api/favoritedFoodApi";
 
 export default function FoodDetail() {
     const user = useSelector(selectUser);
@@ -24,8 +25,48 @@ export default function FoodDetail() {
         setRating(num);
     }
 
-    const handleLiked = (result: boolean) => {
+    const [favoritedID, setFavoritedID] = useState('');
 
+    const addFavoritedFood = useMutation(
+        addFavoritedFoodApi, {
+            onSuccess(data, variables, context) {
+                if (data['acknowledged']) {
+                    setFavoritedID(data['inserted_id'])
+                    alert('Đã thêm vào yêu thích!');
+                }
+            },
+            onError(error, variables, context) {
+                console.log(error);
+            },
+        }
+    )
+
+    const removeFavoritedFood = useMutation(
+        deleteFavoritedFoodApi, {
+            onSuccess(data, variables, context) {
+                if (data === "successfull") {
+                    alert('Đã loại bỏ khỏi yêu thích!');
+                }
+            },
+            onError(error, variables, context) {
+                console.log(error);
+            },
+        }
+    )
+
+    const handleFavortied = (result: boolean) => {
+        const values = {
+            userID: user['_id'].$oid,
+            foodID: food['_id'].$oid,
+            detail: food,
+            createdAt: Date(),
+            updatedAt: result?  Date(): null,
+        }
+
+        
+        if (result) {
+            addFavoritedFood.mutate(values);
+        } else { removeFavoritedFood.mutate(favoritedID) }
 
     }
 
@@ -72,7 +113,7 @@ export default function FoodDetail() {
                         src={imageFile instanceof Blob? URL.createObjectURL(imageFile) : image} alt="food"
                     />
                     <div className="absolute top-5 right-4">
-                        <FavoritedButton login={user} liked={handleLiked} />
+                        <FavoritedButton login={user} foodID={food['_id']?.$oid} liked={handleFavortied} />
                     </div>
                 </div>
 
