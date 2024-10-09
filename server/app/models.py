@@ -171,7 +171,7 @@ def order_model(request):
         "total": request.json.get("total"),
         "createdAt": request.json.get("createdAt"),
         "updatedAt": request.json.get("updatedAt"),
-        "stated": request.json.get("stated"),
+        "status": request.json.get("status"),
     }
 
     model = {key: value for key, value in model.items() if value is not None}

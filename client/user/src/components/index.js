@@ -20,6 +20,9 @@ export {default as TopicCard} from './food/topicCard.tsx'
 // Cart
 export {default as CartItem} from './cart/cartItem.tsx'
 
+// orderes
+export {default as FoodItem} from './order/foodItem.tsx'
+export {default as Orderes} from './order/orderes.tsx'
 
 // components
 export {default as FavoritedButton} from './button/favoritedButton.tsx'
@@ -54,3 +57,6 @@ export {default as AccForm} from './acc/accForm.tsx'
 
 // DateTime display
 export {default as DateTimeDisplay} from './dateTimeDisplay.tsx'
+
+//Bages
+export {default as Status} from './bages/status.tsx' 

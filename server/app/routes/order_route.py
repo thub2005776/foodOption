@@ -11,7 +11,7 @@ order_collection = db['order']
 
 class OrderDetails(MethodView):
     def get(self):
-        cursor = order_collection.find()
+        cursor = order_collection.find().sort('updatedAt',pymongo.DESCENDING)
         if cursor:
             return json.loads(json_util.dumps(cursor))
         else:
@@ -66,15 +66,9 @@ class OrderDetail(MethodView):
                     result = order_collection.find_one_and_update(
                         query,
                         update=update,
-                        upsert=True,
-                        return_document=pymongo.ReturnDocument.AFTER
                     )
                     if result:
-                        result_dict = {
-                            "acknowledged": result.acknowledged,
-                            "inserted_id": str(result.inserted_id)
-                        }
-                        return json.loads(json_util.dumps(result_dict))
+                        return "successfull"
                     else:
                         return "Can't update the order detail. Try again."
                 else:
@@ -104,7 +98,7 @@ class OrderesByUid(MethodView):
         try:
             if id and ObjectId(id):
                 query = {"userID": id}
-                cursor = order_collection.find(query)
+                cursor = order_collection.find(query).sort('updatedAt',pymongo.DESCENDING)
                 if cursor:
                     return json.loads(json_util.dumps(cursor))
                 else:

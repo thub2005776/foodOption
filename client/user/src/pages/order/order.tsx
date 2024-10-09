@@ -18,7 +18,7 @@ export default function Order() {
     const navigate = useNavigate();
 
     const { data: order } = useQuery(id, () => getOrderByIdApi(id));
-    const { data: address } = useQuery(`${id}_address`, () => getAddressByUidApi(user && user['_id'].$oid, 'user'))
+    const { data: address } = useQuery(`${id}_address`, () => getAddressByUidApi(user['_id'] && user['_id'].$oid, 'user'))
 
     const foodList = order && order['detail'];
     const [selectedAddress, setSelectedAddress] = useState(Array.isArray(address) && address.find(f => f['actived']))
@@ -40,30 +40,32 @@ export default function Order() {
 
     const processing = useMutation(
         updateOrderApi, {
-            onSuccess(data, variables, context) {
-                if (data['acknowledged']) {
-                    navigate(`/ordered/${data['inserted_id']}`)
-                }
-            }, onError(error, variables, context) {
-                console.log(error);
-                
-            },
-        }
+        onSuccess(data, variables, context) {
+            if (data === "successfull") {
+                navigate(`/ordered/${id}`)
+            }
+        }, onError(error, variables, context) {
+            console.log(error);
+
+        },
+    }
     )
 
     const handlePay = () => {
         const orderValues = {
+            id: id,
             address: selectedAddress,
             total: total(),
             payment: payment,
             updatedAt: Date(),
-            stated: payment === 'cach' ? 'pending' : 'processing',
+            status: payment === 'cach' ? 'pending' : 'processing',
         }
 
         if (payment === 'cash') {
             processing.mutate(orderValues)
         }
-        
+
+
     }
 
 
@@ -119,9 +121,12 @@ export default function Order() {
                     </p>
                 </div>
                 <div className="">
-                    {foodList.map((item: Object, i: React.Key) => (
-                        <CartItem key={i} orderID={order['_id'].$oid} item={item} index={i} />
-                    ))}
+                    <ul className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+
+                            {foodList.map((item: Object, i: React.Key) => (
+                                <CartItem key={i} orderID={order['_id'].$oid} item={item} index={i} />
+                            ))}
+                    </ul>
                 </div>
             </div>
 
@@ -207,7 +212,7 @@ export default function Order() {
                         <Statistic valueStyle={{ color: '#e02424' }} value={total()} suffix="đ" />
                     </p>
                     <button
-                    onClick={handlePay}
+                        onClick={handlePay}
                         type="button"
                         className="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
                         Thanh toán

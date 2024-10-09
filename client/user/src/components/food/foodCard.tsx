@@ -6,7 +6,7 @@ import { downloadApi } from "../../api/uploadFileApi";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../features/userSlice";
 
-import { Statistic } from 'antd';
+import { Statistic, message } from 'antd';
 import { addFavoritedFoodApi, deleteFavoritedFoodApi } from "../../api/favoritedFoodApi";
 
 export default function FoodCard({ food }:{ food: Object }) {
@@ -14,16 +14,24 @@ export default function FoodCard({ food }:{ food: Object }) {
     const { data: imageFile } = useQuery(food['image'] ? food['_id'].$oid : 'foodImage', () => downloadApi(food['image'] ? food['image'] : 'food.jpg'));
 
     const [favoritedID, setFavoritedID] = useState('');
+    const [messageApi, contextHolder] = message.useMessage();
 
     const addFavoritedFood = useMutation(
         addFavoritedFoodApi, {
             onSuccess(data, variables, context) {
                 if (data['acknowledged']) {
                     setFavoritedID(data['inserted_id'])
-                    alert('Đã thêm vào yêu thích!');
+                    messageApi.open({
+                        type: 'success',
+                        content: 'Đã thêm vào yêu thích!',
+                      });
                 }
             },
             onError(error, variables, context) {
+                messageApi.open({
+                    type: 'error',
+                    content: 'Đã xảy ra lỗi. Vui lòng thử lại sau.',
+                  });
                 console.log(error);
             },
         }
@@ -33,10 +41,17 @@ export default function FoodCard({ food }:{ food: Object }) {
         deleteFavoritedFoodApi, {
             onSuccess(data, variables, context) {
                 if (data === "successfull") {
-                    alert('Đã loại bỏ khỏi yêu thích!');
+                    messageApi.open({
+                        type: 'success',
+                        content: 'Đã loại bỏ khỏi yêu thích!',
+                      });
                 }
             },
             onError(error, variables, context) {
+                messageApi.open({
+                    type: 'error',
+                    content: 'Đã xảy ra lỗi. Vui lòng thử lại sau.',
+                  });
                 console.log(error);
             },
         }

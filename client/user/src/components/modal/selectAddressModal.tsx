@@ -24,8 +24,8 @@ export default function SelectAddressModal({ address, updated }: { address: Arra
 
             {/* <!-- Main modal --> */}
             {open &&
-            <div id="select-modal" className="overflow-y-auto overflow-x-hidden top-0 right-0 z-[1000] justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                <div className="absolute right-0 p-4 w-[30rem] max-h-full">
+            <div id="select-modal" className="overflow-y-auto overflow-x-hidden top-0 right-0  justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                <div className="absolute z-[10000] right-0 p-4 w-[30rem] max-h-full">
                     {/* <!-- Modal content --> */}
                     <div className="relative bg-blue-50 rounded-lg shadow dark:bg-gray-700">
                         {/* <!-- Modal header --> */}

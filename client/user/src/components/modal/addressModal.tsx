@@ -111,8 +111,8 @@ export default function AddressModal({ type, addressItem }: { type: string, addr
 
             {/* <!-- Main modal --> */}
             {open &&
-                <div id="select-modal" className="overflow-y-auto overflow-x-hidden z-[10000] justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                    <div className="absolute top-[15%] right-[5%] p-4 w-full max-w-md max-h-full">
+                <div id="select-modal" className="overflow-y-auto overflow-x-hidden  justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+                    <div className="absolute z-[1000] top-[15%] right-[5%] p-4 w-full max-w-md max-h-full">
                         {/* <!-- Modal content --> */}
                         <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
                             {/* <!-- Modal header --> */}

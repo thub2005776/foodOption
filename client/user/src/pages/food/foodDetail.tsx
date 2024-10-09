@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Rate } from 'antd';
+import { Rate, message } from 'antd';
 import { useMutation, useQuery } from "react-query";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getFoodByIdApi } from "../../api/foodApi";
@@ -19,6 +19,7 @@ export default function FoodDetail() {
     const { data: food } = useQuery(id, () => getFoodByIdApi(id));
     const {data: imageFile } = useQuery(`${id}_food`, () => downloadApi(food['image']? food['image']:'food.jpg'));
     const [rating, setRating] = useState(0);
+    const [messageApi, contextHolder] = message.useMessage();
     const navigate = useNavigate();
 
     const handleRated = (num: number) => {
@@ -32,10 +33,17 @@ export default function FoodDetail() {
             onSuccess(data, variables, context) {
                 if (data['acknowledged']) {
                     setFavoritedID(data['inserted_id'])
-                    alert('Đã thêm vào yêu thích!');
+                    messageApi.open({
+                        type: 'success',
+                        content: 'Đã thêm vào yêu thích!',
+                      });
                 }
             },
             onError(error, variables, context) {
+                messageApi.open({
+                    type: 'error',
+                    content: 'Đã xảy ra lỗi. Vui lòng thử lại sau.',
+                  });
                 console.log(error);
             },
         }
@@ -45,10 +53,17 @@ export default function FoodDetail() {
         deleteFavoritedFoodApi, {
             onSuccess(data, variables, context) {
                 if (data === "successfull") {
-                    alert('Đã loại bỏ khỏi yêu thích!');
+                    messageApi.open({
+                        type: 'success',
+                        content: 'Đã loại bỏ khỏi yêu thích!',
+                      });
                 }
             },
             onError(error, variables, context) {
+                messageApi.open({
+                    type: 'error',
+                    content: 'Đã xảy ra lỗi. Vui lòng thử lại sau.',
+                  });
                 console.log(error);
             },
         }
@@ -60,7 +75,7 @@ export default function FoodDetail() {
             foodID: food['_id'].$oid,
             detail: food,
             createdAt: Date(),
-            updatedAt: result?  Date(): null,
+            updatedAt: Date(),
         }
 
         
@@ -74,12 +89,19 @@ export default function FoodDetail() {
         addOrderApi, {
             onSuccess(data, variables, context) {
                 if (data['acknowledged']) {
+                    messageApi.open({
+                        type: 'success',
+                        content: 'Đặt hàng thành công!',
+                      });
                     navigate(`/order/${data['inserted_id']}`)
                     
                 }
             }, onError(error, variables, context) {
+                messageApi.open({
+                    type: 'error',
+                    content: 'Đã xảy ra lỗi. Vui lòng thử lại sau.',
+                  });
                 console.log(error);
-                
             },
         }
     )
@@ -95,7 +117,7 @@ export default function FoodDetail() {
                 note: '',
             }],
             createdAt: Date(),
-            stated: 'pre-pending',
+            stated: 'pending',
         }
 
         addOrder.mutate(values)

@@ -40,3 +40,8 @@ export const updateOrderFoodApi = async (order) => {
     const res = await OrderApi.post(`/api/order/${order.orderID}/${order.index}`, order);
     return res.data;
 }
+
+export const deleteOrderApi = async (id) => {
+    const res = await OrderApi.delete(`/api/order/${id}`);
+    return res.data;
+}
