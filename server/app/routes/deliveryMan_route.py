@@ -7,7 +7,7 @@ import json
 import bcrypt
 from bson import json_util, ObjectId
 from app.db_connection import db
-deliveryMan_collection = db['deliveryMan']
+deliveryMan_collection = db['deliveryman']
 
 
 class DeliveryManList(MethodView):
@@ -135,6 +135,6 @@ class UpdatePassword(MethodView):
         except:
             return "ID (ObjectId) pamram is required."
         
-app.add_url_rule('/api/acc/deliveryMan', view_func=DeliveryManList.as_view("deliveryManList"))
-app.add_url_rule('/api/acc/deliveryMan/<id>', view_func=DeliveryManInfo.as_view("deliveryManInfo"))
-app.add_url_rule('/api/acc/deliveryMan/pw/<id>', view_func=UpdatePassword.as_view("UpdatePasswordDeliveryMan"))
+app.add_url_rule('/api/acc/deliveryman', view_func=DeliveryManList.as_view("deliveryManList"))
+app.add_url_rule('/api/acc/deliveryman/<id>', view_func=DeliveryManInfo.as_view("deliveryManInfo"))
+app.add_url_rule('/api/acc/deliveryman/pw/<id>', view_func=UpdatePassword.as_view("UpdatePasswordDeliveryMan"))

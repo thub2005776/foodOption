@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Statistic , message} from 'antd';
 
 import { selectUser } from "../../features/userSlice";
 import { deleteOrderApi, getOrderByIdApi, updateOrderApi } from "../../api/orderApi";
 
-import { AddressModal, CartItem, DateTimeDisplay, Delete, SelectAddressModal, Status } from "../../components";
+import { AddressModal, BackButton, CartItem, DateTimeDisplay, Delete, SelectAddressModal, Status } from "../../components";
 import { useMutation, useQuery } from "react-query";
 import { getAddressByUidApi } from "../../api/user";
 
@@ -15,6 +15,8 @@ export default function Ordered() {
     const user = useSelector(selectUser);
     const location = useLocation();
     const id = location.pathname.split('/')[2];
+    const navigate = useNavigate();
+
     const { data: order } = useQuery(id, () => getOrderByIdApi(id));
     const { data: address } = useQuery(`${id}_address`, () => getAddressByUidApi(user['_id'] && user['_id'].$oid, 'user'))
 
@@ -94,13 +96,20 @@ export default function Ordered() {
         }
     }
 
-
     return (
         user && order && address &&
         <div className="lg:mx-20 mx-10">
             <p className="text-3xl font-extrabold text-gray-900 dark:text-white text-center m-10">
                 HOÁ ĐƠN
             </p>
+            
+            <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            onClick={() => navigate(`/trend`)}>
+            <svg className="w-6 h-6text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14M5 12l4-4m-4 4 4 4" />
+            </svg>
+            Trở về
+        </button>
             <Status status={order['status']}/>
             {/* address */}
             <div className="mb-10 shadow-md">

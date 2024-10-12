@@ -105,3 +105,20 @@ export const deleteRoleApi = async (id) => {
     const res = await userApi.delete(`/api/role/${id}`);
     return res.data;
 }
+
+// address by uid
+export const getAddressByUidApi = async (id, type) => {
+    const res = await userApi.get(`/api/acc/${type}/address/uid/${id}`);
+    return res.data;
+}
+
+
+export const updateAddressByUidApi = async (address) => {
+    const res = await userApi.post(`/api/acc/${address.type}/address/uid/${address.id}`, address);
+    return res.data;
+}
+
+export const deleteAddressByUidApi = async (address) => {
+    const res = await userApi.delete(`/api/acc/${address.type}/address/uid/${address.id}`);
+    return res.data;
+}

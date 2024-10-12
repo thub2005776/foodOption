@@ -21,6 +21,8 @@ export {default as Item} from './list/item.tsx'
 export {default as FoodList} from './food/foodList.tsx'
 export {default as Rankings} from './home/rankings.tsx'
 export {default as RankingsItem} from './home/RankingsItem.tsx'
+export {default as TimeLater} from './dateTimeDisplay/timeLater.tsx'
+export {default as TimeAgo} from './dateTimeDisplay/dateTimeMoment.tsx'
 
 // accounts
 export {default as AccList} from './acc/accList.tsx'
@@ -50,6 +52,7 @@ export {default as Delete} from './modal/deleteModal.tsx'
 export {default as Reply} from './modal/replyModal.tsx'
 export {default as AddressModal} from './modal/addressModal.tsx'
 export {default as RoleModal} from './modal/roleModal.tsx'
+export {default as SelectUserModal} from './modal/selectUserModal.tsx'
 
 // formes
 export {default as ChangPassword} from './modal/changPasswordModal.tsx'
@@ -61,6 +64,13 @@ export {default as UserForm} from './order/userForm.tsx'
 // order
 export {default as OrderList} from './order/orderList.tsx'
 export {default as OrderItem} from './order/orderItem.tsx'
+export {default as OrderTable} from './order/orderTable.tsx'
+export {default as FoodItem} from './order/foodItem.tsx'
+export {default as OrderDisplay} from './order/orderes.tsx'
+export {default as DateTimeDisplay} from './order/dateTimeDisplay.tsx'
+export {default as Status} from './order/status.tsx'
+export {default as Address} from './order/address.tsx'
+export {default as AddressItem} from './order/addressItem.tsx'
 
 // import coupon
 export {default as ImportCouponList} from './importCoupon/importCouponList.tsx'

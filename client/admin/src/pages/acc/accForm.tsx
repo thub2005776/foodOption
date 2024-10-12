@@ -19,7 +19,7 @@ export default function AccForm() {
     const type = location.pathname.split('/')[2];
 
     const { data: userAcc } = useQuery(id, () => getUserByIdApi(id, type));
-    const { data: imageFile } = useQuery(type, () => downloadApi(userAcc?.image ? userAcc['image'] : 'food.jpg'))
+    const { data: imageFile } = useQuery(userAcc?.image && userAcc['image'], () => downloadApi(userAcc?.image ? userAcc['image'] : 'food.jpg'))
 
     const [open, setOpen] = useState(false);
     const [openRole, setOpenRole] = useState(false);
@@ -127,7 +127,7 @@ export default function AccForm() {
                 className=" md:flex justify-center gap-5 dark:bg-gray-800  p-2 rounded-md">
                 <div className="">
                     <div className="">
-                        {imageLink.length > 0 && imageFile ?
+                        {imageLink.length > 0 || imageFile instanceof Blob ?
                             <div className="w-64 h-64">
                                 <img src={imageLink || URL.createObjectURL(imageFile)} className="w-64 h-64 rounded-full" alt="UploadedImage" />
                                 <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">

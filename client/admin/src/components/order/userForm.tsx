@@ -1,65 +1,67 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useQuery } from "react-query";
-import { downloadApi } from "../../api/uploadFileApi";
+import { useMutation, useQuery } from "react-query";
+import { getUserApi } from "../../api/user";
+import { SelectUserModal } from "../../components";
+import { updateOrderApi } from "../../api/orderApi";
 
-export default function UserForm() {
+export default function UserForm({ userID, orderID, type }: { userID: string, orderID: string, type: string }) {
     const [open, setOpen] = useState(false);
-    const [userInfo, setUserInfo] = useState('abc')
-    const { data: imageFile } = useQuery('imageFile', () => downloadApi('food.jpg'))
+
+    const { data: useres } = useQuery(type, () => getUserApi(type));
+
+    const [userInfo, setUserInfo] = useState(useres && useres.find(f => f['_id'].$oid === userID));
+    
+    
+    const updatedOrder = useMutation(
+        updateOrderApi, {
+        onError(error, variables, context) {
+            console.log(error);
+
+        },
+    })
+
+    const handledSlected = (result: string) => {
+        setUserInfo(Array.isArray(useres) && useres.find(f => f['_id'].$oid === result));
+
+        if (type === 'staff') {
+            const values = {
+                staffID: result,
+                id: orderID,
+                updatedAt: Date(),
+            }
+            updatedOrder.mutate(values)
+        } else {
+            const values = {
+                deliverymanID: result,
+                id: orderID,
+                updatedAt: Date(),
+            }
+            updatedOrder.mutate(values)
+        }
+
+    }
 
     return (
-        imageFile &&
+        useres &&
         <div className="relative">
+            {userInfo && 
             <div
                 onClick={() => setOpen(!open)}
                 className='flex justify-between gap-5 md:w-72 bg-blue-50 dark:bg-gray-800 p-4 rounded-md'>
-                    <img className="w-10 h-10 rounded-full" src={URL.createObjectURL(imageFile)} alt="" />
-                    <div className="flex-1 ">
-                        <div className="text-base text-gray-900 dark:text-gray-400 font-semibold">Neil Sims</div>
-                        <div className="font-normal text-gray-500">phone</div>
-                        <div className="flex justify-between">
-                            <Link to={`/acc/:id`}>
-                                <div className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                                    Chi tiết
-                                </div>
-                            </Link>
-                            <div>
-                                {open ?
-                                    <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m5 15 7-7 7 7" />
-                                    </svg>
-                                    : <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m19 9-7 7-7-7" />
-                                    </svg>}
+                <div className="flex-1 ">
+                    <div className="text-base text-gray-900 dark:text-gray-400 font-semibold">{userInfo['name']}</div>
+                    <div className="font-normal text-gray-500">(+84) {userInfo['phone']}</div>
+                    <div className="flex justify-between">
+                        <Link to={`/acc/${type}/${userID}`}>
+                            <div className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                                Chi tiết
                             </div>
-
-                        </div>
-
+                        </Link>
                     </div>
-
-            </div>
-
-
-            {open &&
-                <div id="dropdown" className="absolute z-[100] w-full h-60 bg-white divide-y divide-gray-100 rounded-b-lg shadow dark:bg-gray-700">
-                    <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
-                        <li
-                            onClick={() => {
-                                setOpen(false)
-                                setUserInfo('bcd')
-                            }}
-                            className='flex justify-evenly cursor-pointer'>
-                            <div className="flex gap-5">
-                                <img className="w-10 h-10 rounded-full" src={URL.createObjectURL(imageFile)} alt="" />
-                                <div className="ps-3">
-                                    <div className="text-base text-gray-900 dark:text-gray-400 font-semibold">Neil Sims</div>
-                                    <div className="font-normal text-gray-500">phone</div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>}
+                </div>
+            </div>}
+            {type !== 'user' && !userInfo && <SelectUserModal useres={useres} updated={handledSlected} />}
         </div>
     );
 };

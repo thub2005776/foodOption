@@ -2,32 +2,30 @@ import React, { useState } from "react";
 import { selectUser } from "../../features/userSlice";
 import { useSelector } from "react-redux";
 import { useMutation } from "react-query";
-import { addAddressApi, updateAddressApi, updateAddressByUidApi } from "../../api/user";
+import { addAddressApi, updateAddressApi, updateAddressByUidApi, updateUserApi } from "../../api/user";
 
 export default function AddressModal({ type, addressItem }: { type: string, addressItem: Object }) {
     const user = useSelector(selectUser);
     const [open, setOpen] = useState(false);
 
-    const [username, setUsername] = useState(addressItem['username']? addressItem['username']: '');
-    const [phone, setPhone] = useState(addressItem['phone']? addressItem['phone']: '');
+    const [username, setUsername] = useState(addressItem['username'] ? addressItem['username'] : '');
+    const [phone, setPhone] = useState(addressItem['phone'] ? addressItem['phone'] : '');
     const [newAddress, setNewAddress] = useState(addressItem['address'] ? addressItem['address'] : '');
     const [actived, setActived] = useState(addressItem['actived'] ? addressItem['actived'] : false);
 
-    const handleSetLocation = () => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                var latitude = position.coords.latitude;
-                var longitude = position.coords.longitude;
-                console.log(latitude);
-                console.log(longitude);
-
-
-            });
-        } else {
-            // Xử lý khi trình duyệt không hỗ trợ Geolocation API
-            alert("trình duyệt không hỗ trợ Geolocation API")
-        }
-    }
+    // const handleSetLocation = () => {
+    //     if (navigator.geolocation) {
+    //         navigator.geolocation.getCurrentPosition(function (position) {
+    //             var latitude = position.coords.latitude;
+    //             var longitude = position.coords.longitude;
+    //             console.log(latitude);
+    //             console.log(longitude);
+    //         });
+    //     } else {
+    //         // Xử lý khi trình duyệt không hỗ trợ Geolocation API
+    //         alert("trình duyệt không hỗ trợ Geolocation API")
+    //     }
+    // }
 
     const updateActiveAddress = useMutation(
         updateAddressByUidApi, {
@@ -48,8 +46,7 @@ export default function AddressModal({ type, addressItem }: { type: string, addr
             } else alert(data)
         },
         onError: (err) => { console.log(err) }
-    }
-    )
+    })
 
     const updateAddress = useMutation(
         updateAddressApi, {
@@ -59,8 +56,18 @@ export default function AddressModal({ type, addressItem }: { type: string, addr
             } else alert(data)
         },
         onError: (err) => { console.log(err) }
-    }
-    )
+    })
+
+    const updateAddressOfUser = useMutation(
+        updateUserApi, {
+        onSuccess(data) {
+            if (data === 'successfull') {
+                console.log(data);
+                
+            } else alert(data)
+        },
+        onError: (err) => { console.log(err) }
+    })
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -84,6 +91,15 @@ export default function AddressModal({ type, addressItem }: { type: string, addr
                 id: user['_id']!.$oid,
                 actived: false,
             }
+
+            const addressOfUser = {
+                AddressID: addressItem['_id']?.$oid,
+                id: user['_id']!.$oid,
+                type: 'user',
+                address: newAddress,
+            }
+
+            updateAddressOfUser.mutate(addressOfUser);
             updateActiveAddress.mutate(value)
         }
 
@@ -137,21 +153,21 @@ export default function AddressModal({ type, addressItem }: { type: string, addr
                                         <div className="flex gap-4 mb-6">
                                             <div className="p-4">
                                                 <label htmlFor="username" className="text-gray-900 dark:text-white">Tên người nhận</label>
-                                                <input 
-                                                onChange={(e) => setUsername(e.target.value)}
-                                                type="text" 
-                                                id="username"
-                                                className="w-full border border-blue-600 rounded-md text-sm text-gray-900 bg-white dark:bg-gray-800 focus:ring-0 dark:text-white"
-                                                defaultValue={username}/>
+                                                <input
+                                                    onChange={(e) => setUsername(e.target.value)}
+                                                    type="text"
+                                                    id="username"
+                                                    className="w-full border border-blue-600 rounded-md text-sm text-gray-900 bg-white dark:bg-gray-800 focus:ring-0 dark:text-white"
+                                                    defaultValue={username} />
                                             </div>
                                             <div className="p-4">
                                                 <label htmlFor="phone" className="text-gray-900 dark:text-white">Số điện thoại</label>
-                                                <input 
-                                                onChange={(e) => setPhone(e.target.value)}
-                                                type="number" 
-                                                id="phone"
-                                                className="w-full border border-blue-600 rounded-md text-sm text-gray-900 bg-white dark:bg-gray-800 focus:ring-0 dark:text-white"
-                                                defaultValue={phone}/>
+                                                <input
+                                                    onChange={(e) => setPhone(e.target.value)}
+                                                    type="number"
+                                                    id="phone"
+                                                    className="w-full border border-blue-600 rounded-md text-sm text-gray-900 bg-white dark:bg-gray-800 focus:ring-0 dark:text-white"
+                                                    defaultValue={phone} />
                                             </div>
                                         </div>
                                         <div className="px-4 py-2 mb-3 bg-white rounded-t-lg dark:bg-gray-800">
@@ -174,7 +190,6 @@ export default function AddressModal({ type, addressItem }: { type: string, addr
                                             </button>
                                             <div className="flex ps-0 space-x-1 rtl:space-x-reverse sm:ps-2">
                                                 <button
-                                                    onClick={handleSetLocation}
                                                     type="button"
                                                     className="inline-flex justify-center items-center p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
                                                     <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">

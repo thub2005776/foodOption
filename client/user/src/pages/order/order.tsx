@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Statistic } from 'antd';
+import { Statistic, message } from 'antd';
 
 import { selectUser } from "../../features/userSlice";
-import { getOrderByIdApi, updateOrderApi } from "../../api/orderApi";
+import { getOrderByIdApi, updateOrderApi, deleteOrderApi } from "../../api/orderApi";
 
-import { AddressModal, CartItem, DateTimeDisplay, SelectAddressModal } from "../../components";
+import { AddressModal, OrderItem, DateTimeDisplay, SelectAddressModal, Delete } from "../../components";
 import { useMutation, useQuery } from "react-query";
 import { getAddressByUidApi } from "../../api/user";
 
@@ -23,6 +23,7 @@ export default function Order() {
     const foodList = order && order['detail'];
     const [selectedAddress, setSelectedAddress] = useState(Array.isArray(address) && address.find(f => f['actived']))
     const [payment, setPayMent] = useState('cash');
+    const [messageApi, contextHolder] = message.useMessage();
 
     const total = () => {
         var t = 0;
@@ -51,6 +52,29 @@ export default function Order() {
     }
     )
 
+    const cancelCheck = useMutation(
+        deleteOrderApi, {
+        onSuccess(data, variables, context) {
+            if (data === "successfull") {
+                navigate(-1)
+            }
+        }, onError(error, variables, context) {
+            messageApi.open({
+                type: 'error',
+                content: 'Đã xảy ra lỗi. Hãy thử lại sau.',
+            });
+            console.log(error);
+
+        },
+    }
+    )
+
+    const handleCancel = (res: boolean) => {
+        if (res) {
+            cancelCheck.mutate(id);
+        }
+    }
+
     const handlePay = () => {
         const orderValues = {
             id: id,
@@ -67,7 +91,6 @@ export default function Order() {
 
 
     }
-
 
     return (
         user && order && address &&
@@ -123,9 +146,9 @@ export default function Order() {
                 <div className="">
                     <ul className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
 
-                            {foodList.map((item: Object, i: React.Key) => (
-                                <CartItem key={i} orderID={order['_id'].$oid} item={item} index={i} />
-                            ))}
+                        {foodList.map((item: Object, i: React.Key) => (
+                            <OrderItem key={i} orderID={order['_id'].$oid} item={item} index={i} />
+                        ))}
                     </ul>
                 </div>
             </div>
@@ -211,12 +234,16 @@ export default function Order() {
                     <p className="mb-3 font-bold text-red-600 dark:text-red-500">
                         <Statistic valueStyle={{ color: '#e02424' }} value={total()} suffix="đ" />
                     </p>
-                    <button
-                        onClick={handlePay}
-                        type="button"
-                        className="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
-                        Thanh toán
-                    </button>
+                    <div className="flex">
+                        <Delete name='Đơn hàng' res={handleCancel} />
+                        <button
+                            onClick={handlePay}
+                            type="button"
+                            className="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                            Đặt hàng
+                        </button>
+                    </div>
+
                 </div>
             </div>
         </div>

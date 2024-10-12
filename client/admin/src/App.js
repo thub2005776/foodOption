@@ -38,6 +38,8 @@ function App() {
         <Route path="/acc/supplier/add" element={<AccForm />} />
         <Route path="/acc/staff/add" element={<AccForm />} />
         <Route path="/acc/staff/:id" element={<AccInfo />} />
+        <Route path="/acc/deliveryman/add" element={<AccForm />} />
+        <Route path="/acc/deliveryman/:id" element={<AccInfo />} />
         <Route path="/acc/admin/add" element={<AccForm />} />
         <Route path="/acc/admin/:id" element={<AccInfo />} />
         <Route path="/acc/role" element={<Role />} />

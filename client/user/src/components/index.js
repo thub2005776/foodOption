@@ -23,6 +23,7 @@ export {default as CartItem} from './cart/cartItem.tsx'
 // orderes
 export {default as FoodItem} from './order/foodItem.tsx'
 export {default as Orderes} from './order/orderes.tsx'
+export {default as OrderItem} from './order/orderItem.tsx'
 
 // components
 export {default as FavoritedButton} from './button/favoritedButton.tsx'

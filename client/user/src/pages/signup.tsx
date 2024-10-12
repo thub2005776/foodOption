@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useMutation } from 'react-query';
 import { signUpApi } from '../api/authActions';
 import { useNavigate } from 'react-router-dom';
+import { addCartApi } from '../api/cartApi';
 
 
 
@@ -11,6 +12,19 @@ export default function SignUp() {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
     const { mutate } = useMutation(signUpApi);
+
+    const addCart = useMutation(
+        addCartApi, {
+            onSuccess(data, variables, context) {
+                if(data === "successfull") {
+                    navigate('/login')
+                }
+            },
+            onError(error, variables, context) {
+                console.log(error);
+            },
+        }
+    )
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -29,8 +43,15 @@ export default function SignUp() {
 
         mutate(credentials, {
             onSuccess: (data) => {
-                if (data === "Sign up successfull" ) {
-                    navigate('/login')
+                if (data['_id']) {
+                    const values = {
+                        userID: data['_id'].$oid,
+                        detail: [],
+                        createdAt: Date(),
+                        updatedAt: Date(),
+                    }
+                    
+                    addCart.mutate(values)
                 } else alert(data)
             },
             onError: (err) => {

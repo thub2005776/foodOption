@@ -57,6 +57,20 @@ def favorited_model(request):
     model = {key: value for key, value in model.items() if value is not None}
     return model
 
+
+# cart food model
+def cart_model(request):
+    model = {
+        "userID": request.json.get("userID"),
+        "detail": request.json.get("detail"),  #json type
+        "createdAt": request.json.get("createdAt"),
+        "updatedAt": request.json.get("updatedAt"),
+    }
+
+    model = {key: value for key, value in model.items() if value is not None}
+    return model
+
+
 # recipe model
 def recipe_model(request):
     fmodel = {
@@ -165,7 +179,7 @@ def order_model(request):
         "staffID": request.json.get("staffID"),
         "address": request.json.get("address"),
         "detail": request.json.get("detail"), #json type
-        "deliveryMan": request.json.get("deliveryMan"),
+        "deliverymanID": request.json.get("deliverymanID"),
         "deliveryTime": request.json.get("deliveryTime"),
         "payment": request.json.get("payment"),
         "total": request.json.get("total"),

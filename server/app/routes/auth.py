@@ -46,7 +46,7 @@ def signup():
                 return_document=pymongo.ReturnDocument.AFTER
             )
             if result:
-                return "Sign up successfull"
+                return json.loads(json_util.dumps(result))
             else:
                 return "Can't sign up this account. Try again."
     else:
