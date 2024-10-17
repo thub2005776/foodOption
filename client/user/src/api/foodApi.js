@@ -58,11 +58,16 @@ export const getFoodByIdApi = async (Id) => {
 }
 
 export const addFoodApi = async (food) => {
-    const res = await foodApi.post('/api/Food', food);
+    const res = await foodApi.post('/api/food', food);
     return res.data;
 }
 
 export const updateFoodApi = async (Food) => {
-    const res = await foodApi.post(`/api/Food/${Food.id}`, Food);
+    const res = await foodApi.post(`/api/food/${Food.id}`, Food);
+    return res.data;
+}
+
+export const updateStoredFoodApi = async (Food) => {
+    const res = await foodApi.post(`/api/food/stored/${Food.id}`, Food);
     return res.data;
 }

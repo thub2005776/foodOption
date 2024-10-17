@@ -72,8 +72,7 @@ class UserAddress(MethodView):
                     result = address_collection.find_one_and_update(
                         query,
                         update=update,
-                        upsert=True,
-                        return_document=pymongo.ReturnDocument.AFTER
+                        upsert=True
                     )
                     if result:
                         return "successfull"

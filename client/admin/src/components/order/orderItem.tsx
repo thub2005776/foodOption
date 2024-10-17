@@ -10,6 +10,7 @@ export default function OrderItem({ item }: { item: Object }) {
     const [status, setStatus] = useState(item['status']);
 
     const statusList = [
+        { tab: 'processing', title: 'Đang xử lý' },
         { tab: 'preparing', title: 'Đang chuẩn bị' },
         { tab: 'delivering', title: 'Đang giao' },
         { tab: 'completed', title: 'Hoàn thành' },
@@ -48,10 +49,10 @@ export default function OrderItem({ item }: { item: Object }) {
                 </div>
             </td>
             <td className="py-4 relative">
-                <div className="absolute top-7 z-[100000]">
+                <div className="relative">
                     <button
                         onClick={() => setOpen(!open)}
-                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+                        className="absolute top-0 z-[100] text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
                         {status}
                         <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
@@ -60,13 +61,13 @@ export default function OrderItem({ item }: { item: Object }) {
 
                     {/* <!-- Dropdown menu --> */}
                     {open &&
-                        <div className=" bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                        <div className="absolute top-10 z-[100000] bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
                             <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" >
                                 {statusList.map((item, i) => (
                                     <li key={i}>
                                         <div
                                             onClick={() => setStatus(item.tab)}
-                                            className={`${status === item.tab && "bg-gray-100 dark:bg-gray-600 "}  "block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"`}>
+                                            className={`${status === item.tab && "bg-gray-100 dark:bg-gray-600 "}  "block px-4 py-2 hover:bg-gray-100 cursor-pointer dark:hover:bg-gray-600 dark:hover:text-white"`}>
                                             {item.tab}
                                         </div>
                                     </li>
@@ -96,7 +97,7 @@ export default function OrderItem({ item }: { item: Object }) {
                 </Link>
             </th>
             <td className="px-6 py-4">
-                <Statistic value={item['total']} suffix="đ" />
+                <Statistic  value={item['total']} suffix="đ" />
             </td>
             <td className="px-6 py-4">
                 <div className="font-medium text-blue-600 dark:text-blue-500">

@@ -63,23 +63,25 @@ class CartDetail(MethodView):
     def post(self, id):
         try:
             if id and ObjectId(id):
-                query = {"_id": ObjectId(id)}
                 if request.get_json:
-                    update = {
-                        "$set": cart_model(request=request)
+                    userID = id
+                    foodID =  request.json.get("foodID")
+                    remover_element = request.json.get("element")
+                    query = {
+                            "userID": userID,
+                            "detail.food._id.$oid": foodID
                     }
-                    result = cart_collection.find_one_and_update(
-                        query,
-                        update=update,
-                    )
-                    if result:
+
+                    update_query = {"$pull": {"detail": remover_element}}
+                    result = cart_collection.update_one(query, update_query)
+                    if result.modified_count > 0:
                         return "successfull"
                     else:
-                        return "Can't update the cart detail. Try again."
+                        return "None document is deleted."
                 else:
                     return "Body of the request is empty."
             else:
-                return "ID pamram is empty."
+                return "This is a DELETE request."
         except:
             return "ID (ObjectId) pamram is required."
 

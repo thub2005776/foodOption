@@ -5,6 +5,12 @@ export default function Status({ status }: { status: string }) {
         <p className="mb-6 text-gray-900 dark:text-white font-semibold">
             Trạng thái
 
+            {status === "pending" &&
+                <span className="bg-gray-100 text-gray-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">
+                    Chờ duyệt
+                </span>
+            }
+
             {status === "processing" &&
                 <span className="bg-blue-100 text-blue-800  font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
                       Đang xử lý

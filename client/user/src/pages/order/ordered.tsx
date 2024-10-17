@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Statistic , message} from 'antd';
+import { Statistic } from 'antd';
 
 import { selectUser } from "../../features/userSlice";
 import { deleteOrderApi, getOrderByIdApi, updateOrderApi } from "../../api/orderApi";
 
-import { AddressModal, BackButton, CartItem, DateTimeDisplay, Delete, SelectAddressModal, Status } from "../../components";
+import { AddressModal, OrderItem, DateTimeDisplay, Delete, SelectAddressModal, Status, AddressDisplay } from "../../components";
 import { useMutation, useQuery } from "react-query";
 import { getAddressByUidApi } from "../../api/user";
+import { updateStoredFoodApi } from "../../api/foodApi";
 
 
 export default function Ordered() {
@@ -20,10 +21,11 @@ export default function Ordered() {
     const { data: order } = useQuery(id, () => getOrderByIdApi(id));
     const { data: address } = useQuery(`${id}_address`, () => getAddressByUidApi(user['_id'] && user['_id'].$oid, 'user'))
 
-    const [messageApi, contextHolder] = message.useMessage();
     const foodList = order && order['detail'];
-    const [selectedAddress, setSelectedAddress] = useState(order['address'])
-    
+    const defaltAddress = Array.isArray(address) && address.find(f => f['actived'])
+
+    const [selectedAddress, setSelectedAddress] = useState(order && order['address'] ? order['address'] : defaltAddress)
+
     const total = () => {
         var t = 0;
         if (Array.isArray(foodList)) {
@@ -40,44 +42,18 @@ export default function Ordered() {
 
     const processing = useMutation(
         updateOrderApi, {
-            onSuccess(data, variables, context) {
-                if (data === "successfull") {
-                    messageApi.open({
-                        type: 'success',
-                        content: 'Đơn hàng cập nhật thành công!',
-                      });
-                    document.location.reload()
-                }
-            }, onError(error, variables, context) {
-                messageApi.open({
-                    type: 'error',
-                    content: 'Đã xảy ra lỗi. Hãy thử lại sau.',
-                  });
-                console.log(error);
+        onSuccess(data, variables, context) {
+            if (data === "successfull") {
+                console.log(data);
                 
-            },
-        }
+            }
+        }, onError(error, variables, context) {
+            console.log(error);
+
+        },
+    }
     )
 
-    const cancelCheck = useMutation(
-        deleteOrderApi, {
-            onSuccess(data, variables, context) {
-                if (data === "successfull") {
-                    messageApi.open({
-                        type: 'success',
-                        content: 'Đơn hàng đã huỷ thành công!',
-                      });
-                }
-            }, onError(error, variables, context) {
-                messageApi.open({
-                    type: 'error',
-                    content: 'Đã xảy ra lỗi. Hãy thử lại sau.',
-                  });
-                console.log(error);
-                
-            },
-        }
-    )
     const handleChanged = () => {
         const orderValues = {
             id: id,
@@ -87,12 +63,50 @@ export default function Ordered() {
         }
 
         processing.mutate(orderValues);
-        
+
     }
 
-    const handleCancel = (res:boolean) => {
+    const updatedStoredFood = useMutation(
+        updateStoredFoodApi, {
+        onSuccess(data, variables, context) {
+            if (data !== "successfull") {
+                console.log(data);
+
+            }
+        }, onError(error, variables, context) {
+            console.log(error);
+        },
+    })
+
+    const updatedStatus = useMutation(
+        updateOrderApi, {
+            onSuccess(data, variables, context) {
+                if (data == "successfull") {
+                    navigate('/trend')
+                }
+            }, onError(error, variables, context) {
+                console.log(error);
+            },
+        }
+    )
+
+    const handleCancel = (res: boolean) => {
         if (res) {
-            cancelCheck.mutate(id);
+            Array.isArray(order['detail']) && order['detail'].forEach(e => {
+                const foodValues = {
+                    id: e['food']['_id'].$oid,
+                    quantity: e['quantity'],
+                    operation: '+',
+                }
+                updatedStoredFood.mutate(foodValues);
+            })
+            const checkValues = {
+                id: order['_id'].$oid,
+                updatedAt: Date(),
+                status: 'canceled',
+            }
+    
+            updatedStatus.mutate(checkValues);
         }
     }
 
@@ -102,15 +116,16 @@ export default function Ordered() {
             <p className="text-3xl font-extrabold text-gray-900 dark:text-white text-center m-10">
                 HOÁ ĐƠN
             </p>
-            
-            <button type="button" className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            onClick={() => navigate(`/trend`)}>
-            <svg className="w-6 h-6text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14M5 12l4-4m-4 4 4 4" />
-            </svg>
-            Trở về
-        </button>
-            <Status status={order['status']}/>
+
+            <button type="button" className="m-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                onClick={() => navigate(`/trend`)}>
+                <svg className="w-6 h-6text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14M5 12l4-4m-4 4 4 4" />
+                </svg>
+                Tiếp tục đặt món
+            </button>
+            <Status status={order['status']} />
+
             {/* address */}
             <div className="mb-10 shadow-md">
                 <div className="flex justify-between">
@@ -122,31 +137,17 @@ export default function Ordered() {
                             Địa chỉ nhận hàng
                         </p>
                     </div>
-                    {!selectedAddress && <AddressModal type="add" addressItem={{}} />}
+                    {!order['address'] && (order['status'] === 'pending' || order['status'] === 'processing') &&
+                        <AddressModal type="add" addressItem={{}} />}
                 </div>
 
                 {/* edit address */}
-                {selectedAddress &&
-                    <div
-                        className="shadow-sm m-6 p-4">
-                        <div>
-                            <p className="text-gray-900 dark:text-white font-bold">{selectedAddress['username']} |
-                                <span className="text-gray-600 font-bold">(+84) {selectedAddress['phone']}</span>
-                            </p>
-                        </div>
-                        <div className="flex justify-between">
-                            <div>
-                                <p className="text-gray-600">{selectedAddress['address']}</p>
-                                <p className="text-green-500 ">
-                                    {selectedAddress['actived'] ? 'Mặc định' : ''}
-                                </p>
-                            </div>
-                            <div className="relative flex ">
-                                <SelectAddressModal address={address} updated={handleUpdated} />
-                            </div>
-                        </div>
+                {(selectedAddress || order['address']) &&
+                    <div>
+                        {(order['status'] === 'pending' || order['status'] === 'processing') &&
+                            <SelectAddressModal address={address} updated={handleUpdated} />}
+                        <AddressDisplay address={selectedAddress || order['address']} />
                     </div>}
-
             </div>
 
             {/* Food list */}
@@ -161,7 +162,7 @@ export default function Ordered() {
                 </div>
                 <div className="">
                     {foodList.map((item: Object, i: React.Key) => (
-                        <CartItem key={i} orderID={order['_id'].$oid} item={item} index={i} />
+                        <OrderItem key={i} order={order} item={item} index={i} />
                     ))}
                 </div>
             </div>
@@ -178,13 +179,13 @@ export default function Ordered() {
                     </p>
                 </div>
                 <div className="p-4 shadow-md">
-                            <div className="inline-flex items-center justify-between w-fit p-5 bg-white border  rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 border-blue-600 text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
-                                <div className="block">
-                                    <div className="w-full text-lg font-semibold">
-                                        {order['payment'] === "cash"? "Tiền mặt":"Chuyển khoản"}
-                                    </div>
-                                </div>
+                    <div className="inline-flex items-center justify-between w-fit p-5 bg-white border  rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 border-blue-600 text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
+                        <div className="block">
+                            <div className="w-full text-lg font-semibold">
+                                {order['payment'] === "transfer" ? "Chuyển khoản" : "Tiền mặt"}
                             </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -229,15 +230,16 @@ export default function Ordered() {
                     <p className="mb-3 font-bold text-red-600 dark:text-red-500">
                         <Statistic valueStyle={{ color: '#e02424' }} value={total()} suffix="đ" />
                     </p>
-                    <div className="flex ">
-                        <Delete name='Đơn hàng' res={handleCancel} />
-                    <button
-                        onClick={handleChanged}
-                        type="button"
-                        className="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
-                        Lưu thay đổi
-                    </button> 
-                    </div>
+                    {(order['status'] === 'pending' || order['status'] === 'processing') &&
+                        <div className="flex ">
+                            <Delete name='Đơn hàng' res={handleCancel} />
+                            <button
+                                onClick={handleChanged}
+                                type="button"
+                                className="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                                Lưu thay đổi
+                            </button>
+                        </div>}
                 </div>
             </div>
         </div>

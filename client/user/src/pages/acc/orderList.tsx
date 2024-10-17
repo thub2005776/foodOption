@@ -19,7 +19,7 @@ export default function OrderList() {
     const [tab, setTab] = useState('all');
     const status = [
         { tab: 'all', title: 'Tất cả' },
-        { tab: 'pending', title: 'Chờ thanh toán' },
+        { tab: 'pending', title: 'Chờ duyệt' },
         { tab: 'processing', title: 'Đang xử lý' },
         { tab: 'preparing', title: 'Đang chuẩn bị' },
         { tab: 'delivering', title: 'Đang giao' },

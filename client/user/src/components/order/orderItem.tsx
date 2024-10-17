@@ -3,20 +3,35 @@ import { Statistic } from 'antd';
 import { useMutation, useQuery } from "react-query";
 import { downloadApi } from "../../api/uploadFileApi";
 import { updateOrderFoodApi } from "../../api/orderApi";
+import { getFoodByIdApi, updateStoredFoodApi } from "../../api/foodApi";
 
-export default function OrderItem({ orderID, item, index }: { orderID: string, item: Object, index: React.Key }) {
+export default function OrderItem({ order, item, index }: { order: Object, item: Object, index: React.Key }) {
     const { data: imageFile } = useQuery(item['food'].image, () => downloadApi(item['food'] ? item['food'].image : 'food.jpg'));
+    const {data: food } = useQuery(item && item['food']['_id'].$oid, () => getFoodByIdApi(item  && item['food'] && item['food']['_id'].$oid))
 
     const [quantity, setQuantity] = useState(item && item['quantity']);
     const [note, setNote] = useState(item && item['note']);
-    const [err, setErr] = useState('  ');
-
+    const message = food && food['stored']? food['stored']: '';
+    const [err, setErr] = useState('');
+    
     const updatedFood = {
-        orderID: orderID,
+        orderID: order && order['_id'].$oid,
         index: index,
         note: note,
         quantity: quantity,
     }
+
+    const updatedStoredFood = useMutation(
+        updateStoredFoodApi, {
+        onSuccess(data, variables, context) {
+            if (data !== "successfull") {
+                console.log(data);
+
+            }
+        }, onError(error, variables, context) {
+            console.log(error);
+        },
+    })
 
     const updatedOrderFood = useMutation(
         updateOrderFoodApi, {
@@ -28,26 +43,43 @@ export default function OrderItem({ orderID, item, index }: { orderID: string, i
         }, onError(error, variables, context) {
             console.log(error);
         },
-    }
-    )
+    })
 
     const handleDesQuantity = () => {
-        if (quantity > 0) {
+        if (quantity > 1) {
             setQuantity(quantity - 1);
             setErr('  ')
 
             updatedFood.quantity = quantity - 1;
             updatedOrderFood.mutate(updatedFood);
-        } else { setErr('Số lượng đã về 0.') }
+
+            const foodValues = {
+                id: food['_id'].$oid,
+                quantity: quantity - 1,
+                operation: '+',
+            }
+            updatedStoredFood.mutate(foodValues);
+        } else { setErr('Số lượng không thể về 0.') }
     }
 
     const handleIncQuantity = () => {
-        if (quantity < 10) {
+        if (quantity < food['stored']) {
             setQuantity(quantity + 1);
             setErr('  ')
 
             updatedFood.quantity = quantity + 1;
             updatedOrderFood.mutate(updatedFood);
+
+            const foodValues = {
+                id: food['_id'].$oid,
+                quantity: quantity + 1,
+                operation: '-',
+            }
+            if (food['stored'] >= quantity + 1) {
+                 updatedStoredFood.mutate(foodValues);
+                 updatedOrderFood.mutate(updatedFood);
+            } else { setErr('Số lượng đã đến giới hạn tối đa.') }
+           
         } else { setErr('Số lượng đã đến giới hạn tối đa.') }
     }
 
@@ -77,35 +109,42 @@ export default function OrderItem({ orderID, item, index }: { orderID: string, i
                     <textarea
                         onChange={(e) => {
                             setNote(e.target.value)
+                            updatedFood.note = e.target.value
                             updatedOrderFood.mutate(updatedFood);
                         }}
                         id="message"
                         rows={4}
-                        className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        className={`${order['status'] !== 'pending' && order['status'] !== 'processing' && "cursor-not-allowed "} block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
                         placeholder="Thêm ghi chú..."
+                        readOnly={order['status'] !== 'pending' && order['status'] !== 'processing'}
                         defaultValue={note}></textarea>
                 </div>
                 <div className="pt-16 ps-5">
                     <div className="flex gap-5 h-fit">
-                        <div
+                        {(order['status'] === 'pending' || order['status'] === 'processing') && 
+                         <div
                             onClick={handleDesQuantity}
                             className="p-1 cursor-pointer rounded-md border border-orange-500 dark:border-orange-400">
                             <svg className="w-6 h-6 text-orange-500" aria-hidden="true" xmlns="http:www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14" />
                             </svg>
-                        </div>
+                        </div>}
                         <p className="text-gray-900 dark:text-white font-bold text-lg">
                             {quantity}
                         </p>
+                        
+                        {(order['status'] === 'pending' || order['status'] === 'processing') &&
                         <div
                             onClick={handleIncQuantity}
                             className="p-1 cursor-pointer rounded-md bg-orange-500 dark:bg-orange-400">
                             <svg className="w-6 h-6 text-white" aria-hidden="true" xmlns="http:www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14m-7 7V5" />
                             </svg>
-                        </div>
+                        </div>}
                     </div>
-                    <p className="text-sm text-red-600">{err}</p>
+                    {message && <p className="text-sm text-green-600">Còn lại {message} phần ăn</p>}
+                    {err && <p className="text-sm text-red-600">{err}</p>}
+                    
                 </div>
             </li>
     );

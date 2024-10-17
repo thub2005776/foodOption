@@ -13,19 +13,6 @@ export default function AddressModal({ type, addressItem }: { type: string, addr
     const [newAddress, setNewAddress] = useState(addressItem['address'] ? addressItem['address'] : '');
     const [actived, setActived] = useState(addressItem['actived'] ? addressItem['actived'] : false);
 
-    // const handleSetLocation = () => {
-    //     if (navigator.geolocation) {
-    //         navigator.geolocation.getCurrentPosition(function (position) {
-    //             var latitude = position.coords.latitude;
-    //             var longitude = position.coords.longitude;
-    //             console.log(latitude);
-    //             console.log(longitude);
-    //         });
-    //     } else {
-    //         // Xử lý khi trình duyệt không hỗ trợ Geolocation API
-    //         alert("trình duyệt không hỗ trợ Geolocation API")
-    //     }
-    // }
 
     const updateActiveAddress = useMutation(
         updateAddressByUidApi, {
@@ -96,7 +83,7 @@ export default function AddressModal({ type, addressItem }: { type: string, addr
                 AddressID: addressItem['_id']?.$oid,
                 id: user['_id']!.$oid,
                 type: 'user',
-                address: newAddress,
+                address: address,
             }
 
             updateAddressOfUser.mutate(addressOfUser);

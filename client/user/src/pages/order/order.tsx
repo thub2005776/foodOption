@@ -6,7 +6,7 @@ import { Statistic, message } from 'antd';
 import { selectUser } from "../../features/userSlice";
 import { getOrderByIdApi, updateOrderApi, deleteOrderApi } from "../../api/orderApi";
 
-import { AddressModal, OrderItem, DateTimeDisplay, SelectAddressModal, Delete } from "../../components";
+import { AddressModal, OrderItem, DateTimeDisplay, SelectAddressModal, Delete, PayPalButton } from "../../components";
 import { useMutation, useQuery } from "react-query";
 import { getAddressByUidApi } from "../../api/user";
 
@@ -21,7 +21,8 @@ export default function Order() {
     const { data: address } = useQuery(`${id}_address`, () => getAddressByUidApi(user['_id'] && user['_id'].$oid, 'user'))
 
     const foodList = order && order['detail'];
-    const [selectedAddress, setSelectedAddress] = useState(Array.isArray(address) && address.find(f => f['actived']))
+
+    const [selectedAddress, setSelectedAddress] = useState(user['address'])
     const [payment, setPayMent] = useState('cash');
     const [messageApi, contextHolder] = message.useMessage();
 
@@ -43,7 +44,7 @@ export default function Order() {
         updateOrderApi, {
         onSuccess(data, variables, context) {
             if (data === "successfull") {
-                navigate(`/ordered/${id}`)
+                navigate(`/payment/successfull/${id}`)
             }
         }, onError(error, variables, context) {
             console.log(error);
@@ -56,7 +57,7 @@ export default function Order() {
         deleteOrderApi, {
         onSuccess(data, variables, context) {
             if (data === "successfull") {
-                navigate(-1)
+                navigate(-2)
             }
         }, onError(error, variables, context) {
             messageApi.open({
@@ -66,8 +67,7 @@ export default function Order() {
             console.log(error);
 
         },
-    }
-    )
+    })
 
     const handleCancel = (res: boolean) => {
         if (res) {
@@ -75,21 +75,23 @@ export default function Order() {
         }
     }
 
+    const orderValues = {
+        id: id,
+        address: selectedAddress,
+        total: total(),
+        payment: payment,
+        updatedAt: Date(),
+        status: payment === 'cach' ? 'pending' : 'processing',
+    }
+    const handleSuccessfullyPayOut = (res: boolean) => {
+        if (res) {
+            orderValues.payment = 'transfer'
+            handlePay()
+        }
+    }
+
     const handlePay = () => {
-        const orderValues = {
-            id: id,
-            address: selectedAddress,
-            total: total(),
-            payment: payment,
-            updatedAt: Date(),
-            status: payment === 'cach' ? 'pending' : 'processing',
-        }
-
-        if (payment === 'cash') {
-            processing.mutate(orderValues)
-        }
-
-
+        processing.mutate(orderValues)
     }
 
     return (
@@ -145,9 +147,8 @@ export default function Order() {
                 </div>
                 <div className="">
                     <ul className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-
                         {foodList.map((item: Object, i: React.Key) => (
-                            <OrderItem key={i} orderID={order['_id'].$oid} item={item} index={i} />
+                            <OrderItem key={i} order={order} item={item} index={i} />
                         ))}
                     </ul>
                 </div>
@@ -172,7 +173,7 @@ export default function Order() {
                                 checked={payment === 'cash'}
                                 type="radio" id="hosting-small" name="hosting" value="cash" className="hidden peer" />
                             <label htmlFor="hosting-small" className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
-                                <div className="block">
+                                <div className="block p-7">
                                     <div className="w-full text-lg font-semibold">Tiền mặt</div>
                                     <div className="w-full">Thanh toán sau khi nhận hàng</div>
                                 </div>
@@ -183,16 +184,12 @@ export default function Order() {
                                 onChange={() => setPayMent('transfer')}
                                 type="radio" id="hosting-big" name="hosting" value="transfer" className="hidden peer" />
                             <label htmlFor="hosting-big" className="inline-flex items-center justify-between w-full p-5 text-gray-500 bg-white border border-gray-200 rounded-lg cursor-pointer dark:hover:text-gray-300 dark:border-gray-700 dark:peer-checked:text-blue-500 peer-checked:border-blue-600 peer-checked:text-blue-600 hover:text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:bg-gray-800 dark:hover:bg-gray-700">
-                                <div className="block">
-                                    <div className="w-full text-lg font-semibold">Chuyển khoản</div>
-                                    <div className="w-full"></div>
-                                </div>
+                                <PayPalButton success={handleSuccessfullyPayOut} />
                             </label>
                         </li>
                     </ul>
                 </div>
             </div>
-
             {/* Delivery */}
             <div className="mb-10">
                 <div className="flex gap-5">
@@ -243,7 +240,6 @@ export default function Order() {
                             Đặt hàng
                         </button>
                     </div>
-
                 </div>
             </div>
         </div>

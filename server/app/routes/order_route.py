@@ -98,7 +98,7 @@ class OrderesByUid(MethodView):
         try:
             if id and ObjectId(id):
                 query = {"userID": id}
-                cursor = order_collection.find(query).sort('updatedAt',pymongo.ASCENDING)
+                cursor = order_collection.find(query).sort('updatedAt',pymongo.DESCENDING)
                 if cursor:
                     return json.loads(json_util.dumps(cursor))
                 else:
