@@ -17,3 +17,4 @@ from app.routes.address_route import *
 from app.routes.order_route import *
 from app.routes.favorited_food_route import *
 from app.routes.cart_route import *
+from app.routes.review_route import *

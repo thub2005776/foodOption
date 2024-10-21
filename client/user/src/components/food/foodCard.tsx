@@ -107,11 +107,8 @@ export default function FoodCard({ food }: { food: Object }) {
         food && imageFile &&
         <div className="relative">
             {contextHolder}
-            <div className="absolute z-50 top-5 right-3">
-                {/* <FavoritedButton login={user} foodID={food['_id'] && food['_id'].$oid} liked={handleFavortied} /> */}
-            </div>
 
-            <div className="w-60 h-[27rem] relative p-1 cursor-pointer bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+            <div className="w-60 h-[27rem] relative p-1 cursor-pointer hover:bg-orange-200 dark:hover:bg-gray-700 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <Link to={`/food/${food['_id']?.$oid}`}>
                     <img className="rounded-t-lg w-60 h-64"
                         src={imageFile instanceof Blob ? URL.createObjectURL(imageFile)
@@ -132,9 +129,7 @@ export default function FoodCard({ food }: { food: Object }) {
                 </Link>
                 <div className="absolute bottom-2 w-full">
                     <div className="flex justify-around">
-                        <Rating
-                            rate={food['rating']}
-                            amount={0} />
+                        <Rating foodID={food['_id'].$oid}/>
                         <button
                             onClick={handleAddCart}
                             className="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-500 to-pink-500 group-hover:from-purple-500 group-hover:to-pink-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800">

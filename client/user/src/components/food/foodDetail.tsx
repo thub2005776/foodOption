@@ -137,7 +137,7 @@ export default function FoodDetail({ food }: { food: Object }) {
                             <dt className="mb-1 text-gray-900 text-3xl font-bold dark:text-white">
                                 {food['name']}
                             </dt>
-                            <Rating rate={4.45} amount={35} />
+                            <Rating foodID={food['_id'] && food['_id']['$oid']} />
                         </div>
                         <div className=" flex flex-col pb-3">
                             <dt className="mb-1 text-red-600 text-3xl font-bold dark:text-red-500">

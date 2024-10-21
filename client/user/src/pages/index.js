@@ -15,3 +15,5 @@ export {default as Cart} from './cart/cart.tsx'
 
 export {default as Order} from './order/order.tsx'
 export {default as Ordered} from './order/ordered.tsx'
+
+export {default as Review} from './review/review.tsx'

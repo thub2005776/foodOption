@@ -22,8 +22,8 @@ export default function OrderList() {
         { tab: 'pending', title: 'Chờ duyệt' },
         { tab: 'processing', title: 'Đang xử lý' },
         { tab: 'preparing', title: 'Đang chuẩn bị' },
-        { tab: 'delivering', title: 'Đang giao' },
-        { tab: 'completed', title: 'Hoàn thành' },
+        { tab: 'delivering', title: 'Đang giao hàng' },
+        { tab: 'delivered', title: 'Hoàn thành' },
         { tab: 'canceled', title: 'Đã huỷ' },
     ]
 

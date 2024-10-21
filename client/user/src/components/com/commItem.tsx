@@ -2,9 +2,6 @@ import React, { useState } from "react";
 import { Delete, Reply } from "../../components";
 
 export default function CommItem({user, com}:{user:Object, com:Object}) {
-    const [openOpt, setOpenOpt] = useState(false);
-    const [openDel, setOpenDel] = useState(false);
-
     return (
         <div>
             <div className="flex items-start gap-2.5">
@@ -27,11 +24,6 @@ export default function CommItem({user, com}:{user:Object, com:Object}) {
                         >Chưa phản hồi
                         </span>
                     </div>
-                    <div className="flex mt-10">
-                        <Reply/>
-                        <Delete/>
-                    </div>
-                    
             </div>
 
         </div>

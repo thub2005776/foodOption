@@ -14,7 +14,6 @@ export {default as FoodCard} from './food/foodCard.tsx'
 export {default as Rating} from './food/rating.tsx'
 export {default as Food} from './food/foodDetail.tsx'
 export {default as IngredientTable} from './food/ingredientTable.tsx'
-export {default as ProcessingList} from './food/processList.tsx'
 export {default as TopicCard} from './food/topicCard.tsx'
 
 // Cart
@@ -26,6 +25,10 @@ export {default as Orderes} from './order/orderes.tsx'
 export {default as OrderItem} from './order/orderItem.tsx'
 export {default as AddressDisplay} from './order/addressDisplay.tsx'
 export {default as Check} from './order/check.tsx'
+
+// review
+export {default as ReviewFood} from './review/reviewFood.tsx'
+export {default as Review} from './review/review.tsx'
 
 // components
 export {default as FavoritedButton} from './button/favoritedButton.tsx'
@@ -55,6 +58,7 @@ export {default as Reply} from './modal/replyModal.tsx'
 export {default as ChangPassword} from './modal/changPasswordModal.tsx'
 export {default as AddressModal} from './modal/addressModal.tsx'
 export {default as SelectAddressModal} from './modal/selectAddressModal.tsx'
+export {default as ReviewModal} from './modal/reviewModal.tsx'
 
 // Formes
 export {default as AccForm} from './acc/accForm.tsx'

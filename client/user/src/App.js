@@ -18,7 +18,8 @@ import {
   Cart, 
   Order, 
   Ordered, 
-  OrderList} from "./pages"
+  OrderList,
+  Review} from "./pages"
 
 import { SuccessMesage } from './components'
 
@@ -58,6 +59,8 @@ function App() {
         <Route path="/order/:id" element={<Order />} />
         <Route path="/ordered/:id" element={<Ordered />} />
         <Route path="/payment/successfull/:id" element={<SuccessMesage />} />
+
+        <Route path="/review/:id" element={<Review />} />
       </Routes>
       <Footer />
     </div>

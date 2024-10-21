@@ -10,7 +10,6 @@ def food_model(request):
         "stored": request.json.get("stored"),
         "image": request.json.get("image"),
         "tag": request.json.get("tag"),
-        "rating": request.json.get("rating"),
         "sold": request.json.get("sold"),
         "createdAt": request.json.get("createdAt"),
         "updatedAt": request.json.get("updatedAt"),
@@ -70,6 +69,21 @@ def cart_model(request):
     model = {key: value for key, value in model.items() if value is not None}
     return model
 
+
+# cart food model
+def review_model(request):
+    model = {
+        "user": request.json.get("user"), #object type
+        "checkID": request.json.get("checkID"),
+        "food": request.json.get("food"),
+        "liked": request.json.get("liked"),
+        "comment": request.json.get("comment"),
+        "createdAt": request.json.get("createdAt"),
+        "updatedAt": request.json.get("updatedAt"),
+    }
+
+    model = {key: value for key, value in model.items() if value is not None}
+    return model
 
 # recipe model
 def recipe_model(request):
@@ -186,6 +200,8 @@ def order_model(request):
         "createdAt": request.json.get("createdAt"),
         "updatedAt": request.json.get("updatedAt"),
         "status": request.json.get("status"),
+        "review": request.json.get("review"),
+        "rating": request.json.get("rating"),
     }
 
     model = {key: value for key, value in model.items() if value is not None}
