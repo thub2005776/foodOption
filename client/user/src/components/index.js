@@ -15,6 +15,7 @@ export {default as Rating} from './food/rating.tsx'
 export {default as Food} from './food/foodDetail.tsx'
 export {default as IngredientTable} from './food/ingredientTable.tsx'
 export {default as TopicCard} from './food/topicCard.tsx'
+export {default as PreviewFood} from './food/previewFood.tsx'
 
 // Cart
 export {default as CartItem} from './cart/cartItem.tsx'

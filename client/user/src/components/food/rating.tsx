@@ -5,8 +5,6 @@ import { getOrderRatingByFidApi } from "../../api/orderApi";
 export default function Rating({ foodID }: { foodID:string }) {
     const {data: rating} = useQuery(foodID, () => getOrderRatingByFidApi(foodID))
     
-    console.log(rating);
-    
     return (
         rating &&
         <div className="flex items-center">

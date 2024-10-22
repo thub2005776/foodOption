@@ -21,6 +21,11 @@ export const getFoodGroup = async () => {
     return res.data;
 }
 
+export const getFoodGroupByTid = async (topicID) => {
+    const res = await foodApi.get(`/api/foodgroup/tid/${topicID}`);
+    return res.data;
+}
+
 export const addFoodGroup = async (foodgroup) => {
     const res = await foodApi.post('/api/foodgroup', foodgroup);
     return res.data;
