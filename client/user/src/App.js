@@ -13,7 +13,7 @@ import {
   SignUp, 
   Play, 
   Trend, 
-  TopSeller, 
+  Notify, 
   Topic, 
   Cart, 
   Order, 
@@ -51,7 +51,7 @@ function App() {
 
         <Route path="/foodopt" element={<Play />} />
         <Route path="/trend" element={<Trend />} />
-        <Route path="/topseller" element={<TopSeller />} />
+        <Route path="/notify" element={<Notify />} />
         <Route path="/food/:id" element={<FoodDetail />} />
         <Route path="/topic/:id" element={<Topic />} />
         <Route path="/cart/:id" element={<Cart />} />

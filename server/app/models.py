@@ -85,13 +85,14 @@ def review_model(request):
     model = {key: value for key, value in model.items() if value is not None}
     return model
 
-# recipe model
-def recipe_model(request):
+# notify model
+def notify_model(request):
     fmodel = {
-        "foodId": request.json.get("foodId"),
-        "video": request.json.get("video"),
-        "ingredients": request.json.get("ingredients"),
-        "processing": request.json.get("processing"),
+        "order": request.json.get("order"), #object type
+        "createdAt": request.json.get("createdAt"),
+        "updatedAt": request.json.get("updatedAt"),
+        "content": request.json.get("content"),
+        "viewed": request.json.get("viewed"),
     }
 
     fmodel = {key: value for key, value in fmodel.items() if value is not None}
