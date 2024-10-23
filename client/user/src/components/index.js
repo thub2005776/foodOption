@@ -26,6 +26,7 @@ export {default as Orderes} from './order/orderes.tsx'
 export {default as OrderItem} from './order/orderItem.tsx'
 export {default as AddressDisplay} from './order/addressDisplay.tsx'
 export {default as Check} from './order/check.tsx'
+export {default as Proccess} from './order/proccess.tsx'
 
 // review
 export {default as ReviewFood} from './review/reviewFood.tsx'

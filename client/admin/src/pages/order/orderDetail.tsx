@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { selectUser} from "../../features/userSlice";
 import { useSelector } from "react-redux";
 
-import { OrderForm, UserForm } from '../../components';
+import { BackButton, OrderForm, UserForm } from '../../components';
 import { useQuery } from 'react-query';
 import { getOrderByIdApi } from '../../api/orderApi';
 
@@ -17,6 +17,7 @@ export default function OrderDetail() {
   return (
     user && order &&
     <div className='mx-10'>
+      <BackButton/>
       <p className="text-2xl text-center mb-6 font-bold tracking-tight text-gray-900 dark:text-white">
         Thông tin Đơn hàng
       </p>

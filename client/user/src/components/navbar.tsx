@@ -59,11 +59,11 @@ export default function Navbar() {
                                 Món ăn
                             </p>
                         </Link>
-                        <Link to={'/topseller'}>
+                        {user && <Link to={`acc/${user['_id']['$oid']}/ordered`}>
                             <p className="text-lg font-bold cursor-pointer text-gray-900 hover:text-blue-800 dark:text-gray-600 dark:hover:text-gray-400">
-                                Top Bán Chạy
+                                Đơn hàng
                             </p>
-                        </Link>
+                        </Link>}
                     </div>
 
                     <div className="me-10 lg:me-0 flex space-x-3 rtl:space-x-reverse">

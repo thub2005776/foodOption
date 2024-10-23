@@ -16,7 +16,7 @@ export default function OrderForm({ check }: { check: Object }) {
                 </div>
                 <p className='text-gray-600 font-semibold text-2xl'>
                     Phương thức thanh toán:
-                    <span className=''>{check['payment'] === 'cash' ? ' Tiền mặt' : ' chuyển khoản'}</span>
+                    <span className=''>{check['payment'] === 'cash' ? ' Tiền mặt' : ' Chuyển khoản qua Paypal'}</span>
                 </p>
 
 

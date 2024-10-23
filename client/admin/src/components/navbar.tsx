@@ -12,7 +12,7 @@ export default function Navbar() {
     const navigate = useNavigate();
     const location = useLocation();
     const id = location.pathname.split('/')[1];
-    
+
     const dispatch = useDispatch();
     const logoutQuery = useMutation(
         logoutApi, {
@@ -29,8 +29,8 @@ export default function Navbar() {
 
     const user = useSelector(selectUser);
 
-    const { data: imageFile } = useQuery(user && user['image']? user['image']:'avatar', 
-        () => downloadApi(user && user['image']? user['image']:'food.jpg'));
+    const { data: imageFile } = useQuery(user && user['image'] ? user['image'] : 'avatar',
+        () => downloadApi(user && user['image'] ? user['image'] : 'food.jpg'));
 
     const handleLogout = () => {
         logoutQuery.mutate()
@@ -53,14 +53,20 @@ export default function Navbar() {
                             </button>
 
                             <div>
-                                <img src={imageFile? URL.createObjectURL(imageFile) : 'https://i.pinimg.com/564x/77/00/f0/7700f043a15ac6b34d952eca997d7725.jpg'}
+                                <img src={imageFile ? URL.createObjectURL(imageFile) : 'https://i.pinimg.com/564x/77/00/f0/7700f043a15ac6b34d952eca997d7725.jpg'}
                                     className=" mx-auto h-8 w-8 rounded-full" alt="avatar" />
-                                {user['role'] === 'Admin' ?
+                                {String(user['role']).toLocaleLowerCase() === 'admin' &&
                                     <span className="bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
                                         Admin
-                                    </span>
-                                    : <span className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">
+                                    </span>}
+
+                                {String(user['role']).toLocaleLowerCase() === 'staff' &&
+                                    <span className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">
                                         Staff
+                                    </span>}
+                                {String(user['role']).toLocaleLowerCase() === 'deliveryman' &&
+                                    <span className="bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">
+                                        Delivery Man
                                     </span>}
                             </div>
                         </div>}

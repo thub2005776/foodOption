@@ -24,7 +24,12 @@ export default function Login() {
                 dispatch(
                     login(data)
                 );
-                navigate('/admin/tab1')
+                if(data['role'] === 'deliveryman') {
+                    navigate('/admin/tab3')
+                } else {
+                    navigate('/admin/tab1')
+                }
+                
             }
         },
         onError: (err) => {

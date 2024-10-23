@@ -37,6 +37,11 @@ export const getFavoritedFoodByUidApi = async (uid) => {
     return res.data;
 }
 
+export const getFavoritedFoodByFidApi = async (fid) => {
+    const res = await favoritedFoodApi.get(`/api/favorited/uid/${fid}`);
+    return res.data;
+}
+
 export const deleteFavoritedFoodByUidApi = async (uid) => {
     const res = await favoritedFoodApi.delete(`/api/favorited/uid/${uid}`);
     return res.data;

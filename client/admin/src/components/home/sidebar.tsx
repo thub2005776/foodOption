@@ -36,27 +36,45 @@ export default function Sidebar() {
     }
 
     const TabItem = ({ title, icon, tabName }: { title: String, icon: ReactNode, tabName: String }) => {
+        const deliverymanRights = String(user['role']).toLocaleLowerCase() === 'deliveryman';
         return (
-            <Link to={`/admin/${tabName}`}>
-                <li onClick={() => handleClick(tabName)}>
-                    <div className={`${tab === tabName && 'bg-blue-200 dark:bg-gray-600'} ${tabCSS}`}>
-                        {icon}
-                        <span className="flex-1 ms-3 whitespace-nowrap">{title}</span>
-                    </div>
-                </li>
-            </Link>
+            <div>
+                {deliverymanRights ?
+                    tabName !== 'tab3' ?
+                        <button onClick={() => handleClick(tabName)}
+                            className={`${tabCSS} cursor-not-allowed text-gray-400`}
+                            disabled>
+                            {icon}
+                            <span className="whitespace-nowrap">{title}</span>
+                        </button>
+                        : <Link to={`/admin/${tabName}`}>
+                            <button onClick={() => handleClick(tabName)}
+                                className={`${tab === tabName && 'bg-blue-200 dark:bg-gray-600'} ${tabCSS} ${acvtivedTab}`}>
+                                {icon}
+                                <p className="whitespace-nowrap ">{title}</p>
+                            </button>
+                        </Link>
+                    : <Link to={`/admin/${tabName}`}>
+                        <button onClick={() => handleClick(tabName)}
+                            className={`${tab === tabName && 'bg-blue-200 dark:bg-gray-600'} ${tabCSS} ${acvtivedTab}`}>
+                            {icon}
+                            <p className="whitespace-nowrap ">{title}</p>
+                        </button>
+                    </Link>}
 
+            </div>
         )
     }
 
-    const tabCSS: String = "flex items-center p-2 text-gray-900 rounded-lg hover:cursor-pointer dark:text-white hover:bg-blue-100 dark:hover:bg-gray-700 group"
+    const tabCSS: String = "flex gap-6 w-full p-2 rounded-lg  dark:text-white group"
+    const acvtivedTab = "hover:cursor-pointer hover:bg-blue-100 dark:hover:bg-gray-700 text-gray-900"
 
     return (
         user &&
         <div className="h-screen">
             <aside id="default-sidebar" className="fixed top-[4.1rem] left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
                 <div className="h-full px-3 py-4 overflow-y-auto bg-gray-100 dark:bg-gray-800">
-                    <ul className="space-y-2 font-semibold mt-5 text-lg">
+                    <div className="space-y-2 font-semibold mt-5 text-lg">
                         <TabItem
                             title={'Chung'}
                             tabName={'tab1'}
@@ -121,15 +139,15 @@ export default function Sidebar() {
                                 </svg>
 
                             } />
-                        <li onClick={handleLogout}>
+                        <button onClick={handleLogout}>
                             <div className="flex items-center p-2 cursor-pointer text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                                 <svg className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                                     <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14M5 12l4-4m-4 4 4 4" />
                                 </svg>
                                 <span className="flex-1 ms-3 whitespace-nowrap">Đăng xuất</span>
                             </div>
-                        </li>
-                    </ul>
+                        </button>
+                    </div>
                 </div>
             </aside>
 

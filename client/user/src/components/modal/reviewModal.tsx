@@ -9,7 +9,6 @@ import { ReviewFood } from '../../components';
 
 export default function ReviewModal({ check }: { check: Object }) {
     const user = useSelector(selectUser);
-    const navigate = useNavigate();
     const [open, setOpen] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
 

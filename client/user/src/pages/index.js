@@ -7,6 +7,7 @@ export {default as Topic} from './food/topic.tsx'
 
 export {default as AccInfo} from './acc/accInfo.tsx'
 export {default as OrderList} from './acc/orderList.tsx'
+export {default as Favorited} from './acc/favorited.tsx'
 
 export {default as Play} from './food/play.tsx'
 export {default as Trend} from './food/trend.tsx'

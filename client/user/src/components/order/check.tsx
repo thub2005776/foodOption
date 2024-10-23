@@ -9,6 +9,8 @@ import { updateFoodApi, updateStoredFoodApi } from '../../api/foodApi';
 export default function Check({ item }: { item: Object }) {
     const [messageApi, contextHolder] = message.useMessage();
 
+    const statusName = Array.isArray(item['status']) && item['status'][item['status'].length -1]['status'];
+    
     const completedCondition = ['delivering'];
     const notCompletedCondition = ['processing', 'preparing'];
     const reviewCondition = ['delivered'];
@@ -104,7 +106,7 @@ export default function Check({ item }: { item: Object }) {
                         Thời gian đặt hàng:
                         <DateTimeDisplay datetime={item['createdAt']} />
                     </p>
-                    {item['status'] === 'completed' &&
+                    {statusName === 'delivered' &&
                         <p className="text-gray-600 dark:text-white">
                             Thời gian nhận hàng:
                             <DateTimeDisplay datetime={item['updatedAt']} />
@@ -115,7 +117,7 @@ export default function Check({ item }: { item: Object }) {
                     <div className="flex">
                         <Status status={item['status']} />
                     </div>
-                    {reviewCondition.find(f => f === item['status']) && 
+                    {reviewCondition.find(f => f === statusName) && 
                     <ReviewModal check={item} />}
                 </div>
 
@@ -131,16 +133,16 @@ export default function Check({ item }: { item: Object }) {
                     <Statistic valueStyle={{ color: '#e02424' }} value={item['total']} suffix="đ" />
                 </div>
                 <div className="flex justify-end">
-                    {(item['status'] === 'pending' || item['status'] === 'processing') &&
+                    {(statusName === 'pending' || statusName === 'processing') &&
                         <Delete name='Đơn hàng' res={handleCancel} />}
-                    {completedCondition.find(f => f === item['status']) &&
+                    {completedCondition.find(f => f === statusName) &&
                         <button
                             onClick={handleCompleted}
                             type="button" className="text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
                             Đã nhận hàng
                         </button>}
 
-                    {notCompletedCondition.find(f => f === item['status']) &&
+                    {notCompletedCondition.find(f => f === statusName) &&
                         <button type="button" className="text-white bg-gray-400 dark:bg-gray-500 cursor-not-allowed font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 text-center" disabled>
                             Đã nhận hàng
                         </button>}

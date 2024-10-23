@@ -36,6 +36,13 @@ export default function Order() {
         return t;
     }
 
+    const success = () => {
+        messageApi.open({
+            type: 'success',
+            content: 'Cập nhật thành công!',
+        });
+    };
+
     const handleUpdated = (res: string) => {
         setSelectedAddress(Array.isArray(address) && address.find(f => f['_id'].$oid === res))
     }
@@ -44,7 +51,13 @@ export default function Order() {
         updateOrderApi, {
         onSuccess(data, variables, context) {
             if (data === "successfull") {
-                navigate(`/payment/successfull/${id}`)
+                if (orderValues.payment === 'transfer') {
+                    navigate(`/payment/successfull/${id}`)
+                } else {
+                    success()
+                    navigate(`/ordered/${id}`)
+                }
+                
             }
         }, onError(error, variables, context) {
             console.log(error);
@@ -81,8 +94,9 @@ export default function Order() {
         total: total(),
         payment: payment,
         updatedAt: Date(),
-        status: payment === 'cach' ? 'pending' : 'processing',
+        newStatus: {status: payment === 'cach' ? 'pending' : 'processing', time: Date()},
     }
+
     const handleSuccessfullyPayOut = (res: boolean) => {
         if (res) {
             orderValues.payment = 'transfer'
@@ -97,6 +111,7 @@ export default function Order() {
     return (
         user && order && address &&
         <div className="lg:mx-20 mx-10">
+            {contextHolder}
             {/* address */}
             <div className="mb-10 shadow-md">
                 <div className="flex justify-between">

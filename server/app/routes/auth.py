@@ -9,6 +9,7 @@ from app.db_connection import db
 user_collection = db['user']
 admin_collection = db['admin']
 staff_collection = db['staff']
+deliveryman_collection = db['deliveryman']
 
 from datetime import datetime, timedelta
 import jwt
@@ -66,11 +67,14 @@ def login(auth):
     else:
         cursorAdmin = admin_collection.find_one({'email': email})
         cursorStaff = staff_collection.find_one({'email': email})
+        cursorDeliveryMan = deliveryman_collection.find_one({'email': email})
 
         if (cursorAdmin):
             cursor = cursorAdmin
-        else:
+        elif (cursorStaff):
             cursor = cursorStaff
+        else:
+            cursor = cursorDeliveryMan
             
     if not cursor:
         return "User not found"
@@ -108,12 +112,14 @@ def verify(key):
         else:
             cursorAdmin = admin_collection.find_one({'_id': id})
             cursorStaff = staff_collection.find_one({'_id': id})
+            cursorDeliveryMan = deliveryman_collection.find_one({'_id': id})
             
             if (cursorAdmin):
                 cursor = cursorAdmin
-                
-            else:
+            elif (cursorStaff):
                 cursor = cursorStaff
+            else:
+                cursor = cursorDeliveryMan
         
         return json.loads(json_util.dumps(cursor))
     

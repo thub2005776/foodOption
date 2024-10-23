@@ -13,7 +13,7 @@ export default function OrderList() {
         { tab: 'processing', title: 'Đang xử lý' },
         { tab: 'preparing', title: 'Đang chuẩn bị' },
         { tab: 'delivering', title: 'Đang chuẩn bị' },
-        { tab: 'completed', title: 'Hoàn thành' },
+        { tab: 'delivered', title: 'Hoàn thành' },
         { tab: 'canceled', title: 'Đã huỷ' },
     ]
     

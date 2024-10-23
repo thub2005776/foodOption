@@ -21,16 +21,16 @@ export const getOrderByFidApi = async (foodID) => {
     return res.data;
 }
 
+// export const updateOrderStatusApi = async (order) => {
+//     const res = await OrderApi.post(`/api/order/status/${order.id}`, order);
+//     return res.data;
+// }
+
 export const getOrderRatingByFidApi = async (foodID) => {
     const res = await OrderApi.get(`/api/order/rating/fid/${foodID}`);
     return res.data;
 }
 
-
-// export const getOrderBySIdApi = async (staffId) => {
-//     const res = await OrderApi.get(`/api/order/tid/${staffId}`);
-//     return res.data;
-// }
 
 export const getOrderByIdApi = async (Id) => {
     const res = await OrderApi.get(`/api/order/${Id}`);

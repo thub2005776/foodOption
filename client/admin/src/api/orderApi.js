@@ -41,6 +41,11 @@ export const updateOrderFoodApi = async (order) => {
     return res.data;
 }
 
+export const updateOrderStatusApi = async (order) => {
+    const res = await OrderApi.post(`/api/order/status/${order.id}`, order);
+    return res.data;
+}
+
 export const deleteOrderApi = async (id) => {
     const res = await OrderApi.delete(`/api/order/${id}`);
     return res.data;

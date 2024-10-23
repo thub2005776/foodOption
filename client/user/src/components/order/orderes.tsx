@@ -2,7 +2,7 @@ import React from "react";
 import { Check } from "../../components"
 
 export default function Orderes({ type, orderes }: { type: string, orderes: Array<Object> }) {
-    const orderesFilter = orderes.filter(f => f['status'] === type || type === 'all');
+    const orderesFilter = orderes.filter(f => f['status'][f['status'].length -1]['status'] === type || type === 'all');
 
     return (
         <div className="mx-10 m-2">

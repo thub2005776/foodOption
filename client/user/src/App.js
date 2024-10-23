@@ -19,7 +19,8 @@ import {
   Order, 
   Ordered, 
   OrderList,
-  Review} from "./pages"
+  Review, 
+  Favorited} from "./pages"
 
 import { SuccessMesage } from './components'
 
@@ -48,6 +49,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/acc/:id" element={<AccInfo />} />
         <Route path="acc/:id/ordered" element={<OrderList />} />
+        <Route path="acc/:id/favorited" element={<Favorited />} />
 
         <Route path="/foodopt" element={<Play />} />
         <Route path="/trend" element={<Trend />} />

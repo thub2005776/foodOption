@@ -4,10 +4,9 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { selectUser } from "../../features/userSlice";
 import { useMutation, useQuery } from "react-query";
-import { FavoritedButton, Rating, TagBage } from "../../components";
+import { Rating, TagBage } from "../../components";
 import { downloadApi } from "../../api/uploadFileApi";
 import { addOrderApi } from "../../api/orderApi";
-import { addFavoritedFoodApi, deleteFavoritedFoodApi } from "../../api/favoritedFoodApi";
 import { updateCartFoodApi } from "../../api/cartApi";
 
 export default function FoodDetail({ food }: { food: Object }) {
@@ -15,48 +14,9 @@ export default function FoodDetail({ food }: { food: Object }) {
     const { data: imageFile } = useQuery(food && food['image'] ? food['image'] : 'food.jpg',
         () => downloadApi(food && food['image'] ? food['image'] : 'food.jpg'));
 
-    const [favoritedID, setFavoritedID] = useState('');
+    
     const navigate = useNavigate();
-    const addFavoritedFood = useMutation(
-        addFavoritedFoodApi, {
-        onSuccess(data, variables, context) {
-            if (data['acknowledged']) {
-                setFavoritedID(data['inserted_id'])
-            }
-        },
-        onError(error, variables, context) {
-            console.log(error);
-        },
-    }
-    )
 
-    const removeFavoritedFood = useMutation(
-        deleteFavoritedFoodApi, {
-        onSuccess(data, variables, context) {
-            if (data === "successfull") {
-            }
-        },
-        onError(error, variables, context) {
-            console.log(error);
-        },
-    }
-    )
-
-    const handleFavortied = (result: boolean) => {
-        const values = {
-            userID: user['_id'].$oid,
-            foodID: food['_id'].$oid,
-            detail: food,
-            createdAt: Date(),
-            updatedAt: Date(),
-        }
-
-
-        if (result) {
-            addFavoritedFood.mutate(values);
-        } else { removeFavoritedFood.mutate(favoritedID) }
-
-    }
 
     const addOrder = useMutation(
         addOrderApi, {
@@ -83,7 +43,7 @@ export default function FoodDetail({ food }: { food: Object }) {
                 createdAt: Date(),
                 updatedAt: Date(),
                 payment: 'cash',
-                status: 'pending',
+                status: [{status: 'pending', time: Date()}],
             }
 
             addOrder.mutate(values)
@@ -125,9 +85,6 @@ export default function FoodDetail({ food }: { food: Object }) {
                 <img className=" rounded-md"
                     src={imageFile instanceof Blob ? URL.createObjectURL(imageFile) : image} alt="food"
                 />
-                <div className="absolute top-5 right-4">
-                    <FavoritedButton login={user} foodID={food['_id']?.$oid} liked={handleFavortied} />
-                </div>
             </div>
 
             <div className="lg:block sm:flex gap-5 w-full">

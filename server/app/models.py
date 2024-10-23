@@ -47,8 +47,7 @@ def foodGroup_model(request):
 def favorited_model(request):
     model = {
         "userID": request.json.get("userID"),
-        "foodID": request.json.get("foodID"),
-        "detail": request.json.get("detail"),
+        "food": request.json.get("food"),
         "createdAt": request.json.get("createdAt"),
         "updatedAt": request.json.get("updatedAt"),
     }

@@ -19,22 +19,20 @@ class FavoritedDetails(MethodView):
 
     def post(self):
         if request.json:
-            document = favorited_model(request=request)
+            food = request.json.get('food')
             query = {"userID": request.json.get('userID'),
-                     "foodID": request.json.get('foodID'),
+                     "food._id.$oid": food['_id']['$oid'],
                     }
-            
+            updated = {"$set": favorited_model(request=request)}
             result = favorited_collection.find_one_and_update(
                 query,
-                document,
-                return_document=pymongo.ReturnDocument.AFTER
+                updated,
+                upsert=True,
             )
             if result:
-                result_dict = {
-                    "acknowledged": result.acknowledged,
-                    "inserted_id": str(result.inserted_id)
-                }
-                return json.loads(json_util.dumps(result_dict))
+                print(result)
+                
+                return json.loads(json_util.dumps(result['_id']))
             else:
                 return "Can't insert the favorited detail. Try again."
         else:
@@ -141,7 +139,7 @@ class FavoritedByFid(MethodView):
     def get(self, id):
         try:
             if id and ObjectId(id):
-                query = {"foodID": id}
+                query = {"food._id.$oid": id}
                 cursor = favorited_collection.find(query)
                 if cursor:
                     return json.loads(json_util.dumps(cursor))
@@ -155,7 +153,7 @@ class FavoritedByFid(MethodView):
     def delete(self, id):
         try:
             if id and ObjectId(id):
-                query = {"staffID": id}
+                query = {"food._id.$oid": id}
                 result = favorited_collection.delete_many(query)
                 if result:
                     return "successfull"
@@ -168,9 +166,6 @@ class FavoritedByFid(MethodView):
 
 
 app.add_url_rule('/api/favorited', view_func=FavoritedDetails.as_view("FavoritedDetails"))
-app.add_url_rule('/api/favorited/<id>',
-                 view_func=FavoritedDetail.as_view("FavoritedDetail"))
-app.add_url_rule('/api/favorited/uid/<id>',
-                 view_func=FavoritedByUid.as_view("FavoritedByUid"))
-app.add_url_rule('/api/favorited/fid/<id>',
-                 view_func=FavoritedByFid.as_view("FavoritedByFid"))
+app.add_url_rule('/api/favorited/<id>', view_func=FavoritedDetail.as_view("FavoritedDetail"))
+app.add_url_rule('/api/favorited/uid/<id>', view_func=FavoritedByUid.as_view("FavoritedByUid"))
+app.add_url_rule('/api/favorited/fid/<id>', view_func=FavoritedByFid.as_view("FavoritedByFid"))

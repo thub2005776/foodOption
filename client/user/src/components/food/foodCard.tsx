@@ -38,39 +38,7 @@ export default function FoodCard({ food }: { food: Object }) {
     }
     )
 
-    const removeFavoritedFood = useMutation(
-        deleteFavoritedFoodApi, {
-        onSuccess(data, variables, context) {
-            if (data === "successfull") {
-                messageApi.open({
-                    type: 'success',
-                    content: 'Đã loại bỏ khỏi yêu thích!',
-                });
-            }
-        },
-        onError(error, variables, context) {
-            messageApi.open({
-                type: 'error',
-                content: 'Đã xảy ra lỗi. Vui lòng thử lại sau.',
-            });
-            console.log(error);
-        },
-    })
 
-    const handleFavortied = (result: boolean) => {
-        const values = {
-            userID: user['_id'].$oid,
-            foodID: food['_id'].$oid,
-            detail: food,
-            createdAt: Date(),
-            updatedAt: result ? Date() : null,
-        }
-
-        if (result) {
-            addFavoritedFood.mutate(values);
-        } else { removeFavoritedFood.mutate(favoritedID) }
-
-    }
 
     const success = () => {
         messageApi.open({

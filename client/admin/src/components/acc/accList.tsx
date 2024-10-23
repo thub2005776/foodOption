@@ -17,6 +17,8 @@ export default function AccList() {
     const [open, setOpen] = useState(false);
     const [tab, setTab] = useState(Array.isArray(roles)? roles[0].role : 'User');
 
+    const StaffRightsException = {auth: 'staff', role: 'admin'}
+
     return (
         auth && roles &&
         <div>
@@ -28,7 +30,7 @@ export default function AccList() {
                             className="me-2">
                             <button
                                 onClick={() => setTab(item['role'])}
-                                disabled={String(auth['role']).toLocaleLowerCase() === 'staff' && (item['role'] === 'Admin' || item['role'] === 'Staff')}
+                                disabled={String(auth['role']).toLocaleLowerCase() === StaffRightsException.auth && item['role'] === StaffRightsException.role}
                                 className={
                                     `${tab !== item['role'] ?
                                           'text-gray-600': 'text-blue-600 border-blue-600'} 

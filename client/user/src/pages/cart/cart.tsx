@@ -112,7 +112,7 @@ export default function Cart() {
             total: total,
             createdAt: Date(),
             updatedAt: Date(),
-            status: 'pending',
+            status: [{status: 'pending', time: Date()}],
         }
 
         checkedFood.forEach(e => {

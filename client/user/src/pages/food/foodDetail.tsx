@@ -24,8 +24,7 @@ export default function FoodDetail() {
           })
       }, [])
     
-      console.log(reviews);
-      
+
     return (
         food && reviews &&
         <div className="lg:mx-20 mx-10">

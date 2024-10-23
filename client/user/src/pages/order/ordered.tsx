@@ -4,9 +4,9 @@ import { useSelector } from "react-redux";
 import { Statistic } from 'antd';
 
 import { selectUser } from "../../features/userSlice";
-import { deleteOrderApi, getOrderByIdApi, updateOrderApi } from "../../api/orderApi";
+import { getOrderByIdApi, updateOrderApi } from "../../api/orderApi";
 
-import { AddressModal, OrderItem, DateTimeDisplay, Delete, SelectAddressModal, Status, AddressDisplay } from "../../components";
+import { AddressModal, OrderItem, DateTimeDisplay, Delete, SelectAddressModal, AddressDisplay, Proccess } from "../../components";
 import { useMutation, useQuery } from "react-query";
 import { getAddressByUidApi } from "../../api/user";
 import { updateStoredFoodApi } from "../../api/foodApi";
@@ -29,7 +29,7 @@ export default function Ordered() {
     const total = () => {
         var t = 0;
         if (Array.isArray(foodList)) {
-            foodList.map((item) => {
+            foodList.forEach((item) => {
                 t += Number(item['food'].price) * item['quantity']
             })
         }
@@ -81,7 +81,7 @@ export default function Ordered() {
     const updatedStatus = useMutation(
         updateOrderApi, {
             onSuccess(data, variables, context) {
-                if (data == "successfull") {
+                if (data === "successfull") {
                     navigate('/trend')
                 }
             }, onError(error, variables, context) {
@@ -103,7 +103,7 @@ export default function Ordered() {
             const checkValues = {
                 id: order['_id'].$oid,
                 updatedAt: Date(),
-                status: 'canceled',
+                status: {status: 'canceled', time: Date()},
             }
     
             updatedStatus.mutate(checkValues);
@@ -124,8 +124,8 @@ export default function Ordered() {
                 </svg>
                 Tiếp tục đặt món
             </button>
-            <Status status={order['status']} />
 
+            <Proccess status={order['status']} />
             {/* address */}
             <div className="mb-10 shadow-md">
                 <div className="flex justify-between">

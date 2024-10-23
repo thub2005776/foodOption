@@ -63,11 +63,6 @@ export default function AccInfo() {
                                         className="p-2 hover:cursor-pointer text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                                         <p className="ms-10 whitespace-nowrap">Địa chỉ</p>
                                     </li>
-                                    <li
-                                        onClick={() => setTab('payment')}
-                                        className="p-2 hover:cursor-pointer text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                                        <p className="ms-10 whitespace-nowrap">Ngân hàng</p>
-                                    </li>
                                 </ul>}
                         </li>
                         <li>

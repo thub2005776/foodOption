@@ -10,7 +10,7 @@ export default function UserForm({ userID, orderID, type }: { userID: string, or
 
     const { data: useres } = useQuery(type, () => getUserApi(type));
 
-    const [userInfo, setUserInfo] = useState(useres && useres.find(f => f['_id'].$oid === userID));
+    const [userInfo, setUserInfo] = useState(Array.isArray(useres) && useres.find(f => f['_id'].$oid === userID));
     
     
     const updatedOrder = useMutation(

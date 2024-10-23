@@ -61,13 +61,15 @@ class OrderDetail(MethodView):
                 query = {"_id": ObjectId(id)}
                 if request.get_json:
                     update = {
-                        "$set": order_model(request=request)
+                        "$set": order_model(request=request),
+                        "$push": {"status": request.json.get("newStatus")},
                     }
 
                     result = order_collection.find_one_and_update(
                         query,
                         update=update,
                     )
+
                     if result:
                         return "successfull"
                     else:
@@ -274,6 +276,31 @@ class OrderesRatingByFid(MethodView):
             return "ID (ObjectId) pamram is required."
 
 
+class OrderesStatus(MethodView):
+   def post(self, id, index):
+        try:
+            if id and ObjectId(id):
+                query = {"_id": ObjectId(id)}
+                if request.get_json:
+                    status = request.json.get("status")
+                    update = {"$push": {"status": status }}
+                    result = order_collection.find_one_and_update(
+                        query,
+                        update=update,
+                        return_document=pymongo.ReturnDocument.AFTER
+                    )
+                    if result:
+                        return "successfull"
+                    else:
+                        return "Can't update the status. Try again."
+                else:
+                    return "Body of the request is empty."
+            else:
+                return "ID pamram is empty."
+        except:
+            return "ID (ObjectId) pamram is required."
+
+
 
 app.add_url_rule('/api/order', view_func=OrderDetails.as_view("OrderDetails"))
 app.add_url_rule('/api/order/<id>', view_func=OrderDetail.as_view("OrderDetail"))
@@ -282,3 +309,4 @@ app.add_url_rule('/api/order/fid/<id>', view_func=OrderesByFid.as_view("orderesB
 app.add_url_rule('/api/order/sid/<id>', view_func=OrderesBySid.as_view("orderesBySid"))
 app.add_url_rule('/api/order/<id>/<index>', view_func=UpdatedOrder.as_view("updatedOrder"))
 app.add_url_rule('/api/order/rating/fid/<id>', view_func=OrderesRatingByFid.as_view("OrderesRatingByFid"))
+# app.add_url_rule('/api/order/status/<id>', view_func=OrderesStatus.as_view("OrderStatus"))

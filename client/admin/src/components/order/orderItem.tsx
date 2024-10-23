@@ -7,13 +7,14 @@ import { updateOrderApi } from "../../api/orderApi";
 
 export default function OrderItem({ item }: { item: Object }) {
     const [open, setOpen] = useState(false);
-    const [status, setStatus] = useState(item['status']);
+    const statusNow = Array.isArray(item['status']) && item['status'][item['status'].length-1]['status'];
+    const [status, setStatus] = useState(statusNow);
 
     const statusList = [
         { tab: 'processing', title: 'Đang xử lý' },
         { tab: 'preparing', title: 'Đang chuẩn bị' },
         { tab: 'delivering', title: 'Đang giao' },
-        { tab: 'completed', title: 'Hoàn thành' },
+        { tab: 'delivered', title: 'Hoàn thành' },
         { tab: 'canceled', title: 'Huỷ' },
     ]
 
@@ -33,8 +34,9 @@ export default function OrderItem({ item }: { item: Object }) {
     const handlleUpdatedStatus = () => {
         const values = {
             id: item['_id'].$oid,
-            status: status,
+            newStatus: {status: status, time: Date()},
             updatedAt: Date(),
+
         }
 
         updatedStatus.mutate(values);
