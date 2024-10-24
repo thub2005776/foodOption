@@ -15,7 +15,7 @@ export default function Favorited() {
         user && favorited &&
         <div className="">
             {/* sidebar */}
-            <Sidebar />
+            <Sidebar tab="favorited"/>
 
             <div className="p-4 sm:ml-64 ">
                 <div className="flex flex-wrap gap-2">

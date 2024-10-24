@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { Statistic } from 'antd';
+import { Statistic, Rate } from 'antd';
 
 import { selectUser } from "../../features/userSlice";
 import { getOrderByIdApi, updateOrderApi } from "../../api/orderApi";
@@ -17,6 +17,7 @@ export default function Ordered() {
     const location = useLocation();
     const id = location.pathname.split('/')[2];
     const navigate = useNavigate();
+    const desc = ['Rất tệ', 'Không hài lòng', 'OK', 'Hài lòng', 'Tuyệt vời'];
 
     const { data: order } = useQuery(id, () => getOrderByIdApi(id));
     const { data: address } = useQuery(`${id}_address`, () => getAddressByUidApi(user['_id'] && user['_id'].$oid, 'user'))
@@ -45,7 +46,7 @@ export default function Ordered() {
         onSuccess(data, variables, context) {
             if (data === "successfull") {
                 console.log(data);
-                
+
             }
         }, onError(error, variables, context) {
             console.log(error);
@@ -80,14 +81,14 @@ export default function Ordered() {
 
     const updatedStatus = useMutation(
         updateOrderApi, {
-            onSuccess(data, variables, context) {
-                if (data === "successfull") {
-                    navigate('/trend')
-                }
-            }, onError(error, variables, context) {
-                console.log(error);
-            },
-        }
+        onSuccess(data, variables, context) {
+            if (data === "successfull") {
+                navigate('/trend')
+            }
+        }, onError(error, variables, context) {
+            console.log(error);
+        },
+    }
     )
 
     const handleCancel = (res: boolean) => {
@@ -103,9 +104,9 @@ export default function Ordered() {
             const checkValues = {
                 id: order['_id'].$oid,
                 updatedAt: Date(),
-                status: {status: 'canceled', time: Date()},
+                status: { status: 'canceled', time: Date() },
             }
-    
+
             updatedStatus.mutate(checkValues);
         }
     }
@@ -149,6 +150,25 @@ export default function Ordered() {
                         <AddressDisplay address={selectedAddress || order['address']} />
                     </div>}
             </div>
+
+            {/* Review */}
+            {order['rating'] &&
+                <div className="mb-10">
+                    <div className="flex gap-5">
+                        <svg className="w-10 h-10 text-yellow-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M13.849 4.22c-.684-1.626-3.014-1.626-3.698 0L8.397 8.387l-4.552.361c-1.775.14-2.495 2.331-1.142 3.477l3.468 2.937-1.06 4.392c-.413 1.713 1.472 3.067 2.992 2.149L12 19.35l3.897 2.354c1.52.918 3.405-.436 2.992-2.15l-1.06-4.39 3.468-2.938c1.353-1.146.633-3.336-1.142-3.477l-4.552-.36-1.754-4.17Z" />
+                        </svg>
+                        <p className="text-gray-900 font-bold text-2xl dark:text-white">
+                            Đánh giá
+                        </p>
+                    </div>
+                    <div className="p-4 shadow-md">
+                        <div className='flex justify-center gap-4 p-2 mb-6'>
+                            <Rate tooltips={desc} value={order['rating']} />
+                            {order['rating'] ? <span> {desc[order['rating'] - 1]}</span> : null}
+                        </div>
+                    </div>
+                </div>}
 
             {/* Food list */}
             <div className="mb-10">

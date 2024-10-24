@@ -10,8 +10,8 @@ import { Orderes, Sidebar } from "../../components";
 export default function OrderList() {
     const user = useSelector(selectUser);
 
-    const { data: orderes } = useQuery('orderes', () => getOrderByUidApi(user['_id'] && user['_id'].$oid))
-
+    const { data: orderes } = useQuery('orderes', () => getOrderByUidApi(user && user['_id'] && user['_id'].$oid))
+    
     const [tab, setTab] = useState('all');
     const status = [
         { tab: 'all', title: 'Tất cả' },
@@ -27,7 +27,7 @@ export default function OrderList() {
         user && orderes &&
         <div className="">
             {/* sidebar */}
-            <Sidebar />
+            <Sidebar tab="order"/>
 
             <div className="p-4 sm:ml-64 ">
                 <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">

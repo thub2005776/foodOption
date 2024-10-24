@@ -2,9 +2,11 @@ import React from "react";
 import { Check } from "../../components"
 
 export default function Orderes({ type, orderes }: { type: string, orderes: Array<Object> }) {
-    const orderesFilter = orderes.filter(f => f['status'][f['status'].length -1]['status'] === type || type === 'all');
+    const orderesFilter = Array.isArray(orderes) && orderes.length > 0 &&
+      orderes.filter(f => f['status'][f['status'].length -1]['status'] === type || type === 'all');
 
     return (
+        orderes &&
         <div className="mx-10 m-2">
             {Array.isArray(orderesFilter) && orderesFilter.length > 0 ? orderesFilter.map((item, i) => (
                 <Check key={i} item={item}/>

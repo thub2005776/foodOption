@@ -134,7 +134,7 @@ export default function Check({ item }: { item: Object }) {
                 </div>
                 <div className="flex justify-end">
                     {(statusName === 'pending' || statusName === 'processing') &&
-                        <Delete name='Đơn hàng' res={handleCancel} />}
+                        <Delete name='Đơn hàng' action='Huỷ' res={handleCancel} />}
                     {completedCondition.find(f => f === statusName) &&
                         <button
                             onClick={handleCompleted}

@@ -21,7 +21,7 @@ export default function AddressItem({ item }: { item: Object }) {
                 </div>
                 <div className="flex ">
                     <AddressModal type="edit" addressItem={item}/>
-                    <Delete res={handleDelete} name="Địa chỉ"/>
+                    <Delete res={handleDelete} action="Xoá" name="Địa chỉ"/>
                 </div>
             </div>
         </li>

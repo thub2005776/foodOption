@@ -4,16 +4,22 @@ import { useMutation, useQuery } from "react-query";
 import { downloadApi } from "../../api/uploadFileApi";
 import { updateOrderFoodApi } from "../../api/orderApi";
 import { getFoodByIdApi, updateStoredFoodApi } from "../../api/foodApi";
+import { getReviewByCIdApi } from "../../api/reviewApi";
 
 export default function OrderItem({ order, item, index }: { order: Object, item: Object, index: React.Key }) {
     const { data: imageFile } = useQuery(item['food'].image, () => downloadApi(item['food'] ? item['food'].image : 'food.jpg'));
-    const {data: food } = useQuery(item && item['food']['_id'].$oid, () => getFoodByIdApi(item  && item['food'] && item['food']['_id'].$oid))
+    const { data: food } = useQuery(item && item['food']['_id'].$oid, () => getFoodByIdApi(item && item['food'] && item['food']['_id'].$oid))
+    const { data: review } = useQuery('review', () => getReviewByCIdApi(order['_id']['$oid']));
+    const foodReview = Array.isArray(review) && item && review.find(f => f['food']['_id']['$oid'] === item['food']['_id'].$oid)
 
     const [quantity, setQuantity] = useState(item && item['quantity']);
     const [note, setNote] = useState(item && item['note']);
-    const message = food && food['stored']? food['stored']: '';
+    const message = food && food['stored'] ? food['stored'] : '';
     const [err, setErr] = useState('');
-    
+
+    const quantityAndNoteCondition = ['pending', 'processing'];
+    const status = Array.isArray(order['status']) && order['status'][order['status'].length -1]['status'];
+
     const updatedFood = {
         orderID: order && order['_id'].$oid,
         index: index,
@@ -76,10 +82,10 @@ export default function OrderItem({ order, item, index }: { order: Object, item:
                 operation: '-',
             }
             if (food['stored'] >= quantity + 1) {
-                 updatedStoredFood.mutate(foodValues);
-                 updatedOrderFood.mutate(updatedFood);
+                updatedStoredFood.mutate(foodValues);
+                updatedOrderFood.mutate(updatedFood);
             } else { setErr('Số lượng đã đến giới hạn tối đa.') }
-           
+
         } else { setErr('Số lượng đã đến giới hạn tối đa.') }
     }
 
@@ -89,7 +95,8 @@ export default function OrderItem({ order, item, index }: { order: Object, item:
 
     return (
         item &&
-            <li className="relative grid grid-cols-5 w-full shadow-md sm:rounded-lg bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+        <div className="relative w-full shadow-md sm:rounded-lg bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+            <div className="grid grid-cols-5">
                 <div className="p-2">
                     <img
                         className="w-32 rounded-md"
@@ -114,38 +121,44 @@ export default function OrderItem({ order, item, index }: { order: Object, item:
                         }}
                         id="message"
                         rows={4}
-                        className={`${order['status'] !== 'pending' && order['status'] !== 'processing' && "cursor-not-allowed "} block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
+                        className={`${quantityAndNoteCondition.find(f => f !== status) && "cursor-not-allowed "} block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
                         placeholder="Thêm ghi chú..."
-                        readOnly={order['status'] !== 'pending' && order['status'] !== 'processing'}
+                        readOnly={status !== 'pending' && status !== 'proccessing'}
                         defaultValue={note}></textarea>
                 </div>
                 <div className="pt-16 ps-5">
                     <div className="flex gap-5 h-fit">
-                        {(order['status'] === 'pending' || order['status'] === 'processing') && 
-                         <div
-                            onClick={handleDesQuantity}
-                            className="p-1 cursor-pointer rounded-md border border-orange-500 dark:border-orange-400">
-                            <svg className="w-6 h-6 text-orange-500" aria-hidden="true" xmlns="http:www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14" />
-                            </svg>
-                        </div>}
+                        {(quantityAndNoteCondition.find( f=> f === status)) &&
+                            <div
+                                onClick={handleDesQuantity}
+                                className="p-1 cursor-pointer rounded-md border border-orange-500 dark:border-orange-400">
+                                <svg className="w-6 h-6 text-orange-500" aria-hidden="true" xmlns="http:www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14" />
+                                </svg>
+                            </div>}
                         <p className="text-gray-900 dark:text-white font-bold text-lg">
                             {quantity}
                         </p>
-                        
-                        {(order['status'] === 'pending' || order['status'] === 'processing') &&
-                        <div
-                            onClick={handleIncQuantity}
-                            className="p-1 cursor-pointer rounded-md bg-orange-500 dark:bg-orange-400">
-                            <svg className="w-6 h-6 text-white" aria-hidden="true" xmlns="http:www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14m-7 7V5" />
-                            </svg>
-                        </div>}
+
+                        {(quantityAndNoteCondition.find( f=> f === status)) &&
+                            <div
+                                onClick={handleIncQuantity}
+                                className="p-1 cursor-pointer rounded-md bg-orange-500 dark:bg-orange-400">
+                                <svg className="w-6 h-6 text-white" aria-hidden="true" xmlns="http:www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h14m-7 7V5" />
+                                </svg>
+                            </div>}
                     </div>
                     {message && <p className="text-sm text-green-600">Còn lại {message} phần ăn</p>}
                     {err && <p className="text-sm text-red-600">{err}</p>}
-                    
                 </div>
-            </li>
+            </div>
+
+            {foodReview &&
+                <div className="p-2 m-3">
+                    <p className="text-gray-600 font-semibold">Đánh giá của bạn:</p>
+                    <p className="text-gray-600">{foodReview['comment']}</p>
+                </div>}
+        </div>
     );
 };

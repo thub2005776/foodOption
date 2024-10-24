@@ -60,11 +60,14 @@ class OrderDetail(MethodView):
             if id and ObjectId(id):
                 query = {"_id": ObjectId(id)}
                 if request.get_json:
-                    update = {
-                        "$set": order_model(request=request),
-                        "$push": {"status": request.json.get("newStatus")},
-                    }
-
+                    new_status = request.json.get("newStatus")
+                    if new_status:
+                        update = {
+                            "$set": order_model(request=request),
+                            "$push": {"status": new_status},
+                        }
+                    else:
+                        update = {"$set": order_model(request=request)}
                     result = order_collection.find_one_and_update(
                         query,
                         update=update,
