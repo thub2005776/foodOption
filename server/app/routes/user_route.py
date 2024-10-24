@@ -7,6 +7,8 @@ import json
 import bcrypt
 from bson import json_util, ObjectId
 from app.db_connection import db
+from app.routes.cart_route import CartByUid
+from app.routes.address_route import UserAddressByUid
 user_collection = db['user']
 
 class Users(MethodView):
@@ -89,7 +91,7 @@ class UserInfo(MethodView):
             else:
                 return "ID (ObjectId) pamram is required."
         except:
-            return "ID (ObjectId) pamram is required."
+            return "excecpt."
 
     def delete(self, id):
         try:

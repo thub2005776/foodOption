@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { addReviewApi, getReviewByFIdApi, updateReviewApi } from '../../api/reviewApi';
+import { addReviewApi, getReviewByFIdApi } from '../../api/reviewApi';
 import { useSelector } from "react-redux";
 import { selectUser } from "../../features/userSlice";
 import { useMutation, useQuery } from "react-query";
 import { downloadApi } from "../../api/uploadFileApi";
 import { addFavoritedFoodApi, deleteFavoritedFoodApi, getFavoritedFoodByFidApi } from "../../api/favoritedFoodApi";
+import { updateFoodApi } from "../../api/foodApi";
 
 export default function ReviewFood({ foodList, checkID }: { foodList: Object, checkID }) {
     const user = useSelector(selectUser);
@@ -15,13 +16,25 @@ export default function ReviewFood({ foodList, checkID }: { foodList: Object, ch
     const [comment, setComment] = useState('');
     const [saved, setSaved] = useState(false);
     const [favoritedID, setFavoritedID] = useState(favorited);
-    
+
     const addReiew = useMutation(
         addReviewApi, {
         onSuccess(data, variables, context) {
             if (data === "successfull") {
                 console.log(data);
                 setSaved(true)
+            }
+        }, onError(error, variables, context) {
+            console.log(error);
+
+        },
+    })
+
+    const updatedFood = useMutation(
+        updateFoodApi, {
+        onSuccess(data, variables, context) {
+            if (data === "successfull") {
+                console.log(data);
             }
         }, onError(error, variables, context) {
             console.log(error);
@@ -61,6 +74,8 @@ export default function ReviewFood({ foodList, checkID }: { foodList: Object, ch
         deleteFavoritedFoodApi, {
         onSuccess(data, variables, context) {
             if (data === "successfull") {
+                console.log(data);
+                
             }
         },
         onError(error, variables, context) {
@@ -77,14 +92,22 @@ export default function ReviewFood({ foodList, checkID }: { foodList: Object, ch
             updatedAt: Date(),
         }
 
+        const favoritedValue = {
+            favorited: 1,
+            operation: '+',
+        }
 
         if (favoritedID) {
             removeFavoritedFood.mutate(favoritedID)
-        } else { addFavoritedFood.mutate(values) }
-
+            favoritedValue.operation = '-'
+            updatedFood.mutate(favoritedValue)
+        } else {
+            addFavoritedFood.mutate(values)
+            updatedFood.mutate(favoritedValue)
+        }
     }
 
-    const likedCSS = "text-white " 
+    const likedCSS = "text-white "
     const disLikeCSS = "text-gray-900 "
 
     return (
@@ -97,10 +120,10 @@ export default function ReviewFood({ foodList, checkID }: { foodList: Object, ch
                             className="w-10" />
                         <p className="text-gray-600 font-semibold">{foodList['food']['name']}</p>
                     </div>
-                    <button 
-                    onClick={handleFavortied}
-                    className={`relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium  rounded-lg group bg-gradient-to-br from-purple-500 to-pink-500 group-hover:from-purple-500 group-hover:to-pink-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800
-                    ${favoritedID? likedCSS: disLikeCSS}`}>
+                    <button
+                        onClick={handleFavortied}
+                        className={`relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium  rounded-lg group bg-gradient-to-br from-purple-500 to-pink-500 group-hover:from-purple-500 group-hover:to-pink-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800
+                    ${favoritedID ? likedCSS : disLikeCSS}`}>
                         <span className={`${favoritedID && "bg-opacity-0 "} relative px-5 py-1.5  bg-white dark:bg-gray-900 rounded-md hover:bg-opacity-0`}>
                             Yêu thích
                         </span>

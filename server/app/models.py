@@ -14,6 +14,7 @@ def food_model(request):
         "createdAt": request.json.get("createdAt"),
         "updatedAt": request.json.get("updatedAt"),
         "stated": request.json.get("stated"),
+        "favorited": request.json.get("favorited"),
     }
 
     fmodel = {key: value for key, value in fmodel.items() if value is not None}

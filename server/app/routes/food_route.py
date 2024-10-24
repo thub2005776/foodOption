@@ -63,9 +63,16 @@ class FoodDetail(MethodView):
             if id and ObjectId(id):
                 query = {"_id": ObjectId(id)}
                 if request.get_json:
-                    update = {
-                        "$set": food_model(request=request)
-                    }
+                    favorited = request.json.get("favorited")
+                    operation = request.json.get("operation")
+                    if favorited:
+                        favoritedFood = food_collection.find_one(query)
+                        if operation == '+':
+                            update = {"$set": {"favorited": favoritedFood['favorited'] + favorited }}
+                        else:
+                            update = {"$set": {"favorited": favoritedFood['favorited'] - favorited }}
+                    else:
+                        update = { "$set": food_model(request=request)}
                     result = food_collection.find_one_and_update(
                         query, 
                         update=update, 

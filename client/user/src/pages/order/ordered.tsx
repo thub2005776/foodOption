@@ -232,7 +232,7 @@ export default function Ordered() {
                     </p>
                     {(order['status'] === 'pending' || order['status'] === 'processing') &&
                         <div className="flex ">
-                            <Delete name='Đơn hàng' res={handleCancel} />
+                            <Delete name='Đơn hàng' action="Huỷ" res={handleCancel} />
                             <button
                                 onClick={handleChanged}
                                 type="button"

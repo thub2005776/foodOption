@@ -45,6 +45,8 @@ export {default as SuccessMesage} from './button/successMessage.tsx'
 export {default as AccList} from './acc/accList.tsx'
 export {default as Address} from './acc/address.tsx'
 export {default as AddressItem} from './acc/addressItem.tsx'
+export {default as Sidebar} from './acc/sidebar.tsx'
+export {default as FavoritedItem} from './acc/favoritedItem.tsx'
 
 // Comments
 export {default as CommItem} from './com/commItem.tsx'

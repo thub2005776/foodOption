@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 import { Button, Modal, Rate } from 'antd';
-import { useSelector } from 'react-redux';
-import { selectUser } from '../../features/userSlice';
 import { useMutation } from 'react-query';
 import { updateOrderApi } from '../../api/orderApi';
-import { useNavigate } from 'react-router-dom';
 import { ReviewFood } from '../../components';
 
 export default function ReviewModal({ check }: { check: Object }) {
-    const user = useSelector(selectUser);
     const [open, setOpen] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
 
@@ -30,7 +26,6 @@ export default function ReviewModal({ check }: { check: Object }) {
             console.log(error);
         },
     })
-
 
     const handleOk = () => {
         const reviewCheck = {
