@@ -1,77 +1,121 @@
 import React, { useState } from "react";
-import { ImportCouponItem } from "..";
+import { DateTimeMoment, DropdownComponent, ImportCouponItem, SearchModal, TimeFilter } from "../../components";
+import { Link } from "react-router-dom";
+import { useQuery } from "react-query";
+import { getImportCouponApi } from "../../api/importCouponApi";
+import { DatePicker, DatePickerProps, Space } from "antd";
 
 
 export default function ImportCouponList() {
-    const [selected, setSelected] = useState('1 tuần');
-    const [open, setOpen] = useState(false);
+    const { data: impt } = useQuery('importcoupones', () => getImportCouponApi());
 
-    const selection = ['Chờ duyệt', 'Đã huỷ', '1 tuần', '1 tháng', '3 tháng', '1 năm'];
+    const [start, setStart] = useState('');
+    const [end, setEnd] = useState('');
+
+    const selection = [{ name: 'Mới nhất' }, { name: '1 tuần' }, { name: '1 tháng' }, { name: '3 tháng' }, { name: '1 năm' }];
+    const [selected, setSelected] = useState(selection[0].name);
+    const handleSelected = (res: string) => {
+        setSelected(res);
+
+    }
+
+    const onChangeStart: DatePickerProps['onChange'] = (date) => {
+        setStart(date && date['$d'])
+    };
+
+    const onChangeEnd: DatePickerProps['onChange'] = (date) => {
+        setEnd(date && date['$d'])
+    };
+
     return (
+        impt &&
         <div>
-            <div className="relative mb-2">
-                <button
-                    onClick={() => setOpen(!open)}
-                    id="dropdownRadioButton"
-                    className="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" type="button">
-                    <svg className="w-3 h-3 text-gray-500 dark:text-gray-400 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 0a10 10 0 1 0 10 10A10.011 10.011 0 0 0 10 0Zm3.982 13.982a1 1 0 0 1-1.414 0l-3.274-3.274A1.012 1.012 0 0 1 9 10V6a1 1 0 0 1 2 0v3.586l2.982 2.982a1 1 0 0 1 0 1.414Z" />
-                    </svg>
-                    {selected}
-                    <svg className="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
-                    </svg>
+            <div className="flex justify-end gap-5">
+                {/* Search for import coupon */}
+                <SearchModal type="importcoupon" data={impt} />
+                {/* Add new import coupon */}
+                <button>
+                    <Link to={`/importcoupon/add`}>
+                        <svg className="w-8 h-8 text-blue-400 dark:text-gray-600 hover:text-blue-600 dark:hover:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                            <path fillRule="evenodd" d="M4.857 3A1.857 1.857 0 0 0 3 4.857v4.286C3 10.169 3.831 11 4.857 11h4.286A1.857 1.857 0 0 0 11 9.143V4.857A1.857 1.857 0 0 0 9.143 3H4.857Zm10 0A1.857 1.857 0 0 0 13 4.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 21 9.143V4.857A1.857 1.857 0 0 0 19.143 3h-4.286Zm-10 10A1.857 1.857 0 0 0 3 14.857v4.286C3 20.169 3.831 21 4.857 21h4.286A1.857 1.857 0 0 0 11 19.143v-4.286A1.857 1.857 0 0 0 9.143 13H4.857ZM18 14a1 1 0 1 0-2 0v2h-2a1 1 0 1 0 0 2h2v2a1 1 0 1 0 2 0v-2h2a1 1 0 1 0 0-2h-2v-2Z" clipRule="evenodd" />
+                        </svg>
+                    </Link>
                 </button>
+                {/*Going to food type */}
+                <button type="button"
+                    className="text-white bg-gradient-to-br from-green-400 to-blue-600 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-green-200 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                    <Link to={`/foodtype`}>
+                        <div className="flex">
+                            <p>Nhóm nguyên liệu</p>
+                            <span>
+                                <svg className="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 12H5m14 0-4 4m4-4-4-4" />
+                                </svg>
+                            </span>
+                        </div>
 
-                {open &&
-                    <div
-                        id="dropdownRadio"
-                        className="absolute z-[100] w-48 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600" >
-                        <ul className="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200 cursor-pointer" >
-                            {selection.map((item, i) => (
-                                <li key={i}
-                                    onClick={() => {
-                                        setSelected(item)
-                                        setOpen(false)
-                                    }}>
-                                    <div className="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                        {item}
-                                    </div>
-                                </li>))}
-                        </ul>
-                    </div>}
+                    </Link>
+                </button>
             </div>
-            <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
 
+            <div className="flex gap-5">
+                <DropdownComponent type={selected} data={selection} selectedItem={handleSelected} />
+                <div className="flex gap-5">
+                    <div className="mb-5">
+                        <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Từ:
+                        </label>
+                        <Space direction="vertical">
+                            <DatePicker
+                                size="middle"
+                                onChange={onChangeStart} />
+                        </Space>
+                    </div>
+                    <div className="mb-5">
+                        <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Đến:
+                        </label>
+                        <Space direction="vertical">
+                            <DatePicker
+                                size="middle"
+                                onChange={onChangeEnd} />
+                        </Space>
+                    </div>
+                </div>
+            </div >
+
+            <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
                 <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-                            <th scope="col" className="p-4">
+                            <th scope="col" className="px-6 py-3">
                                 Thời gian
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Nguyên liệu
+                                Mã phiếu nhập hàng
                             </th>
                             <th scope="col" className="px-6 py-3">
                                 Nhà cung cấp
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Trạng thái
+                                Nhân viên phụ trách
                             </th>
                             <th scope="col" className="px-6 py-3">
-                                Đơn giá
+                                Tổng cộng
                             </th>
                             <th scope="col" className="px-6 py-3">
                                 Thêm
                             </th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <ImportCouponItem />
-                    </tbody>
+                    {/* {Array.isArray(impt) && impt.length > 0 && impt.slice(0,10).map((item, i) => (
+                            <ImportCouponItem key={i} item={item} />
+                        ))} */}
+
+                    <TimeFilter data={impt} type="importcoupon" selected={selected} start={start} end={end} />
                 </table>
             </div>
-        </div>
 
+        </div>
     );
 };

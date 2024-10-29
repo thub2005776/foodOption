@@ -117,7 +117,9 @@ export default function Ordered() {
             <p className="text-3xl font-extrabold text-gray-900 dark:text-white text-center m-10">
                 HOÁ ĐƠN
             </p>
-
+            <p className="text-xl text-gray-600 text-center m-10">
+                Mã đơn hàng: {order['_id']['$oid']}
+            </p>
             <button type="button" className="m-5 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                 onClick={() => navigate(`/trend`)}>
                 <svg className="w-6 h-6text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">

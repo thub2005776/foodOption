@@ -1,15 +1,24 @@
 import React from "react";
 import { useState } from "react";
 import { Modal } from 'antd';
-import { useQuery } from "react-query";
-import { getFoodApi } from "../../api/foodApi";
-import {PreviewFood} from "../../components";
+import { Check, PreviewFood } from "../../components";
 
 export default function SearchModal({ type, data }: { type: string, data: Array<Object> }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [input, setInput] = useState('');
 
-    const searchResult = type === 'food' && Array.isArray(data) && data.filter(f => String(f['name']).toLocaleLowerCase().includes(input));
+    const searchResult = () => {
+        var result = [{}]
+        if (Array.isArray(data) && data.length > 0) {
+            if (type === 'food') {
+                result = data.filter(f => String(f['name']).toLocaleLowerCase().includes(input));
+            } else if (type === 'order') {
+                result = data;
+            }
+        }
+
+        return result;
+    }
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -25,10 +34,11 @@ export default function SearchModal({ type, data }: { type: string, data: Array<
     return (
         data &&
         <div className="">
-            <div onClick={showModal}>
-                <svg className="w-8 h-8 cursor-pointer text-blue-400 dark:text-gray-600 hover:text-blue-800 dark:hover:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <div onClick={showModal} className="flex gap-2 p-1 cursor-pointer bg-gray-200/5 dark:bg-gray-800 border border-blue-400 dark:border-gray-600 rounded-lg w-40">
+                <svg className="w-6 h-6 cursor-pointer text-blue-400 dark:text-gray-600 hover:text-blue-800 dark:hover:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
                     <path stroke="currentColor" strokeLinecap="round" strokeWidth="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z" />
                 </svg>
+                <p className="text-gray-500">Tìm kiếm...</p>
             </div>
 
             <Modal title="Tìm kiếm" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
@@ -52,8 +62,9 @@ export default function SearchModal({ type, data }: { type: string, data: Array<
                         </div>
 
                         <div className="p-4 md:p-5 space-y-4">
-                            {Array.isArray(searchResult) && searchResult.length > 0 && searchResult.slice(0,5).map((item, i) => (
-                                type === 'food' && <PreviewFood key={i} food={item} />
+                            {Array.isArray(searchResult()) && searchResult().length > 0 && searchResult().slice(0, 3).map((item, i) => (
+                                type === 'food'? <PreviewFood key={i} food={item} />
+                                :type === 'order' && <Check key={i} item={item} />
                             ))}
                         </div>
                     </div>

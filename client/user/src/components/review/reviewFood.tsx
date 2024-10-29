@@ -17,6 +17,8 @@ export default function ReviewFood({ foodList, checkID }: { foodList: Object, ch
     const [saved, setSaved] = useState(false);
     const [favoritedID, setFavoritedID] = useState(favorited);
 
+    console.log(favoritedID);
+    
     const addReiew = useMutation(
         addReviewApi, {
         onSuccess(data, variables, context) {
@@ -29,6 +31,9 @@ export default function ReviewFood({ foodList, checkID }: { foodList: Object, ch
 
         },
     })
+
+    console.log(favorited);
+    
 
     const updatedFood = useMutation(
         updateFoodApi, {

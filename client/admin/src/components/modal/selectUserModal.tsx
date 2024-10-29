@@ -23,9 +23,9 @@ export default function SelectUserModal({ useres, updated }: { useres: Array<Obj
             {/* <!-- Main modal --> */}
             {open &&
             <div id="select-modal" className="overflow-y-auto overflow-x-hidden top-0 right-0  justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
-                <div className="absolute z-[10000] right-0 p-4 w-[30rem] max-h-full">
+                <div className="absolute z-[1000] top-0 right-4 p-4 w-[30rem] max-h-full">
                     {/* <!-- Modal content --> */}
-                    <div className="relative bg-blue-50 rounded-lg shadow dark:bg-gray-700">
+                    <div className="relative bg-gray-50 rounded-lg shadow dark:bg-gray-700">
                         {/* <!-- Modal header --> */}
                         <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                             <h3 className="text-lg font-semibold text-gray-900 dark:text-white">

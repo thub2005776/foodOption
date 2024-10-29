@@ -175,11 +175,42 @@ def rate_model(request):
     return model
 
 #  import coupon model
-def importCoupon_model(request):
+def import_coupon_model(request):
     model = {
-        "supplierID": request.json.get("supplierID"),
-        "staffID": request.json.get("staffID"),
+        "supplier": request.json.get("supplier"),
+        "staff": request.json.get("staff"),
         "detail": request.json.get("detail"), #json type
+        "total": request.json.get("total"),
+        "noted": request.json.get("noted"),
+        "createdAt": request.json.get("createdAt"),
+        "updatedAt": request.json.get("updatedAt"),
+    }
+
+    model = {key: value for key, value in model.items() if value is not None}
+    return model
+
+#  import coupon model
+def food_type_model(request):
+    model = {
+        "name": request.json.get("name"),
+        "detail": request.json.get("detail"),
+        "createdAt": request.json.get("createdAt"),
+        "updatedAt": request.json.get("updatedAt"),
+    }
+
+    model = {key: value for key, value in model.items() if value is not None}
+    return model
+
+#  import coupon model
+def import_coupon_detail_model(request):
+    model = {
+        "foodTypeID": request.json.get("foodTypeID"),
+        "name": request.json.get("name"),
+        "cost": request.json.get("cost"),
+        "quantity": request.json.get("quantity"),
+        "unit": request.json.get("unit"),
+        "exp": request.json.get("exp"),
+        "caution": request.json.get("caution"),
         "createdAt": request.json.get("createdAt"),
         "updatedAt": request.json.get("updatedAt"),
     }
@@ -203,18 +234,6 @@ def order_model(request):
         "status": request.json.get("status"),
         "review": request.json.get("review"),
         "rating": request.json.get("rating"),
-    }
-
-    model = {key: value for key, value in model.items() if value is not None}
-    return model
-
-#  payment model
-def payment_model(request):
-    model = {
-        "payment": request.json.get("payment"),
-        "description": request.json.get("description"),
-        "createdAt": request.json.get("createdAt"),
-        "updatedAt": request.json.get("updatedAt"),
     }
 
     model = {key: value for key, value in model.items() if value is not None}

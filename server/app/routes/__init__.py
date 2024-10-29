@@ -18,3 +18,6 @@ from app.routes.order_route import *
 from app.routes.favorited_food_route import *
 from app.routes.cart_route import *
 from app.routes.review_route import *
+from app.routes.food_type_route import *
+from app.routes.import_coupon_detail_route import *
+from app.routes.import_coupon_route import *

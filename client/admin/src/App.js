@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom"
-import { AccForm, AccInfo, FoodForm, Home, Login, OrderDetail, Role } from "./pages"
+import { AccForm, AccInfo, FoodForm, FoodType, Home, ImportCoupon, Login, OrderDetail, Role } from "./pages"
 import { FoodGroupItems, Navbar } from "./components";
 import { useDispatch } from "react-redux";
 import { login } from "./features/userSlice";
@@ -45,6 +45,10 @@ function App() {
         <Route path="/acc/role" element={<Role />} />
         
         <Route path="/order/:id" element={<OrderDetail />} />
+
+        <Route path="/foodtype" element={<FoodType />} />
+        <Route path="/importcoupon/add" element={<ImportCoupon />}/>
+        <Route path="/importcoupon/:id" element={<ImportCoupon />}/>
       </Routes>
     </div>
   );

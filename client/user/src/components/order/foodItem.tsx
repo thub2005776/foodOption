@@ -10,7 +10,7 @@ export default function FoodItem({ foodItem }: { foodItem: Object }) {
     
     return (
         <li className="m-5 text-gray-900 dark:text-white">
-            <div className="flex justify-between border-b-[0.5px]">
+            <div className="flex justify-between border-b-[0.5px] dark:border-gray-600">
                 <div className="flex gap-5">
                     <img src={imageFile instanceof Blob ? URL.createObjectURL(imageFile) : image} className="w-20" alt="food" />
                     <div >

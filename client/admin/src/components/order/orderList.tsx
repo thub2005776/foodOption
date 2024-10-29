@@ -34,7 +34,7 @@ export default function OrderList() {
                         ))}
                     </ul>
                 </div>
-            <div className="relative  shadow-md sm:rounded-lg">
+            <div className="relative shadow-md sm:rounded-lg">
                 <OrderTable orderes={orderes} type={tab} />
             </div>
         </div>

@@ -3,7 +3,7 @@ import { selectUser } from "../../features/userSlice";
 import { useQuery } from "react-query";
 import { useSelector } from "react-redux";
 import { getOrderByUidApi } from "../../api/orderApi";
-import { Orderes, Sidebar } from "../../components";
+import { Orderes, SearchModal, Sidebar } from "../../components";
 
 
 
@@ -30,6 +30,10 @@ export default function OrderList() {
             <Sidebar tab="order"/>
 
             <div className="p-4 sm:ml-64 ">
+                <div className="absolute right-5 mb-6">
+                    <SearchModal type="order" data={orderes} />
+                </div>
+                
                 <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
                     <ul className="flex flex-wrap -mb-px">
                         {status.map((item, i) => (

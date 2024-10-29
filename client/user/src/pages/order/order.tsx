@@ -247,7 +247,7 @@ export default function Order() {
                         <Statistic valueStyle={{ color: '#e02424' }} value={total()} suffix="đ" />
                     </p>
                     <div className="flex">
-                        <Delete name='Đơn hàng' res={handleCancel} />
+                        <Delete action="Huỷ" name='Đơn hàng' res={handleCancel} />
                         <button
                             onClick={handlePay}
                             type="button"
