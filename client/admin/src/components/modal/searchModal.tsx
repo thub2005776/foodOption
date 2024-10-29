@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { Modal } from 'antd';
-import { ImportCouponView } from "../../components";
+import { FoodView, ImportCouponView, Item } from "../../components";
 
 export default function SearchModal({ type, data }: { type: string, data: Array<Object> }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -10,7 +10,7 @@ export default function SearchModal({ type, data }: { type: string, data: Array<
     const searchResult = () => {
         var result = [{}]
         if (Array.isArray(data) && data.length > 0) {
-            if (type === 'food') {
+            if (type === 'food' || type === 'topic') {
                 result = data.filter(f => String(f['name']).toLocaleLowerCase().includes(input));
             } else if (type === 'order') {
                 result = data.filter(f => String(f['_id']['$oid']).includes(input));
@@ -18,16 +18,16 @@ export default function SearchModal({ type, data }: { type: string, data: Array<
                     result = data.filter(f => String(f['payment']).toLocaleLowerCase().includes(input));
                     if (!result[0]) {
                         result = data.filter(f => String(f['status']).toLocaleLowerCase().includes(input));
-                    } 
-                } 
+                    }
+                }
             } else if (type === 'importcoupon') {
                 result = data.filter(f => String(f['_id']['$oid']).includes(input));
                 if (!result[0]) {
                     result = data.filter(f => String(f['supplier']['name']).toLocaleLowerCase().includes(input));
                     if (!result[0]) {
                         result = data.filter(f => String(f['staff']['name']).toLocaleLowerCase().includes(input));
-                    } 
-                } 
+                    }
+                }
             } else if (type === 'user') {
                 result = data.filter(f => String(f['_id']['$oid']).includes(input));
                 if (!result[0]) {
@@ -37,9 +37,9 @@ export default function SearchModal({ type, data }: { type: string, data: Array<
 
                         if (!result[0]) {
                             result = data.filter(f => String(f['gender']).toLocaleLowerCase().includes(input));
-                        } 
-                    } 
-                } 
+                        }
+                    }
+                }
             }
         }
 
@@ -89,7 +89,8 @@ export default function SearchModal({ type, data }: { type: string, data: Array<
 
                         <div className="p-4 md:p-5 space-y-4">
                             {Array.isArray(searchResult()) && searchResult().length > 0 && searchResult().slice(0, 3).map((item, i) => (
-                               type === 'importcoupon' &&  <ImportCouponView impt={item}/>
+                                (type === 'importcoupon' || type === 'order') ? <ImportCouponView type={type} impt={item} />
+                                    : (type === 'food' || type === 'topic') &&  <FoodView type={type} food={item} key={i} />
                             ))}
                         </div>
                     </div>

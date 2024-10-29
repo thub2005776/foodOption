@@ -8,10 +8,10 @@ export {default as FoodGroupList} from './foodGroup/topicList.tsx'
 export {default as FoodGroupItem} from './foodGroup/foodGroupItem.tsx'
 export {default as FoodGroupItems} from './foodGroup/foodGroupItems.tsx'
 export {default as TagBage} from './food/tagBage.tsx'
-export {default as VideoPlayer} from './food/videoPlayer.tsx'
 export {default as FGroupList} from './foodGroup/fgroupList.tsx'
 export {default as FGroupTable} from './foodGroup/foodGroupTable.tsx'
 export {default as FoodCard} from './food/foodCard.tsx'
+export {default as FoodView} from './food/foodView.tsx'
 
 
 
@@ -42,9 +42,6 @@ export {default as BackButton} from './button/backButton.tsx'
 export {default as ForwardButton} from './button/ForwardButton.tsx'
 export {default as AddButton} from './button/addButton.tsx'
 
-// recipes
-export {default as RecipeItem} from './food/recipeItem.tsx'
-export {default as RecipeItems} from './food/recipeItems.tsx'
 
 // modals
 export {default as TopicModal} from './modal/topicModal.tsx'

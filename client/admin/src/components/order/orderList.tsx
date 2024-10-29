@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { OrderItem, OrderTable } from "../../components";
+import { OrderTable, SearchModal } from "../../components";
 import { useQuery } from "react-query";
 import { getOrderApi } from "../../api/orderApi";
 
 export default function OrderList() {
-    const {data: orderes} = useQuery('orderList', () => getOrderApi());
+    const { data: orderes } = useQuery('orderList', () => getOrderApi());
 
     const [tab, setTab] = useState('all');
     const status = [
@@ -16,11 +16,12 @@ export default function OrderList() {
         { tab: 'delivered', title: 'Hoàn thành' },
         { tab: 'canceled', title: 'Đã huỷ' },
     ]
-    
+
     return (
         orderes &&
         <div>
-            <div className=" text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
+            <div className="flex justify-between">
+                <div className=" text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
                     <ul className="flex flex-wrap -mb-px">
                         {status.map((item, i) => (
                             <li key={i} onClick={() => setTab(item.tab)} className="me-2">
@@ -34,6 +35,9 @@ export default function OrderList() {
                         ))}
                     </ul>
                 </div>
+                <SearchModal data={orderes} type="order" />
+            </div>
+
             <div className="relative shadow-md sm:rounded-lg">
                 <OrderTable orderes={orderes} type={tab} />
             </div>

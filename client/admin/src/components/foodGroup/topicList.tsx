@@ -14,7 +14,7 @@ export default function FoodGroupList() {
         auth && topics &&
         <div>
             <div className="flex gap-4">
-                <SearchModal />
+                <SearchModal type="topic"  data={topics}/>
                 <TopicModal type="add" topic={{}}/>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 p-1">
