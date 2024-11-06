@@ -12,13 +12,13 @@ export {default as FGroupList} from './foodGroup/fgroupList.tsx'
 export {default as FGroupTable} from './foodGroup/foodGroupTable.tsx'
 export {default as FoodCard} from './food/foodCard.tsx'
 export {default as FoodView} from './food/foodView.tsx'
+export {default as Rating} from './food/rating.tsx'
 
 
 
 // components
 export {default as List} from './list/list.tsx'
 export {default as Item} from './list/item.tsx'
-export {default as FoodList} from './food/foodList.tsx'
 export {default as Rankings} from './home/rankings.tsx'
 export {default as RankingsItem} from './home/RankingsItem.tsx'
 export {default as TimeLater} from './dateTimeDisplay/timeLater.tsx'
@@ -47,10 +47,11 @@ export {default as AddButton} from './button/addButton.tsx'
 export {default as TopicModal} from './modal/topicModal.tsx'
 export {default as SearchModal} from './modal/searchModal.tsx'
 export {default as Delete} from './modal/deleteModal.tsx'
-export {default as Reply} from './modal/replyModal.tsx'
+export {default as Reply} from './modal/updatedStoredFoodModal.tsx'
 export {default as AddressModal} from './modal/addressModal.tsx'
 export {default as RoleModal} from './modal/roleModal.tsx'
 export {default as SelectUserModal} from './modal/selectUserModal.tsx'
+export {default as UpdatedStoredFoodModal} from './modal/updatedStoredFoodModal.tsx'
 
 // formes
 export {default as ChangPassword} from './modal/changPasswordModal.tsx'
@@ -81,3 +82,8 @@ export {default as ImportCouponView} from './importCoupon/importCouponView.tsx'
 // DateTime
 export {default as DateTimeMoment} from './dateTimeDisplay/dateTimeMoment.tsx'
 export {default as TimeFilter} from './dateTimeDisplay/timeFilter.tsx'
+
+// Satatics
+export {default as Statatics} from './statatics/satatics.tsx'
+export {default as BarChart} from './statatics/barChart.tsx'
+export {default as PieChart} from './statatics/pieChart.tsx'

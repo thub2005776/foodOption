@@ -116,8 +116,6 @@ export default function ImportCoupon() {
             detail: detail,
             total: total(detail),
             noted: noted,
-            createdAt: impt && impt['createdAt'] ? null : Date(),
-            updatedAt: Date(),
         }
 
         addImportCoupon.mutate(values);

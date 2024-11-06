@@ -11,7 +11,7 @@ food_collection = db['foodDetails']
 
 class FoodDetails(MethodView):
     def get(self):
-        cursor = food_collection.find()
+        cursor = food_collection.find().sort('sold', pymongo.DESCENDING)
         if cursor:
             return json.loads(json_util.dumps(cursor))
         else:

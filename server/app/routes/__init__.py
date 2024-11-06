@@ -21,3 +21,4 @@ from app.routes.review_route import *
 from app.routes.food_type_route import *
 from app.routes.import_coupon_detail_route import *
 from app.routes.import_coupon_route import *
+from app.routes.statatics_rotue import *

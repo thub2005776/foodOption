@@ -1,45 +1,50 @@
 import React, { useState } from "react";
 import { Rankings } from "../../components";
+import { useQuery } from "react-query";
+import { getOrderApi } from "../../api/orderApi";
+import { getReviewApi } from "../../api/reviewApi";
+import { getUserApi } from "../../api/user";
 
 export default function Main() {
-    const [selected, setSelected] = useState('1 tuần');
-    const [open, setOpen] = useState(false);
-
-    const selection = ['1 tuần', '1 tháng', '3 tháng', '1 năm'];
+    const {data: order} = useQuery('order', () => getOrderApi());
+    const {data: review} = useQuery('review', () => getReviewApi());
+    const {data: user} = useQuery('user', () => getUserApi('user'));
+    const {data: staff} = useQuery('staff', () => getUserApi('staff'));
+    const {data: supplier} = useQuery('supplier', () => getUserApi('supplier'));
     return (
+        Array.isArray(order) && Array.isArray(review) && Array.isArray(user) && Array.isArray(staff) && Array.isArray(supplier) && 
         <div className=" ">
-            <div className="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 pb-4 bg-white dark:bg-gray-900">
-                <div className="relative">
-                    <button
-                        onClick={() => setOpen(!open)}
-                        id="dropdownActionButton"
-                        className="inline-flex items-center text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-3 py-1.5 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" type="button">
-                        <span className="sr-only">Action button</span>
-                        {selected}
-                        <svg className="w-2.5 h-2.5 ms-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
-                        </svg>
-                    </button>
-
-                    {open &&
-                        <div id="dropdownAction" className="absolute z-[1000] bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                            <ul className="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownActionButton">
-                                {selection.map((item, i) => (
-                                   <li key={item}
-                                   onClick={() => {
-                                    setSelected(item)
-                                    setOpen(false)
-                                   }}>
-                                    <div
-                                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                        {item}
-                                    </div>
-                                </li>))}
-                            </ul>
-                        </div>}
+            <div>
+                <div className="w-full mb-6  border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                    <div className=" border-gray-200 dark:border-gray-600">
+                        <div className="p-8 bg-white rounded-lg dark:bg-gray-800">
+                            <dl className="grid max-w-screen-xl grid-cols-2 gap-8 p-4 mx-auto text-gray-900 sm:grid-cols-3 xl:grid-cols-6 dark:text-white sm:p-8">
+                                <div className="flex flex-col items-center justify-center">
+                                    <dt className="mb-2 text-3xl font-extrabold">{order.length}</dt>
+                                    <dd className="text-gray-500 dark:text-gray-400">Đơn hàng</dd>
+                                </div>
+                                <div className="flex flex-col items-center justify-center">
+                                    <dt className="mb-2 text-3xl font-extrabold">{review.length}</dt>
+                                    <dd className="text-gray-500 dark:text-gray-400">Đánh giá</dd>
+                                </div>
+                                <div className="flex flex-col items-center justify-center">
+                                    <dt className="mb-2 text-3xl font-extrabold">{user.length}</dt>
+                                    <dd className="text-gray-500 dark:text-gray-400">Khách hàng</dd>
+                                </div>
+                                <div className="flex flex-col items-center justify-center">
+                                    <dt className="mb-2 text-3xl font-extrabold">{staff.length}</dt>
+                                    <dd className="text-gray-500 dark:text-gray-400">Nhân viên</dd>
+                                </div>
+                                <div className="flex flex-col items-center justify-center">
+                                    <dt className="mb-2 text-3xl font-extrabold">{supplier.length}</dt>
+                                    <dd className="text-gray-500 dark:text-gray-400">Nhà cung cấp</dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <Rankings />
+            <Rankings type="TOP MÓN ĂN NỔI BẬT" />
         </div>
     )
 }

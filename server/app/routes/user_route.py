@@ -35,7 +35,6 @@ class Users(MethodView):
                 query,
                 update=update,
                 upsert=True,
-                return_document=pymongo.ReturnDocument.AFTER
             )
             if result:
                 return "successfull"
@@ -80,7 +79,6 @@ class UserInfo(MethodView):
                         query,
                         update=update,
                         upsert=True,
-                        return_document=pymongo.ReturnDocument.AFTER
                     )
                     if result:
                         return "successfull"

@@ -8,7 +8,7 @@ export default function FilteredDataComponent({data, type, selected, start, end}
   
   useEffect(() => {
     const filtered = data.filter(item => {
-      const createdAtDate = parseISO(item['createdAt']);
+      const createdAtDate = parseISO(item['createdAt']['$d']);
 
       // Điều kiện 1 tuần
       const withinWeek = isThisWeek(createdAtDate);

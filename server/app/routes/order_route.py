@@ -6,6 +6,7 @@ import json
 from bson import json_util, ObjectId
 from app.db_connection import db
 from app.models import order_model
+from datetime import datetime
 order_collection = db['order']
 
 
@@ -20,6 +21,7 @@ class OrderDetails(MethodView):
     def post(self):
         if request.json:
             document = order_model(request=request)
+            document['createdAt'] = datetime.today()
             result = order_collection.insert_one(document=document)
             if result:
                 result_dict = {
@@ -68,6 +70,8 @@ class OrderDetail(MethodView):
                         }
                     else:
                         update = {"$set": order_model(request=request)}
+                    
+                    update['updatedAt'] = datetime.today()
                     result = order_collection.find_one_and_update(
                         query,
                         update=update,
@@ -199,6 +203,7 @@ class UpdatedOrder(MethodView):
                     note = request.json.get("note")
                     update = {
                         "$set": {
+                            "updatedAt": datetime.today(),
                             "detail." +index +".quantity": quantity,
                             "detail." +index +".note": note
                         }
@@ -280,17 +285,16 @@ class OrderesRatingByFid(MethodView):
 
 
 class OrderesStatus(MethodView):
-   def post(self, id, index):
+   def post(self, id):
         try:
             if id and ObjectId(id):
                 query = {"_id": ObjectId(id)}
                 if request.get_json:
                     status = request.json.get("status")
-                    update = {"$push": {"status": status }}
+                    update = { "$push": {"status": status }}
                     result = order_collection.find_one_and_update(
                         query,
                         update=update,
-                        return_document=pymongo.ReturnDocument.AFTER
                     )
                     if result:
                         return "successfull"

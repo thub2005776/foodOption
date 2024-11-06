@@ -111,3 +111,8 @@ export const deleteFoodByTidApi = async (id) => {
     const res = await foodApi.delete(`/api/food/tid/${id}`);
     return res.data;
 }
+
+export const updateStoredFoodApi = async (Food) => {
+    const res = await foodApi.post(`/api/food/stored/${Food.id}`, Food);
+    return res.data;
+}

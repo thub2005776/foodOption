@@ -2,7 +2,7 @@ import React from "react";
 
 export default function DateTimeDisplay({datetime}:{datetime:string}) {
     // Xử lý chuỗi để bỏ phần timezone (GMT+0700)
-    const dateStrWithoutTimeZone = datetime.split('GMT')[0].trim();
+    const dateStrWithoutTimeZone = datetime;
     
     // Chuyển đổi chuỗi thành đối tượng Date
     const date = new Date(dateStrWithoutTimeZone);

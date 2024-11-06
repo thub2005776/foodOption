@@ -108,11 +108,11 @@ export default function ImportCouponList() {
                             </th>
                         </tr>
                     </thead>
-                    {/* {Array.isArray(impt) && impt.length > 0 && impt.slice(0,10).map((item, i) => (
+                    {Array.isArray(impt) && impt.length > 0 && impt.slice(0,10).map((item, i) => (
                             <ImportCouponItem key={i} item={item} />
-                        ))} */}
+                        ))}
 
-                    <TimeFilter data={impt} type="importcoupon" selected={selected} start={start} end={end} />
+                    {/* <TimeFilter data={impt} type="importcoupon" selected={selected} start={start} end={end} /> */}
                 </table>
             </div>
 

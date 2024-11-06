@@ -1,10 +1,16 @@
 import React from "react";
 import { RankingsItem } from "../../components";
+import { useQuery } from "react-query";
+import { getFoodApi } from "../../api/foodApi";
 
-export default function Rankings() {
+export default function Rankings({type}:{type:string}) {
+    const { data:food } = useQuery('food', () => getFoodApi());
+
+    const TopFood = Array.isArray(food) && food.length > 0 && food.slice(0,3);
+
     return (
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-
+            <p className="text-center font-bold text-xl mb-6">{type}</p>
             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
@@ -20,10 +26,15 @@ export default function Rankings() {
                         <th scope="col" className="px-6 py-3">
                             Lượt bán
                         </th>
+                        <th scope="col" className="px-6 py-3">
+                            Chi tiết
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <RankingsItem />
+                    {Array.isArray(TopFood) && TopFood.map((item, i) => (
+                        <RankingsItem key={i} item={item} index={i} />
+                    ))}
                 </tbody>
             </table>
         </div>

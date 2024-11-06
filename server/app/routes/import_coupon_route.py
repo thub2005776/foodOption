@@ -6,6 +6,7 @@ import json
 from bson import json_util, ObjectId
 from app.db_connection import db
 from app.models import import_coupon_model
+from datetime import datetime
 food_collection = db['importCoupon']
 
 
@@ -25,6 +26,8 @@ class Import_coupon(MethodView):
                 update = {
                     "$set": import_coupon_model(request=request)
                 }
+
+                update['updatedAt'] = datetime.today()
                 result = food_collection.find_one_and_update(
                     query, 
                     update=update, 
@@ -32,6 +35,7 @@ class Import_coupon(MethodView):
                 )
             else:
                 document = import_coupon_model(request=request)
+                document['createdAt'] = datetime.today()
                 result = food_collection.insert_one(document)
             if result:
                 return 'successfull'

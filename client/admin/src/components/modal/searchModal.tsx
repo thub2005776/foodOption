@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { Modal } from 'antd';
-import { FoodView, ImportCouponView, Item } from "../../components";
+import { FoodView, ImportCouponView} from "../../components";
 
 export default function SearchModal({ type, data }: { type: string, data: Array<Object> }) {
     const [isModalOpen, setIsModalOpen] = useState(false);

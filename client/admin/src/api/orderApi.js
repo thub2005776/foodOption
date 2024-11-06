@@ -46,6 +46,11 @@ export const updateOrderStatusApi = async (order) => {
     return res.data;
 }
 
+export const getOrderRatingByFidApi = async (foodID) => {
+    const res = await OrderApi.get(`/api/order/rating/fid/${foodID}`);
+    return res.data;
+}
+
 export const deleteOrderApi = async (id) => {
     const res = await OrderApi.delete(`/api/order/${id}`);
     return res.data;

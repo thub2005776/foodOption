@@ -22,7 +22,6 @@ export default function List({ title, data, type, id }: { title: Array<string>, 
 
                 <div className="flex gap-4 hover:cursor-pointer">
                     <AddButton type={type} id={id}/>
-                    <SearchModal/>
                 </div>
             </div>
 
@@ -30,10 +29,7 @@ export default function List({ title, data, type, id }: { title: Array<string>, 
                 {dataFilter.length > 0  ? dataFilter.map((item, i) => (
                     <Item
                         key={i}
-                        name={item['name']}
-                        image={item['image']}
-                        id={item['_id']?.$oid}
-                        voted={item['voted']}
+                        item={item}
                     />
                 ))
                 :<p className="text-center text-gray-500 font-semibold">Chưa có món ăn nào</p>}
