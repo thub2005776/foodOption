@@ -29,7 +29,7 @@ export default function RankingsItem({ item, index }: { item: Object, index: num
                 <div className="font-medium text-blue-600 dark:text-blue-500 hover:underline">{item['sold']}</div>
             </td>
             <td className="px-6 py-4">
-                <Link to={`/food/detail/${item['_id']['$oid']}`}>
+                <Link to={`/food/statatics/${item['_id']['$oid']}`}>
                     <div className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Chi tiết</div>
                 </Link>
             </td>

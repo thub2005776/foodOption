@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { BackButton, FGroupList, TagBage, FoodGroupModal } from "../../components";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useMutation, useQuery } from "react-query";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../features/userSlice";
@@ -11,21 +11,21 @@ export default function FoodForm() {
     const user = useSelector(selectUser);
     const location = useLocation();
     const id = location.pathname.split('/')[3];
-    const { data: foodDetail } = useQuery('food', () => getFoodByIdApi(id))
-    const { data: imageFile } = useQuery('imageFile', () => downloadApi(foodDetail?.image? foodDetail['image']: 'food.jpg'))
-    const { data: foodGroup } = useQuery('foodgroup', () => getFoodGroupByTid(foodDetail?.topicID? foodDetail['topicID'] : id))
+    const { data: foodDetail } = useQuery(id, () => getFoodByIdApi(id))
+    const { data: imageFile } = useQuery(foodDetail['image'], () => downloadApi(foodDetail?.image ? foodDetail['image'] : 'food.jpg'))
+    const { data: foodGroup } = useQuery(foodDetail['topicID'], () => getFoodGroupByTid(foodDetail?.topicID ? foodDetail['topicID'] : id))
 
 
     const [gid, setGid] = useState(foodDetail?.groupID ? foodDetail['groupID'] : '')
     const [imageLink, setImageLink] = useState('');
     const [file, setFile] = useState<File | null>();
-    const [name, setName] = useState(foodDetail?.name? foodDetail['name'] : '');
+    const [name, setName] = useState(foodDetail?.name ? foodDetail['name'] : '');
     const [info, setInfo] = useState(foodDetail?.info ? foodDetail['info'] : '');
     const [cost, setCost] = useState(foodDetail?.cost ? foodDetail['cost'] : '');
     const [price, setPrice] = useState(foodDetail?.price ? foodDetail['price'] : '');
     const [stored, setStored] = useState(foodDetail?.stored ? foodDetail['stored'] : '');
-    const [tag, setTag] = useState<Array<string>>(foodDetail?.tag ? foodDetail['tag'] :[]);
-    const [stated, setStated] = useState(foodDetail?.stated?  foodDetail['stated'] : true);
+    const [tag, setTag] = useState<Array<string>>(foodDetail?.tag ? foodDetail['tag'] : []);
+    const [stated, setStated] = useState(foodDetail?.stated ? foodDetail['stated'] : true);
     const [open, setOpen] = useState(false);
 
 
@@ -79,7 +79,7 @@ export default function FoodForm() {
         formData.append('file', file!)
         const values = {
             id: foodDetail && foodDetail['_id']?.$oid,
-            topicID: foodDetail?.topicID? foodDetail['topicID'] : id,
+            topicID: foodDetail?.topicID ? foodDetail['topicID'] : id,
             groupID: gid,
             name: name,
             info: info,
@@ -88,8 +88,8 @@ export default function FoodForm() {
             price: price,
             stored: stored,
             tag: tag,
-            rating: foodDetail?.rating? foodDetail?.rating : 0,
-            sold: foodDetail?.sold? foodDetail?.sold : 0,
+            rating: foodDetail?.rating ? foodDetail?.rating : 0,
+            sold: foodDetail?.sold ? foodDetail?.sold : 0,
             createdAt: foodDetail?.createdAt ? foodDetail['createdAt'] : Date(),
             updatedAt: Date(),
             stated: stated,
@@ -121,6 +121,19 @@ export default function FoodForm() {
             <div className="fixed ml-1 top-32">
                 <BackButton />
             </div>
+            {/* /food/statatics/ */}
+            {id !== 'add' &&
+                <div className="fixed top-32 right-3">
+                    <Link to={`/food/statatics/${id}`}>
+                        <button type="button"
+                            className="flex text-white bg-gradient-to-r from-purple-500 to-pink-500 hover:bg-gradient-to-l focus:ring-4 focus:outline-none focus:ring-purple-200 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                            Thống kê chi tiết
+                            <svg className="rtl:rotate-180 w-3.5 h-3.5 ms-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
+                            </svg>
+                        </button>
+                    </Link>
+                </div>}
             {/* tepper  */}
             <ol className="mb-10 flex items-center w-full text-sm font-medium text-center text-gray-500 dark:text-gray-400 sm:text-base">
                 <li className={`flex md:w-full items-center sm:after:content-[''] after:w-full after:h-1 after:border-b after:border-gray-200 after:border-1 after:hidden sm:after:inline-block after:mx-6 xl:after:mx-10 dark:after:border-gray-700
@@ -153,7 +166,7 @@ export default function FoodForm() {
                     <div className="flex justify-between">
                         <p className="text-blue-700 font-semibold dark:text-white">
                             Nhóm món ăn <span className="text-blue-950 dark:text-gray-400">
-                                [{gid ? gid : foodDetail['groupID'] ? foodDetail['groupID'] : 'mã nhóm'}] 
+                                [{gid ? gid : foodDetail['groupID'] ? foodDetail['groupID'] : 'mã nhóm'}]
                             </span>
                         </p>
                         <FoodGroupModal

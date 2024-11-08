@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom"
-import { AccForm, AccInfo, FoodForm, FoodType, Home, ImportCoupon, Login, OrderDetail, Role } from "./pages"
+import { AccForm, AccInfo, FoodForm, FoodStataticsDetail, FoodType, Home, ImportCoupon, Login, OrderDetail, Role } from "./pages"
 import { FoodGroupItems, Navbar } from "./components";
 import { useDispatch } from "react-redux";
 import { login } from "./features/userSlice";
@@ -31,6 +31,7 @@ function App() {
         <Route path="/topic/:id" element={<FoodGroupItems />} />
         <Route path="/food/add/:id" element={<FoodForm />} />
         <Route path="/food/detail/:id" element={<FoodForm />} />
+        <Route path="/food/statatics/:id" element={<FoodStataticsDetail />} />
 
         <Route path="/acc/user/:id" element={<AccInfo />} />
         <Route path="/acc/user/add" element={<AccForm />} />

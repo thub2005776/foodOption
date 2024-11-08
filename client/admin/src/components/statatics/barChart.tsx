@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { DatasetType, MakeOptional } from '@mui/x-charts/internals';
-import { BarSeriesType } from '@mui/x-charts';
+import { DatasetType} from '@mui/x-charts/internals';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
 export default function BasicBars({ dataset, type }:
@@ -16,7 +15,7 @@ export default function BasicBars({ dataset, type }:
           label: 'VND',
         },
       ],
-      width:type === 'year'? 1000:600,
+      width:type === 'year'? 800:600,
       height:type ==='year'?500:400,
       sx: {
         [`.${axisClasses.left} .${axisClasses.label}`]: {

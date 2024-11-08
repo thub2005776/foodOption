@@ -3,6 +3,7 @@ export {default as Login} from './login.tsx'
 
 // food
 export {default as FoodForm} from './food/foodForm.tsx'
+export {default as FoodStataticsDetail} from './food/foodSataticsDetail.tsx'
 
 // account
 export {default as AccInfo} from './acc/accInfo.tsx'

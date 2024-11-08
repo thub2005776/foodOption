@@ -85,5 +85,7 @@ export {default as TimeFilter} from './dateTimeDisplay/timeFilter.tsx'
 
 // Satatics
 export {default as Statatics} from './statatics/satatics.tsx'
+export {default as ChartFilter} from './statatics/chartFilter.tsx'
 export {default as BarChart} from './statatics/barChart.tsx'
 export {default as PieChart} from './statatics/pieChart.tsx'
+export {default as FoodStatatics} from './statatics/foodStataticis.tsx'
