@@ -12,8 +12,8 @@ export default function FoodForm() {
     const location = useLocation();
     const id = location.pathname.split('/')[3];
     const { data: foodDetail } = useQuery(id, () => getFoodByIdApi(id))
-    const { data: imageFile } = useQuery(foodDetail['image'], () => downloadApi(foodDetail?.image ? foodDetail['image'] : 'food.jpg'))
-    const { data: foodGroup } = useQuery(foodDetail['topicID'], () => getFoodGroupByTid(foodDetail?.topicID ? foodDetail['topicID'] : id))
+    const { data: imageFile } = useQuery(foodDetail && foodDetail['image'], () => downloadApi(foodDetail?.image ? foodDetail['image'] : 'food.jpg'))
+    const { data: foodGroup } = useQuery(foodDetail && foodDetail['topicID'], () => getFoodGroupByTid(foodDetail?.topicID ? foodDetail['topicID'] : id))
 
 
     const [gid, setGid] = useState(foodDetail?.groupID ? foodDetail['groupID'] : '')

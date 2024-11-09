@@ -25,7 +25,7 @@ export default function FoodStataticsDetail() {
             })
     }, [])
 
-    const { data: imageFile } = useQuery('imageFilefood', () => downloadApi(food ? food['image'] : 'food.jpg'));
+    const { data: imageFile } = useQuery(food && food['image'], () => downloadApi(food ? food['image'] : 'food.jpg'));
     const { data: favorited } = useQuery('fovorited', () => getFavoritedFoodByFidApi(id));
     const { data: review } = useQuery('revirew', () => getReviewByFIdApi(id));
     const image = 'https://i.pinimg.com/564x/7c/1e/fb/7c1efb37634dcfc5d9314177f9c3cd91.jpg';

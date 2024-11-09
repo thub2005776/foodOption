@@ -40,7 +40,7 @@ export default function UpdatedStoredFoodModal({ food }: { food: Object }) {
             <Button type="dashed" onClick={showModal}>
                 Stored: {food['stored']}
             </Button>
-            <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            <Modal title="Cập nhật số lượng" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
                 <div className="mb-5">
                     <label htmlFor="stored" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                         Stored

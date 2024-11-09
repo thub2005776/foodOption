@@ -24,8 +24,8 @@ export default function ImportCoupon() {
     }
 
     const [messageApi, contextHolder] = message.useMessage();
-    const [supplier, setSupplier] = useState(impt && impt['_id'] ? impt['supplier'] : defaultValue);
-    const [staff, setStaff] = useState(impt && impt['_id'] ? impt['staff'] : defaultValue);
+    const [supplier, setSupplier] = useState(impt && impt['supplier'] ? impt['supplier'] : defaultValue);
+    const [staff, setStaff] = useState(impt && impt['staff'] ? impt['staff'] : defaultValue);
     const [noted, setNoted] = useState(impt && impt['_id'] ? impt['noted'] : '');
     const [detail, setDetail] = useState(impt && impt['_id'] ? impt['detail'] : [{}]);
 
@@ -199,7 +199,7 @@ export default function ImportCoupon() {
                         <Statistic valueStyle={{ color: '#e02424' }} value={total(detail)} suffix="đ" />
                     </p>
                     <p className="text-gray-900 dark:text-white">Thời gian tạo phiếu: 
-                        <DateTimeDisplay datetime={impt && impt['createdAt'] ? impt['createdAt'] : Date()} /></p>
+                        <DateTimeDisplay datetime={impt && impt['createdAt'] ? impt['createdAt']['$date'] : Date()} /></p>
                     <p className="text-gray-900 dark:text-white">Cập nhật: <DateTimeDisplay datetime={Date()} /></p>
                 </div>
             </div>
