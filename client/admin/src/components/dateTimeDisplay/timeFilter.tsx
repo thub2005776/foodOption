@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { parseISO, isWithinInterval, isThisWeek, isThisMonth, isThisQuarter, isThisYear } from 'date-fns';
-import { ImportCouponItem } from '..';
+import { ImportCouponItem, OrderItem } from '../../components';
 
-export default function FilteredDataComponent({data, type, selected, start, end}:{data:Array<Object>,type:string, selected:string, start:string, end:string}) {
+export default function FilteredDataComponent({data, type, selected, start, end}:
+  {data:Array<Object>,type:string, selected:string,  start:string, end:string}) {
   const [filteredData, setFilteredData] = useState([{}]);
   
-  
-  useEffect(() => {
+
     const filtered = data.filter(item => {
-      const createdAtDate = parseISO(item['createdAt']['$d']);
+      const createdAtDate = parseISO(item['createdAt']['$date']);
 
       // Điều kiện 1 tuần
       const withinWeek = isThisWeek(createdAtDate);
@@ -36,22 +36,20 @@ export default function FilteredDataComponent({data, type, selected, start, end}
         return withinQuarter
       }  else if (selected === '1 năm') {
         return withinYear
-      } else if (start && end) {
+      } else if (selected === 'option') {
         return withinRange
       } else {
         return data
       }
     });
 
-    setFilteredData(filtered);
-  }, []);
 
-  
   return (
     <tbody>
       {/* Hiển thị dữ liệu đã lọc */}
-      {filteredData.length > 0? filteredData.map((item, i) => (
-       type === 'importcoupon' && <ImportCouponItem item={item} key={i} />
+      {filtered.length > 0? filtered.map((item, i) => (
+       type === 'importcoupon'? <ImportCouponItem item={item} key={i} />:
+       type === 'order' &&  <OrderItem key={i} item={item} />
       ))
     : <p className='text-center text-gray-600 p-10'>Không tìm thấy kết quả phù hợp</p>}
     </tbody>

@@ -89,7 +89,7 @@ export default function SearchModal({ type, data }: { type: string, data: Array<
 
                         <div className="p-4 md:p-5 space-y-4">
                             {Array.isArray(searchResult()) && searchResult().length > 0 && searchResult().slice(0, 3).map((item, i) => (
-                                (type === 'importcoupon' || type === 'order') ? <ImportCouponView type={type} impt={item} />
+                                (type === 'importcoupon' || type === 'order') ? <ImportCouponView key={i} type={type} impt={item} />
                                     : (type === 'food' || type === 'topic') &&  <FoodView type={type} food={item} key={i} />
                             ))}
                         </div>

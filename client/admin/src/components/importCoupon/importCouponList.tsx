@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { DateTimeMoment, DropdownComponent, ImportCouponItem, SearchModal, TimeFilter } from "../../components";
+import { DropdownComponent, SearchModal, TimeFilter } from "../../components";
 import { Link } from "react-router-dom";
 import { useQuery } from "react-query";
 import { getImportCouponApi } from "../../api/importCouponApi";
@@ -27,6 +27,9 @@ export default function ImportCouponList() {
         setEnd(date && date['$d'])
     };
 
+    const handleFilterOption = () => {
+        setSelected('option');
+    }
     return (
         impt &&
         <div>
@@ -81,6 +84,11 @@ export default function ImportCouponList() {
                                 onChange={onChangeEnd} />
                         </Space>
                     </div>
+                    <button onClick={handleFilterOption}>
+                        <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                            <path stroke="currentColor" strokeLinecap="round" strokeWidth="2" d="M18.796 4H5.204a1 1 0 0 0-.753 1.659l5.302 6.058a1 1 0 0 1 .247.659v4.874a.5.5 0 0 0 .2.4l3 2.25a.5.5 0 0 0 .8-.4v-7.124a1 1 0 0 1 .247-.659l5.302-6.059c.566-.646.106-1.658-.753-1.658Z" />
+                        </svg>
+                    </button>
                 </div>
             </div >
 
@@ -108,11 +116,7 @@ export default function ImportCouponList() {
                             </th>
                         </tr>
                     </thead>
-                    {Array.isArray(impt) && impt.length > 0 && impt.slice(0,10).map((item, i) => (
-                            <ImportCouponItem key={i} item={item} />
-                        ))}
-
-                    {/* <TimeFilter data={impt} type="importcoupon" selected={selected} start={start} end={end} /> */}
+                    <TimeFilter data={impt} type="importcoupon" selected={selected} start={start} end={end} />
                 </table>
             </div>
 
