@@ -78,6 +78,7 @@ def review_model(request):
         "food": request.json.get("food"),
         "liked": request.json.get("liked"),
         "comment": request.json.get("comment"),
+        "rating": request.json.get("rating"),
         "createdAt": request.json.get("createdAt"),
         "updatedAt": request.json.get("updatedAt"),
     }

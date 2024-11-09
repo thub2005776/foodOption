@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { Modal } from 'antd';
-import { FoodView, ImportCouponView} from "../../components";
+import { FoodView, ImportCouponView, ReviewItem} from "../../components";
 
 export default function SearchModal({ type, data }: { type: string, data: Array<Object> }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -40,7 +40,18 @@ export default function SearchModal({ type, data }: { type: string, data: Array<
                         }
                     }
                 }
-            }
+            } else if (type === 'review') {
+                result = data.filter(f => String(f['user']['name']).includes(input));
+                if (!result[0]) {
+                    result = data.filter(f => String(f['user']['phone']).toLocaleLowerCase().includes(input));
+                    if (!result[0]) {
+                        result = data.filter(f => String(f['checkID']).toLocaleLowerCase().includes(input));
+                        if (!result[0]) {
+                            result = data.filter(f => String(f['comment']).toLocaleLowerCase().includes(input));
+                        }
+                    }
+                }
+            } 
         }
 
         return result;
@@ -90,7 +101,8 @@ export default function SearchModal({ type, data }: { type: string, data: Array<
                         <div className="p-4 md:p-5 space-y-4">
                             {Array.isArray(searchResult()) && searchResult().length > 0 && searchResult().slice(0, 3).map((item, i) => (
                                 (type === 'importcoupon' || type === 'order') ? <ImportCouponView key={i} type={type} impt={item} />
-                                    : (type === 'food' || type === 'topic') &&  <FoodView type={type} food={item} key={i} />
+                                    : (type === 'food' || type === 'topic')?  <FoodView type={type} food={item} key={i} />
+                                    : type === 'review' && <ReviewItem key={i} item={item} />
                             ))}
                         </div>
                     </div>

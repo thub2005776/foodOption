@@ -1,12 +1,18 @@
 import React, { useState } from "react";
 import { DatePicker, DatePickerProps, Space } from "antd";
-import { DropdownComponent, OrderItem, TimeFilter } from "../../components";
+import { DropdownComponent, TimeFilter } from "../../components";
 
 export default function OrderTable({ orderes, type }: { orderes: Array<Object>, type: string }) {
     const [more, setMore] = useState(10);
     const orderesFilter = Array.isArray(orderes) && orderes.filter(f => f['status'] === type || type === 'all');
-    const orderesSeeMore = Array.isArray(orderesFilter) && orderesFilter.length > more ?
-        orderesFilter.slice(0, more) : orderesFilter;
+    const orderesSeeMore = () => {
+        if (Array.isArray(orderesFilter)) {
+            if (orderesFilter.length > more) {
+                return orderesFilter.slice(0, more);
+            } else {return orderesFilter}
+        } else return []
+    }
+
 
 
     const handleSeeMore = () => {
@@ -35,9 +41,9 @@ export default function OrderTable({ orderes, type }: { orderes: Array<Object>, 
         setSelected('option');
     }
     return (
-        orderesFilter &&
+        Array.isArray(orderesFilter) &&
         <div className="">
-             <div className="flex gap-5">
+            <div className="flex gap-5">
                 <DropdownComponent type={selected} data={selection} selectedItem={handleSelected} />
                 <div className="flex gap-5">
                     <div className="mb-5">
@@ -90,15 +96,15 @@ export default function OrderTable({ orderes, type }: { orderes: Array<Object>, 
                         </th>
                     </tr>
                 </thead>
-                <TimeFilter data={orderesFilter} type="order" selected={selected} start={start} end={end} />
+                <TimeFilter data={orderesSeeMore()} type="order" selected={selected} start={start} end={end} />
             </table>
             {orderesFilter.length > more &&
-            <button
-            onClick={handleSeeMore}
-                type="button"
-                className="float-right py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
-                Xem thêm
-            </button>}
+                <button
+                    onClick={handleSeeMore}
+                    type="button"
+                    className="float-right py-2.5 px-5 me-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                    Xem thêm
+                </button>}
         </div>
     );
 };

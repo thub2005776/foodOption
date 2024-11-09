@@ -36,7 +36,7 @@ export default function BasicBars({ dataset, type }:
       series={[
         { dataKey: 'profit', label: 'Doanh thu', valueFormatter },
         { dataKey: 'order_total', label: 'Đơn hàng', valueFormatter },
-        { dataKey: 'impt_total', label: 'Nhập hàng', valueFormatter },
+        { dataKey: 'impt_total', label: 'Chi phí', valueFormatter },
       ]}
       {...chartSetting}
     />

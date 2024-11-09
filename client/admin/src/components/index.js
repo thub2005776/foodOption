@@ -34,8 +34,8 @@ export {default as RoleItem} from './acc/roleItem.tsx'
 export {default as SearchAccount} from './acc/searchAcc.tsx'
 
 // comments
-export {default as CommItem} from './com/commItem.tsx'
-export {default as CommList} from './com/commList.tsx'
+export {default as ReviewItem} from './review/reviewItem.tsx'
+export {default as ReviewList} from './review/reviewList.tsx'
 
 // buttons
 export {default as BackButton} from './button/backButton.tsx'

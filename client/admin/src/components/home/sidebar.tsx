@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout, selectUser } from "../../features/userSlice";
 import { useMutation } from "react-query";
 import { logoutApi } from "../../api/authActions";
-import { Main, FoodGroupList, AccList, CommList, OrderList, ImportCouponList, Statatics } from '../../components';
+import { Main, FoodGroupList, AccList, OrderList, ImportCouponList, Statatics, ReviewList } from '../../components';
 
 export default function Sidebar() {
 
@@ -121,7 +121,7 @@ export default function Sidebar() {
                                 </svg>
                             } />
                         <TabItem
-                            title={'Bình luận'}
+                            title={'Đánh giá'}
                             tabName={'tab6'}
                             icon={
                                 <svg className="flex-shrink-0 w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
@@ -157,7 +157,7 @@ export default function Sidebar() {
                 {tab === 'tab3' && <OrderList />}
                 {tab === 'tab4' && <ImportCouponList />}
                 {tab === 'tab5' && <AccList />}
-                {tab === 'tab6' && <CommList />}
+                {tab === 'tab6' && <ReviewList />}
                 {tab === 'tab7' && <Statatics />}
             </div>
         </div>
