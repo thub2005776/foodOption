@@ -7,7 +7,7 @@ import { downloadApi } from "../../api/uploadFileApi";
 import { addFavoritedFoodApi, deleteFavoritedFoodApi, getFavoritedFoodByFidApi } from "../../api/favoritedFoodApi";
 import { updateFoodApi } from "../../api/foodApi";
 
-export default function ReviewFood({ foodList, checkID }: { foodList: Object, checkID }) {
+export default function ReviewFood({ foodList, checkID, rating }: { foodList: Object, checkID, rating:number }) {
     const user = useSelector(selectUser);
     const { data: imageFile } = useQuery(foodList['food'] && foodList['food']['image'], () => downloadApi(foodList['food']['image'] ? foodList['food']['image'] : 'food.jpg'));
     const { data: review } = useQuery(foodList['food'] && foodList['food']['_id'].$oid, () => getReviewByFIdApi(foodList['food'] && foodList['food']['_id'].$oid));
@@ -17,8 +17,6 @@ export default function ReviewFood({ foodList, checkID }: { foodList: Object, ch
     const [saved, setSaved] = useState(false);
     const [favoritedID, setFavoritedID] = useState(favorited);
 
-    console.log(favoritedID);
-    
     const addReiew = useMutation(
         addReviewApi, {
         onSuccess(data, variables, context) {
@@ -31,9 +29,6 @@ export default function ReviewFood({ foodList, checkID }: { foodList: Object, ch
 
         },
     })
-
-    console.log(favorited);
-    
 
     const updatedFood = useMutation(
         updateFoodApi, {
@@ -53,6 +48,7 @@ export default function ReviewFood({ foodList, checkID }: { foodList: Object, ch
             user: user,
             checkID: checkID,
             food: foodList['food'],
+            rating: rating,
             liked: 0,
             comment: comment,
             createdAt: Date(),

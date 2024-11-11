@@ -1,44 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { FavoritedButton, Rating } from '../../components';
+import { Rating } from '../../components';
 import { useMutation, useQuery } from "react-query";
 import { downloadApi } from "../../api/uploadFileApi";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../features/userSlice";
-
 import { Statistic, message } from 'antd';
-import { addFavoritedFoodApi, deleteFavoritedFoodApi } from "../../api/favoritedFoodApi";
 import { updateCartFoodApi } from "../../api/cartApi";
 
 export default function FoodCard({ food }: { food: Object }) {
     const user = useSelector(selectUser);
     const { data: imageFile } = useQuery(food['image'], () => downloadApi(food['image'] ? food['image'] : 'food.jpg'));
 
-    const [favoritedID, setFavoritedID] = useState('');
     const [messageApi, contextHolder] = message.useMessage();
-
-    const addFavoritedFood = useMutation(
-        addFavoritedFoodApi, {
-        onSuccess(data, variables, context) {
-            if (data['acknowledged']) {
-                setFavoritedID(data['inserted_id'])
-                messageApi.open({
-                    type: 'success',
-                    content: 'Đã thêm vào yêu thích!',
-                });
-            }
-        },
-        onError(error, variables, context) {
-            messageApi.open({
-                type: 'error',
-                content: 'Đã xảy ra lỗi. Vui lòng thử lại sau.',
-            });
-            console.log(error);
-        },
-    }
-    )
-
-
 
     const success = () => {
         messageApi.open({
@@ -73,7 +47,7 @@ export default function FoodCard({ food }: { food: Object }) {
     const image = 'https://i.pinimg.com/564x/e0/62/8b/e0628ba2516d4000328adfe8d0ca2088.jpg';
     return (
         food && imageFile &&
-        <div className="relative">
+        <div className="relative m-1">
             {contextHolder}
 
             <div className="w-60 h-[27rem] relative p-1 cursor-pointer hover:bg-orange-200 dark:hover:bg-gray-700 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">

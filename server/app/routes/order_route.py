@@ -22,6 +22,7 @@ class OrderDetails(MethodView):
         if request.json:
             document = order_model(request=request)
             document['createdAt'] = datetime.today()
+            document['updatedAt'] = datetime.today()
             result = order_collection.insert_one(document=document)
             if result:
                 result_dict = {
@@ -63,15 +64,16 @@ class OrderDetail(MethodView):
                 query = {"_id": ObjectId(id)}
                 if request.get_json:
                     new_status = request.json.get("newStatus")
+                    order_values = order_model(request=request)
+                    order_values['updatedAt'] = datetime.today()
                     if new_status:
                         update = {
-                            "$set": order_model(request=request),
+                            "$set": order_values,
                             "$push": {"status": new_status},
                         }
                     else:
-                        update = {"$set": order_model(request=request)}
+                        update = {"$set": order_values}
                     
-                    update['updatedAt'] = datetime.today()
                     result = order_collection.find_one_and_update(
                         query,
                         update=update,

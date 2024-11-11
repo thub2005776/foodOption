@@ -23,13 +23,13 @@ export default function OrderForm({ check }: { check: Object }) {
                 <div className='mb-5'>
                     <p className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                         Đã tạo lúc:
-                        <DateTimeDisplay datetime={check['createdAt']} />
+                        <DateTimeDisplay datetime={check['createdAt']['$date']} />
                     </p>
                 </div>
                 <div className='mb-5'>
                     <p className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                         Đã cập nhật lúc:
-                        <DateTimeDisplay datetime={check['updatedAt']} />
+                        <DateTimeDisplay datetime={check['updatedAt']['$date']} />
                     </p>
                 </div>
             </div>
@@ -39,7 +39,7 @@ export default function OrderForm({ check }: { check: Object }) {
                     <label htmlFor="text" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                         Thời gian giao hàng (dự kiến)
                     </label>
-                    <TimeLater dateTime={check['updatedAt']} minutes={15} />
+                    <TimeLater dateTime={check['updatedAt']['$date']} minutes={15} />
                 </div>
                 <div className='mb-5'>
                     <label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">

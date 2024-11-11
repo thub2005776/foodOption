@@ -49,8 +49,6 @@ export {default as Sidebar} from './acc/sidebar.tsx'
 export {default as FavoritedItem} from './acc/favoritedItem.tsx'
 
 // Comments
-export {default as CommItem} from './com/commItem.tsx'
-export {default as CommList} from './com/commList.tsx'
 export {default as Comments} from './comment/comments.tsx'
 export {default as CommentInput} from './comment/commentInput.tsx'
 

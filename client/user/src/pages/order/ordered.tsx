@@ -88,8 +88,7 @@ export default function Ordered() {
         }, onError(error, variables, context) {
             console.log(error);
         },
-    }
-    )
+    })
 
     const handleCancel = (res: boolean) => {
         if (res) {
@@ -228,7 +227,7 @@ export default function Ordered() {
                     </p>
                     <p className="text-gray-600 dark:text-white">
                         Thời gian đặt hàng:
-                        <DateTimeDisplay datetime={order['createdAt']} />
+                        <DateTimeDisplay datetime={order['createdAt']['$date']} />
                     </p>
                     <p className="text-gray-600 dark:text-white">
                         Đơn vị giao hàng: Nhân viên gần bạn nhất của Foodopt

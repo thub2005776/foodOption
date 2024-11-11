@@ -67,7 +67,7 @@ export default function ReviewModal({ check }: { check: Object }) {
                         {value ? <span> {desc[value - 1]}</span> : null}
                     </div>
                     {Array.isArray(check['detail']) && check['detail'].map((item, i) => (
-                        <ReviewFood key={i} foodList={item} checkID={check['_id'].$oid} />
+                        <ReviewFood key={i} foodList={item} checkID={check['_id'].$oid} rating={value} />
                     ))}
                 </div>
             </Modal>

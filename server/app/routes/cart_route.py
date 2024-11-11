@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import request
 from flask.views import MethodView
 from app import app
@@ -19,17 +20,10 @@ class CartDetails(MethodView):
 
     def post(self):
         if request.json:
-            query = {"userID": request.json.get("userID")}
-            update = {
-                "$set": cart_model(request=request)
-            }
-
-            result = cart_collection.find_one_and_update(
-                query,
-                update=update,
-                upsert=True,
-                return_document=pymongo.ReturnDocument.AFTER
-            )
+            document = cart_model(request=request)
+            document['createdAt'] = datetime.today()
+            document['updatedAt'] = datetime.today()
+            result = cart_collection.insert_one(document)
             if result:
                 return "successfull"
             else:
@@ -72,7 +66,11 @@ class CartDetail(MethodView):
                             "detail.food._id.$oid": foodID
                     }
 
-                    update_query = {"$pull": {"detail": remover_element}}
+                    update_query = {
+                        "$set": {"updatedAt": datetime.today()},
+                        "$pull": {"detail": remover_element}
+                        }
+
                     result = cart_collection.update_one(query, update_query)
                     if result.modified_count > 0:
                         return "successfull"
@@ -195,7 +193,7 @@ class Updatedcart(MethodView):
                         '$push': {'detail': new_element}, 
                     }
                     result = cart_collection.update_one(query_new, update)
-                    print(result)
+
                     if result.modified_count > 0:
                         return "successfull"
                     else:

@@ -2,7 +2,7 @@ import React, { RefCallback, useState } from "react";
 import { Statistic } from 'antd';
 import { useMutation, useQuery } from "react-query";
 import { downloadApi } from "../../api/uploadFileApi";
-import { deleteCartApi, deleteFoodItemApi, updateCartApi } from "../../api/cartApi";
+import { deleteFoodItemApi, updateCartApi } from "../../api/cartApi";
 import { Delete } from "../../components";
 import { getFoodByIdApi } from "../../api/foodApi";
 
@@ -139,7 +139,7 @@ export default function CartItem(
                     : <p className="text-sm text-red-600">Còn lại {message} phần ăn</p>}
             </div>
             <div className="pt-16 ps-10">
-                <Delete name={item['food'].name} res={handleDeleteFoodItem} />
+                <Delete action="Xoá" name={item['food'].name} res={handleDeleteFoodItem} />
             </div>
         </li>
     );

@@ -44,7 +44,7 @@ export default function OrdereDisplay({ order }: { order: Object }) {
                 <div className="flex justify-between p-4 text-gray-900 dark:text-white  border-b-[0.5px]">
                     <p className="text-gray-600 dark:text-white">
                         Thời gian đặt hàng:
-                        <DateTimeDisplay datetime={order['updatedAt']} />
+                        <DateTimeDisplay datetime={order['updatedAt']['$date']} />
                     </p>
                     <div className="relative">
                         <button 

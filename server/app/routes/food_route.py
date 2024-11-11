@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import  request
 from flask.views import MethodView
 from app import app
@@ -20,9 +21,13 @@ class FoodDetails(MethodView):
     def post(self):
         if request.json:
             query = {"name": request.json.get("name")}
+            food_values = food_model(request=request)
+            food_values["createdAt"] = datetime.today()
+            food_values["updatedAt"] = datetime.today()
             update = {
-                "$set": food_model(request=request)
+                "$set": food_values
             }
+           
             result = food_collection.find_one_and_update(
                 query, 
                 update=update, 
@@ -65,6 +70,8 @@ class FoodDetail(MethodView):
                 if request.get_json:
                     favorited = request.json.get("favorited")
                     operation = request.json.get("operation")
+                    food_values = food_model(request=request)
+                    food_values['updatedAt'] = datetime.today()
                     if favorited:
                         favoritedFood = food_collection.find_one(query)
                         if operation == '+':
@@ -72,7 +79,9 @@ class FoodDetail(MethodView):
                         else:
                             update = {"$set": {"favorited": favoritedFood['favorited'] - favorited }}
                     else:
-                        update = { "$set": food_model(request=request)}
+                        update = { "$set": food_values}
+                    
+                    
                     result = food_collection.find_one_and_update(
                         query, 
                         update=update, 
@@ -118,6 +127,7 @@ class Food(MethodView):
                             update = {"$set": {"stored": stored + quantity}}
                         else:
                             update = {"$set": {"stored": stored - quantity}}
+                        
                         result = food_collection.find_one_and_update(
                             query, 
                             update=update, 

@@ -91,11 +91,11 @@ export default function Check({ item }: { item: Object }) {
         const checkValues = {
             id: item['_id'].$oid,
             updatedAt: Date(),
-            status: 'delivered',
+            newStatus: { status: 'delivered', time: Date() },
         }
-
-        updatedStatus.mutate(checkValues);
         success()
+        updatedStatus.mutate(checkValues);
+
     }
     return (
         <div className="mb-6 p-2 rounded-md shadow-sm bg-gray-100/60 dark:bg-gray-800">
@@ -126,12 +126,12 @@ export default function Check({ item }: { item: Object }) {
                 <div>
                     <p className="text-gray-600 dark:text-white">
                         Thời gian đặt hàng:
-                        <DateTimeDisplay datetime={item['createdAt']} />
+                        <DateTimeDisplay datetime={item['createdAt']['$date']} />
                     </p>
                     {statusName === 'delivered' &&
                         <p className="text-gray-600 dark:text-white">
                             Thời gian nhận hàng:
-                            <DateTimeDisplay datetime={item['updatedAt']} />
+                            <DateTimeDisplay datetime={item['updatedAt']['$date']} />
                         </p>}
                 </div>
                 <div className="text-right">

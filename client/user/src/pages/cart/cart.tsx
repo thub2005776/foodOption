@@ -120,6 +120,7 @@ export default function Cart() {
                 userID: user['_id'].$oid,
                 foodID: e['food']['_id'].$oid,
                 element: e,
+                updatedAt: Date(),
             }
             DeletedFoodItem.mutate(values)
 

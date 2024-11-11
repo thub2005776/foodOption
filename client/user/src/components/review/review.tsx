@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { useQuery } from "react-query";
 import { downloadApi } from "../../api/uploadFileApi";
 import { DateTimeDisplay } from "../../components";
+import { Rate } from "antd";
 
 export default function Review({ item }: { item: Object }) {
     const { data: imageFile } = useQuery(item['user'] ? item['user']['_id']['$oid'] : 'userimage',
@@ -14,8 +15,9 @@ export default function Review({ item }: { item: Object }) {
             <div className="flex flex-col w-full max-w-[320px] leading-1.5">
                 <div className="flex items-center space-x-2 rtl:space-x-reverse">
                     <span className="text-sm font-semibold text-gray-900 dark:text-white">{item['user']['name']}</span>
-                    <span className="text-sm font-normal text-gray-500 dark:text-gray-400"><DateTimeDisplay datetime={item['updatedAt']} /></span>
+                    <span className="text-sm font-normal text-gray-500 dark:text-gray-400"><DateTimeDisplay datetime={item['updatedAt']['$date']} /></span>
                 </div>
+                <Rate value={item['rating']} />
                 <p className="text-sm font-normal py-2 text-gray-900 dark:text-white">{item['comment']}</p>
             </div>
         </div>

@@ -1,14 +1,13 @@
-from app.models import user_model, address_model
+from app.models import user_model
 from flask import request
 from flask.views import MethodView
 from app import app
 import pymongo
 import json
 import bcrypt
+from datetime import datetime
 from bson import json_util, ObjectId
 from app.db_connection import db
-from app.routes.cart_route import CartByUid
-from app.routes.address_route import UserAddressByUid
 user_collection = db['user']
 
 class Users(MethodView):
@@ -26,7 +25,8 @@ class Users(MethodView):
             password = values["password"]
             hashed = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
             values["password"] = hashed.decode("utf-8")
-            print(values)
+            values["createdAt"] = datetime.today()
+            values["updatedAt"] = datetime.today()
             update = {
                 "$set": values
             }
@@ -75,6 +75,7 @@ class UserInfo(MethodView):
                     update = {
                         "$set": user_model(request=request)
                     }
+                    update['updatedAt'] = datetime.today()
                     result = user_collection.find_one_and_update(
                         query,
                         update=update,
@@ -117,6 +118,7 @@ class UpdatePassword(MethodView):
                     update = {
                         "$set": {"password": hashed.decode("utf-8")}
                     }
+                    update['updatedAt'] = datetime.today()
                     result = user_collection.find_one_and_update(
                         query,
                         update=update,

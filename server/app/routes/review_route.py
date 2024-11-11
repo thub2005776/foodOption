@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import request
 from flask.views import MethodView
 from app import app
@@ -24,8 +25,12 @@ class Reviews(MethodView):
                 "food._id.$oid": food['_id']['$oid'],
                 "checkID": request.json.get("checkID"),
             }
-            updated = { "$set": review_model(request=request)}
 
+            review_values = review_model(request=request)
+            review_values['updatedAt'] = datetime.today()
+            review_values['createdAt'] = datetime.today()
+            updated = { "$set": review_values}
+            
             result = review_collection.find_one_and_update(
                 query,
                 updated,
@@ -67,7 +72,9 @@ class Review(MethodView):
                 if request.get_json:
                     
                     query = {"_id": ObjectId(id) }
-                    update = {"$set": review_model(request=request)}
+                    review_values = review_model(request=request)
+                    review_values['updatedAt'] = datetime.today()
+                    update = {"$set": review_values}
                     
                     result = review_collection.update_one(query, update=update)
                     if result.modified_count > 0:
@@ -116,7 +123,9 @@ class ReviewByUid(MethodView):
             if id and ObjectId(id):
                 if request.get_json:
                     query = {"userID": id}
-                    update_query = {"$set": review_model(request=request)}
+                    review_values = review_model(request=request)
+                    review_values['updatedAt'] = datetime.today()
+                    update_query = {"$set": review_values}
                     result = review_collection.update_many(query, update_query)
 
                     if result.modified_count > 0:
@@ -166,7 +175,9 @@ class ReviewByCid(MethodView):
             if id and ObjectId(id):
                 if request.get_json:
                     query = {"checkID": id}
-                    update_query = {"$set": review_model(request=request)}
+                    review_values = review_model(request=request)
+                    review_values['updatedAt'] = datetime.today()
+                    update_query = {"$set": review_values}
                     result = review_collection.update_many(query, update_query)
 
                     if result.modified_count > 0:
@@ -216,7 +227,9 @@ class ReviewByFid(MethodView):
             if id and ObjectId(id):
                 if request.get_json:
                     query = {"food._id.$oid": id}
-                    update_query = {"$set": review_model(request=request)}
+                    review_values = review_model(request=request)
+                    review_values['updatedAt'] = datetime.today()
+                    update_query = {"$set": review_values}
                     result = review_collection.update_many(query, update_query)
 
                     if result.modified_count > 0:

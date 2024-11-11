@@ -8,6 +8,7 @@ import { Rating, TagBage } from "../../components";
 import { downloadApi } from "../../api/uploadFileApi";
 import { addOrderApi } from "../../api/orderApi";
 import { updateCartFoodApi } from "../../api/cartApi";
+import { updateStoredFoodApi } from "../../api/foodApi";
 
 export default function FoodDetail({ food }: { food: Object }) {
     const user = useSelector(selectUser);
@@ -23,6 +24,17 @@ export default function FoodDetail({ food }: { food: Object }) {
         onSuccess(data, variables, context) {
             if (data['acknowledged']) {
                 navigate(`/order/${data['inserted_id']}`)
+            }
+        }, onError(error, variables, context) {
+            console.log(error);
+        },
+    })
+
+    const updatedStoredFood = useMutation(
+        updateStoredFoodApi, {
+        onSuccess(data, variables, context) {
+            if (data !== "successfull") {
+                console.log(data);
 
             }
         }, onError(error, variables, context) {
@@ -47,6 +59,12 @@ export default function FoodDetail({ food }: { food: Object }) {
             }
 
             addOrder.mutate(values)
+            const foodValues = {
+                id: food['_id']['$oid'],
+                quantity: 1,
+                operation: '-',
+            }
+            updatedStoredFood.mutate(foodValues);
 
         } else { alert('Hãy đăng nhập trước khi đặt món.') }
     }

@@ -35,7 +35,8 @@ def signup():
             password = values["password"]
             hashed = bcrypt.hashpw(password.encode("utf-8"), bcrypt.gensalt())
             values["password"] = hashed.decode("utf-8")
-            print(values)
+            values["createdAt"] = datetime.today()
+            values["updatedAt"] = datetime.today()
             update = {
                 "$set": values
             }

@@ -11,9 +11,10 @@ export default function FoodForm() {
     const user = useSelector(selectUser);
     const location = useLocation();
     const id = location.pathname.split('/')[3];
-    const { data: foodDetail } = useQuery(id, () => getFoodByIdApi(id))
-    const { data: imageFile } = useQuery(foodDetail && foodDetail['image'], () => downloadApi(foodDetail?.image ? foodDetail['image'] : 'food.jpg'))
-    const { data: foodGroup } = useQuery(foodDetail && foodDetail['topicID'], () => getFoodGroupByTid(foodDetail?.topicID ? foodDetail['topicID'] : id))
+    const tid = location.pathname.split('/')[2];
+    const { data: foodDetail } = useQuery(id, () => getFoodByIdApi(id !== 'add'? id:tid))
+    const { data: imageFile } = useQuery(foodDetail? foodDetail['image']: 'img', () => downloadApi(foodDetail?.image ? foodDetail['image'] : 'food.jpg'))
+    const { data: foodGroup } = useQuery(id !== 'add'? foodDetail['topicID']: tid, () => getFoodGroupByTid(foodDetail?.topicID ? foodDetail['topicID'] : tid))
 
 
     const [gid, setGid] = useState(foodDetail?.groupID ? foodDetail['groupID'] : '')
@@ -79,7 +80,7 @@ export default function FoodForm() {
         formData.append('file', file!)
         const values = {
             id: foodDetail && foodDetail['_id']?.$oid,
-            topicID: foodDetail?.topicID ? foodDetail['topicID'] : id,
+            topicID: foodDetail?.topicID ? foodDetail['topicID'] : tid,
             groupID: gid,
             name: name,
             info: info,
@@ -114,9 +115,8 @@ export default function FoodForm() {
         }
     }
 
-
     return (
-        foodDetail && id && foodGroup && user &&
+        id && foodGroup && user && foodDetail &&
         <div className='sm:mx-10 mx-4'>
             <div className="fixed ml-1 top-32">
                 <BackButton />
@@ -171,7 +171,7 @@ export default function FoodForm() {
                         </p>
                         <FoodGroupModal
                             foodgroup={foodGroup}
-                            tid={foodDetail['topicID'] ? foodDetail['topicID'] : id}
+                            tid={foodDetail['topicID'] ? foodDetail['topicID'] : tid}
                             getGid={(id: string) => setGid(id)} />
                     </div>
                     <FGroupList
@@ -330,7 +330,7 @@ export default function FoodForm() {
                             <input
                                 onChange={(e) => setStored(e.target.value)}
                                 defaultValue={foodDetail['stored'] ? foodDetail['stored'] : ''}
-                                type="number"
+                                type="text"
                                 id="stored"
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 required />

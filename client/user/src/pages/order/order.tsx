@@ -29,7 +29,7 @@ export default function Order() {
     const total = () => {
         var t = 0;
         if (Array.isArray(foodList)) {
-            foodList.map((item, i) => {
+            foodList.forEach((item) => {
                 t += Number(item['food'].price) * item['quantity']
             })
         }
@@ -50,6 +50,8 @@ export default function Order() {
     const processing = useMutation(
         updateOrderApi, {
         onSuccess(data, variables, context) {
+            console.log(data);
+            
             if (data === "successfull") {
                 if (orderValues.payment === 'transfer') {
                     navigate(`/payment/successfull/${id}`)
@@ -147,7 +149,6 @@ export default function Order() {
                             </div>
                         </div>
                     </div>}
-
             </div>
 
             {/* Food list */}
@@ -222,7 +223,7 @@ export default function Order() {
                     </p>
                     <p className="text-gray-600 dark:text-white">
                         Thời gian đặt hàng:
-                        <DateTimeDisplay datetime={order['createdAt']} />
+                        <DateTimeDisplay datetime={order['createdAt']['$date']} />
                     </p>
                     <p className="text-gray-600 dark:text-white">
                         Đơn vị giao hàng: Nhân viên gần bạn nhất của Foodopt
