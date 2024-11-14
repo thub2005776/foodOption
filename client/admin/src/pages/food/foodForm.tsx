@@ -14,7 +14,7 @@ export default function FoodForm() {
     const tid = location.pathname.split('/')[2];
     const { data: foodDetail } = useQuery(id, () => getFoodByIdApi(id !== 'add'? id:tid))
     const { data: imageFile } = useQuery(foodDetail? foodDetail['image']: 'img', () => downloadApi(foodDetail?.image ? foodDetail['image'] : 'food.jpg'))
-    const { data: foodGroup } = useQuery(id !== 'add'? foodDetail['topicID']: tid, () => getFoodGroupByTid(foodDetail?.topicID ? foodDetail['topicID'] : tid))
+    const { data: foodGroup } = useQuery(id !== 'add' && foodDetail?.topicID ? foodDetail['topicID']: tid, () => getFoodGroupByTid(foodDetail?.topicID ? foodDetail['topicID'] : tid))
 
 
     const [gid, setGid] = useState(foodDetail?.groupID ? foodDetail['groupID'] : '')
@@ -171,7 +171,7 @@ export default function FoodForm() {
                         </p>
                         <FoodGroupModal
                             foodgroup={foodGroup}
-                            tid={foodDetail['topicID'] ? foodDetail['topicID'] : tid}
+                            tid={foodDetail?.topicID ? foodDetail['topicID'] : tid}
                             getGid={(id: string) => setGid(id)} />
                     </div>
                     <FGroupList
