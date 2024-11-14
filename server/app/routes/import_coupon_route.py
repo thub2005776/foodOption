@@ -36,6 +36,7 @@ class Import_coupon(MethodView):
             else:
                 document = import_coupon_model(request=request)
                 document['createdAt'] = datetime.today()
+                document['updatedAt'] = datetime.today()
                 result = food_collection.insert_one(document)
             if result:
                 return 'successfull'

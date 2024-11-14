@@ -44,8 +44,8 @@ export default function FoodStataticsDetail() {
                     </div>
 
                     <p className="text-gray-600 text-wrap">Mô tả: {food['info']}</p>
-                    <p className="text-gray-600">Ngày tạo: {food['createdAt']}</p>
-                    <p className="text-gray-600">Ngày cập nhật: {food['updatedAt']}</p>
+                    <p className="text-gray-600">Ngày tạo: {food['createdAt']['$date']}</p>
+                    <p className="text-gray-600">Ngày cập nhật: {food['updatedAt']['$date']}</p>
                     <p className="text-gray-600">Trạng thái: {food['stated'] ? 'Actived' : 'disabled'}</p>
                 </div>
                 <div className="flex-grow">

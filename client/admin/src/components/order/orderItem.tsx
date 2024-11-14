@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Statistic } from 'antd';
 import { Link } from "react-router-dom";
 import { useMutation } from "react-query";
-import { TimeAgo } from "../../components";
+import { DateTimeDisplay, TimeAgo } from "../../components";
 import { updateOrderApi } from "../../api/orderApi";
 
 export default function OrderItem({ item }: { item: Object }) {
@@ -45,16 +45,16 @@ export default function OrderItem({ item }: { item: Object }) {
     return (
         item &&
         <tr className=" bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-            <td className="w-4 p-4">
-                <div className="flex items-center px-6 py-4">
-                    <TimeAgo dateTimeString={item['updatedAt']} />
+             <td className="px-6 py-4">
+                <div className="font-medium text-gray-900 dark:text-white">
+                {<DateTimeDisplay datetime={item['updatedAt']['$date']} />}
                 </div>
             </td>
-            <td className="py-4 relative">
+            <td className="px-6 py-4">
                 <div className="relative">
                     <button
                         onClick={() => setOpen(!open)}
-                        className="absolute top-0 z-[100] text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+                        className="absolute  z-[100] text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
                         {status}
                         <svg className="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
@@ -63,7 +63,7 @@ export default function OrderItem({ item }: { item: Object }) {
 
                     {/* <!-- Dropdown menu --> */}
                     {open &&
-                        <div className="absolute top-10 z-[100000] bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                        <div className="absolute top-0 z-[100000] bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
                             <ul className="py-2 text-sm text-gray-700 dark:text-gray-200" >
                                 {statusList.map((item, i) => (
                                     <li key={i}>

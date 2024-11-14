@@ -13,6 +13,7 @@ def statics_func(order_list, impt_list, start, end):
     impt_total = 0
     
     for i in order_list:
+        print(i['total'])
         order_total += i['total']
 
     for i in impt_list:
@@ -22,7 +23,7 @@ def statics_func(order_list, impt_list, start, end):
     if profit == 0 or order_total == 0:
         perprofit = 0
     else: 
-        perprofit = float(profit)/float(order_total) * 100
+        perprofit = round(float(profit)/float(order_total) * 100, 2)
 
     date = datetime.strftime(start, "%d/%m/%Y") + '-' + datetime.strftime(end, "%d/%m/%Y")
     values = {
@@ -43,8 +44,9 @@ def food_statics_func(order_list, start, end):
     
     for i in order_list:
         detail = i['detail']
-        order_total += detail['food']['price'] * detail['quantity']
-        impt_total += detail['food']['cost'] * detail['quantity']
+        for j in detail:
+            order_total += int( j['food']['price']) * j['quantity']
+            impt_total += int( j['food']['price']) * j['quantity']
     
     profit = order_total - impt_total
     if profit == 0 or order_total == 0:

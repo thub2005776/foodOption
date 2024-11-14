@@ -5,8 +5,9 @@ import { downloadApi } from "../../api/uploadFileApi";
 
 export default function FoodItem({ total, foodItem }: { total: number, foodItem: Object }) {
 
-    const { data: imageFile } = useQuery(foodItem['image'], () => downloadApi(foodItem['image'] ? foodItem['image'] : 'food.jpg'));
+    const { data: imageFile } = useQuery(foodItem['food']['image'], () => downloadApi(foodItem['food']['image'] ? foodItem['food']['image'] : 'food.jpg'));
     const image = 'https:i.pinimg.com/564x/62/b0/58/62b05832fae87fdabf74517176f30c1f.jpg';
+
     return (
         <li className="m-5 text-gray-900 dark:text-white">
             <div className="flex justify-between border-b-[0.5px]">

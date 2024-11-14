@@ -14,10 +14,7 @@ export default function Rating({ foodID }: { foodID:string }) {
             <p className="ms-2 text-sm font-bold text-gray-800  dark:text-white">
                 {rating['rating']}
             </p>
-            <span className="w-1 h-1 mx-1.5 bg-gray-500 rounded-full dark:bg-gray-400"></span>
-            <p className="text-sm font-medium  underline hover:no-underline text-gray-800 dark:text-white">
-                {rating['length']} Lượt đánh giá
-            </p>
+         
         </div>
     );
 };

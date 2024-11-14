@@ -10,8 +10,6 @@ export default function FoodStatatics({id, food}:{id:string, food:Object}) {
     const {data:stataticsByQuarter} = useQuery('stataticsFByQuarter', () => getFoodStataticsApi(id, 'quarter'));
     const {data:stataticsByYear} = useQuery('stataticsFByYear', () => getFoodStataticsApi(id, 'year'));
 
-    console.log(stataticsByDay);
-    
     return(
         food && Array.isArray(stataticsByDay) &&
         Array.isArray(stataticsByWeek) &&

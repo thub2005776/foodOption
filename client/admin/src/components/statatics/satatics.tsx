@@ -19,7 +19,7 @@ export default function Statatics() {
                     <div className="p-4 bg-white rounded-lg md:p-8 dark:bg-gray-800" id="stats" role="tabpanel" aria-labelledby="stats-tab">
                         <dl className="flex justify-around gap-8 p-4 mx-auto text-gray-900 sm:grid-cols-3 xl:grid-cols-6 dark:text-white sm:p-8">
                             <div className="flex flex-col items-center justify-center">
-                                <dt className="mb-2 text-3xl font-extrabold text-teal-400">+{stataticsByDay[0]['profit']}</dt>
+                                <dt className="mb-2 text-3xl font-extrabold text-teal-400">{stataticsByDay[0]['profit']}</dt>
                                 <dd className="text-gray-500 dark:text-gray-400">Doanh thu hôm nay</dd>
                             </div>
                             <div className="flex flex-col items-center justify-center">
@@ -28,13 +28,13 @@ export default function Statatics() {
                             </div>
                             <div className="flex flex-col items-center justify-center">
                                 <dt className="mb-2 text-3xl font-extrabold text-blue-600">
-                                    +{stataticsByDay[0]['order_total']}
+                                    {stataticsByDay[0]['order_total']}
                                 </dt>
                                 <dd className="text-gray-500 dark:text-gray-400">Đơn hàng hôm nay</dd>
                             </div>
                             <div className="flex flex-col items-center justify-center">
                                 <dt className="mb-2 text-3xl font-extrabold text-fuchsia-600">
-                                    -{stataticsByDay[0]['impt_total']}
+                                    {stataticsByDay[0]['impt_total']}
                                 </dt>
                                 <dd className="text-gray-500 dark:text-gray-400">Nhập hàng hôm nay</dd>
                             </div>

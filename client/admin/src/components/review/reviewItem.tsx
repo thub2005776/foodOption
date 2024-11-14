@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Delete, TimeAgo } from "..";
+import { DateTimeDisplay, Delete, TimeAgo } from "..";
 import { useMutation, useQuery } from "react-query";
 import { downloadApi } from "../../api/uploadFileApi";
 import { Link } from "react-router-dom";
@@ -56,7 +56,7 @@ export default function CommItem({ item }: { item: Object }) {
             <td className="px-6 py-4">
                 <div className="flex items-center">
                     <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div>
-                    <TimeAgo dateTimeString={item['updatedAt']} />
+                   <DateTimeDisplay datetime={item['updatedAt']['$date']} />
                 </div>
             </td>
             <td className="px-6 py-4 flex gap-4">

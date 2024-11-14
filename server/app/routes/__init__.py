@@ -8,7 +8,7 @@ from app.routes.deliveryMan_route import *
 from app.routes.food_route import *
 from app.routes.notify_route import *
 from app.routes.comment_route import *
-from app.routes.foodIdea_route import *
+from app.routes.food_opt_route import *
 from app.routes.foodGroup_route import *
 from app.routes.upload_file_route import *
 from app.routes.topic_route import *

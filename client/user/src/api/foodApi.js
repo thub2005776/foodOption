@@ -76,3 +76,8 @@ export const updateStoredFoodApi = async (Food) => {
     const res = await foodApi.post(`/api/food/stored/${Food.id}`, Food);
     return res.data;
 }
+
+export const foodOptApi = async (data) => {
+    const res = await foodApi.post(`/api/foodopt`, data);
+    return res.data;
+}

@@ -245,7 +245,7 @@ export default function ChartFilter({type, stataticsByDay, stataticsByWeek, stat
                     {isChecked === 'year' && <BarChart dataset={stataticsByYear} type={isChecked} />}
                     {isChecked === 'option' && <BarChart dataset={timeOption} type={isChecked} />}
                     {isChecked === 'years' && <BarChart dataset={years} type={isChecked} />}
-                    <PieChart data={PieChartSeries} />
+                    {/* <PieChart data={PieChartSeries} /> */}
                 </div>
             </div>
     )
