@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Rankings } from "../../components";
+import { Rankings, TopicsRankings } from "../../components";
 import { useQuery } from "react-query";
 import { getOrderApi } from "../../api/orderApi";
 import { getReviewApi } from "../../api/reviewApi";
 import { getUserApi } from "../../api/user";
+import { getFoodApi, getTopicSum } from "../../api/foodApi";
 
 export default function Main() {
     const {data: order} = useQuery('order', () => getOrderApi());
@@ -11,8 +12,19 @@ export default function Main() {
     const {data: user} = useQuery('user', () => getUserApi('user'));
     const {data: staff} = useQuery('staff', () => getUserApi('staff'));
     const {data: supplier} = useQuery('supplier', () => getUserApi('supplier'));
+    const {data:food} = useQuery('food', () => getFoodApi());
+    const {data:topicSum} = useQuery('topicsum', () => getTopicSum());
+
+    const topTopic = Array.isArray(topicSum) && topicSum.sort((a:Object, b:Object) => b['sum'] - a['sum'])
+    
     return (
-        Array.isArray(order) && Array.isArray(review) && Array.isArray(user) && Array.isArray(staff) && Array.isArray(supplier) && 
+        Array.isArray(order) && 
+        Array.isArray(review) && 
+        Array.isArray(user) && 
+        Array.isArray(staff) && 
+        Array.isArray(supplier) && 
+        Array.isArray(food) && 
+        Array.isArray(topTopic) && 
         <div className=" ">
             <div>
                 <div className="w-full mb-6  border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
@@ -44,7 +56,8 @@ export default function Main() {
                     </div>
                 </div>
             </div>
-            <Rankings type="TOP MÓN ĂN NỔI BẬT" />
+            <Rankings type="TOP MÓN ĂN NỔI BẬT" food={food}/>
+            <TopicsRankings type="TOP CHỦ ĐỀ NỔI BẬT" food={topTopic} />
         </div>
     )
 }

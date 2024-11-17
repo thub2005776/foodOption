@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FoodCard, TagBage } from "../../components";
+import { FoodCard } from "../../components";
 import { useMutation } from "react-query";
 import { foodOptApi } from "../../api/foodApi";
 
@@ -43,7 +43,8 @@ export default function Play() {
     return (
         <div className="lg:mx-20 mx-10">
             <div className="mt-10">
-                <div className="flex justify-around p-4 bg-blue-50 dark:bg-gray-800">
+                <h1 className="text-center text-black dark:text-white font-extrabold m-5 text-3xl">HÔM NAY ĂN GÌ?</h1>
+                <div className="flex justify-around p-4 shadow-md dark:bg-gray-800">
                     <div className="mb-5">
                         <label htmlFor="age" className="block mb-4 font-semibold text-gray-900 dark:text-white">
                             Tuổi của bạn

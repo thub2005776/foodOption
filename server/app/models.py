@@ -185,10 +185,12 @@ def import_coupon_model(request):
         "noted": request.json.get("noted"),
         "createdAt": request.json.get("createdAt"),
         "updatedAt": request.json.get("updatedAt"),
+        "editedID": request.json.get("editedID"),
     }
 
     model = {key: value for key, value in model.items() if value is not None}
     return model
+
 
 #  import coupon model
 def food_type_model(request):

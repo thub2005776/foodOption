@@ -36,3 +36,20 @@ export const deleteImportCouponApi = async (id) => {
     const res = await importCoupon.delete(`/api/importcoupon/${id}`);
     return res.data;
 }
+
+// backup
+export const getImportCouponBackupIdApi = async (Id) => {
+    const res = await importCoupon.get(`/api/importcoupon/backup/${Id}`);
+    return res.data;
+}
+
+export const updateImportCouponBackupApi = async (importcoupon) => {
+    const res = await importCoupon.post(`/api/importcoupon/backup/${importcoupon.id}`, importcoupon);
+    return res.data;
+}
+
+
+export const deleteImportCouponBackupApi = async (id) => {
+    const res = await importCoupon.delete(`/api/importcoupon/backup/${id}`);
+    return res.data;
+}

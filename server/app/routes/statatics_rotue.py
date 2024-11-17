@@ -13,7 +13,6 @@ def statics_func(order_list, impt_list, start, end):
     impt_total = 0
     
     for i in order_list:
-        print(i['total'])
         order_total += i['total']
 
     for i in impt_list:
@@ -46,7 +45,36 @@ def food_statics_func(order_list, start, end):
         detail = i['detail']
         for j in detail:
             order_total += int( j['food']['price']) * j['quantity']
-            impt_total += int( j['food']['price']) * j['quantity']
+            impt_total += int( j['food']['cost']) * j['quantity']
+    
+    profit = order_total - impt_total
+    if profit == 0 or order_total == 0:
+        perprofit = 0
+    else: 
+        perprofit = float(profit)/float(order_total) * 100
+
+    date = datetime.strftime(start, "%d/%m/%Y") + '-' + datetime.strftime(end, "%d/%m/%Y")
+    values = {
+        "start": date, 
+        "end": datetime.strftime(end, "%d/%m/%Y"), 
+        "profit": profit, 
+        "perprofit": perprofit,
+        "order_total": order_total,
+        "impt_total": impt_total
+    }
+
+    return values
+
+
+def topic_statics_func(order_list, start, end):
+    order_total = 0
+    impt_total = 0
+    
+    for i in order_list:
+        detail = i['detail']
+        for j in detail:
+            order_total += int( j['food']['price']) * j['quantity']
+            impt_total += int( j['food']['cost']) * j['quantity']
     
     profit = order_total - impt_total
     if profit == 0 or order_total == 0:
@@ -86,8 +114,6 @@ class Profit_in_day(MethodView):
             return json.loads(json_util.dumps([values]))
         else:
             return "Not found any profit."
-
-
 
 
 class Profit_option(MethodView):

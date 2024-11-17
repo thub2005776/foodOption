@@ -87,7 +87,7 @@ export default function FoodForm() {
             image: file?.name,
             cost: cost,
             price: price,
-            stored: stored,
+            stored: Number(stored),
             tag: tag,
             rating: foodDetail?.rating ? foodDetail?.rating : 0,
             sold: foodDetail?.sold ? foodDetail?.sold : 0,

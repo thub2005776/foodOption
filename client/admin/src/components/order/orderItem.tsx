@@ -42,12 +42,13 @@ export default function OrderItem({ item }: { item: Object }) {
         updatedStatus.mutate(values);
         setOpen(false)
     }
+
     return (
         item &&
         <tr className=" bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
              <td className="px-6 py-4">
                 <div className="font-medium text-gray-900 dark:text-white">
-                {<DateTimeDisplay datetime={item['updatedAt']['$date']} />}
+                <DateTimeDisplay datetime={item['updatedAt']['$date']} />
                 </div>
             </td>
             <td className="px-6 py-4">

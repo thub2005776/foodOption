@@ -2,6 +2,8 @@
 export {default as Navbar} from './navbar.tsx'
 export {default as Sidebar} from './home/sidebar.tsx'
 export {default as Main} from './home/main.tsx'
+export {default as TopicsRankings} from './home/topicsRankings.tsx'
+export {default as TopicRankingsItem} from './home/topicRankingsItem.tsx'
 
 // food
 export {default as FoodGroupList} from './foodGroup/topicList.tsx'
@@ -89,3 +91,4 @@ export {default as ChartFilter} from './statatics/chartFilter.tsx'
 export {default as BarChart} from './statatics/barChart.tsx'
 export {default as PieChart} from './statatics/pieChart.tsx'
 export {default as FoodStatatics} from './statatics/foodStataticis.tsx'
+export {default as TopicStatatics} from './statatics/topicStataticis.tsx'

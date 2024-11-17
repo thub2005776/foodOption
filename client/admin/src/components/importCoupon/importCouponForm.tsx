@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
 export default function OrderForm() {
-    const [address, setAddress] = useState('');
     const [edit, setEditor] = useState(false)
     const [open, setOpen] = useState(false)
 

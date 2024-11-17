@@ -1,21 +1,10 @@
 import React from "react";
 
 export default function DateTimeDisplay({datetime}:{datetime:string}) {
-    // Xử lý chuỗi để bỏ phần timezone (GMT+0700)
-    const dateStrWithoutTimeZone = datetime;
-    
-    // Chuyển đổi chuỗi thành đối tượng Date
-    const date = new Date(dateStrWithoutTimeZone);
-    
+    const date = new Date(datetime)  
+
     // Định dạng ngày giờ
-    const formattedDate = date.toLocaleString('vn-Vi', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric',
-      second: 'numeric',
-    });
+    const formattedDate = datetime.slice(11, 19) + ' ' + date.toLocaleDateString()
     return(
         <span> {formattedDate}</span>
     );

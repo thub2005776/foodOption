@@ -6,10 +6,10 @@ import json
 from bson import json_util, ObjectId
 from app.db_connection import db
 from app.models import topic_model
-from app.routes.food_route import FoodManyByTid
-from app.routes.foodGroup_route import FoodGroupMany
+from datetime import  datetime
 
 topic_collection = db['topics']
+food_collection = db['foodDetails']
 
 class Topics(MethodView):
     def get(self):
@@ -93,8 +93,7 @@ class Topic(MethodView):
             if id and ObjectId(id):
                 query = {"_id": ObjectId(id)}
                 result1 = topic_collection.delete_one(query)
-                # result2 = await FoodManyByTid.delete(id=id)
-                # result3 = await FoodGroupMany.delete(id=id)
+                
                 if result1:
                     return "successfull"
                 else:
@@ -104,6 +103,97 @@ class Topic(MethodView):
                 return "This is a DELETE request."
         except:
             return "Error."
+
+
+class Top_topics(MethodView):
+    def get(self):
+        topics = topic_collection.find()
+        if topics:
+            arr = []
+            for topic in topics:
+                id = topic['_id']
+                food = food_collection.find({"topicID": str(id)})
+                if food:
+                    sum = 0
+                    for i in food:
+                        sum += i['sold']
+                        
+                    arr.append({"topic": topic, "sum": sum})
+            
+            return json.loads(json_util.dumps(arr))
+        else:
+            return "Not found any topic group."
+
+    def post(self):
+        if request.json:
+            query = {"topicID": request.json.get("topicID")}
+            food = food_collection.find(query)
+
+            if food:
+                arr = []
+                date = datetime.strftime(datetime.today(), "%d/%m/%Y")
+                
+
+                for i in food:
+                    default_values = {
+                        "start": date, 
+                        "end": date, 
+                        "profit": 0, 
+                        "perprofit": 0,
+                        "order_total": 0,
+                        "impt_total": 0,
+                        "sum": 0
+                    }
+                    default_values['order_total'] += i['sold'] * i['price']
+                    default_values['mpt'] += i['sold'] * i['cost']
+                    default_values['sum'] = i['sold']
+
+                    arr.append(default_values)
+
+                return json.loads(json_util.dumps(arr))
+            else:
+                return "Can't insert the topic group. Try again."
+        else:
+            return "Body of the request is empty."
+
     
+class Top_topic(MethodView):
+    def get(self, id):
+        query = {"topicID": id}
+        food = food_collection.find(query)
+
+        if food:
+            date = datetime.strftime(datetime.today(), "%d/%m/%Y")
+            default_values = {
+                    "start": date, 
+                    "end": date, 
+                    "profit": 0, 
+                    "perprofit": 0,
+                    "order_total": 0,
+                    "impt_total": 0,
+                    "sold": 0,
+                    "sum": 0,
+                }
+            index = 0
+            for i in food:
+                index += 1
+                
+                default_values['order_total'] += int(i['sold']) * int(i['price'])
+                default_values['impt_total'] += int(i['sold']) * int(i['cost'])
+                default_values['sold'] += int(i['sold'])
+            default_values['sum'] = index
+            default_values['profit'] = float(default_values['order_total']) - float( default_values['impt_total'])
+            if default_values['profit'] == 0 or default_values['order_total'] == 0:
+                default_values['perprofit'] = 0
+            else:
+                default_values['perprofit'] = float(default_values['profit'])/float(default_values['order_total']) * 100
+
+            return json.loads(json_util.dumps(default_values))
+        else:
+            return "Can't find the topic group. Try again."
+
+  
 app.add_url_rule('/api/topic', view_func=Topics.as_view("topics"))
 app.add_url_rule('/api/topic/<id>', view_func=Topic.as_view("topic"))
+app.add_url_rule('/api/topic/sum', view_func=Top_topics.as_view("topics_sum"))
+app.add_url_rule('/api/topic/sum/<id>', view_func=Top_topic.as_view("topic_sum"))

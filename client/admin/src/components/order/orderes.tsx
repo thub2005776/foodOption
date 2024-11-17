@@ -45,6 +45,7 @@ export default function OrdereDisplay({ order }: { order: Object }) {
                     <p className="text-gray-600 dark:text-white">
                         Thời gian đặt hàng:
                         <DateTimeDisplay datetime={order['updatedAt']['$date']} />
+                        
                     </p>
                     <div className="relative">
                         <button 

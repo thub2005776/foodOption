@@ -4,7 +4,7 @@ import { DropdownComponent, TimeFilter } from "../../components";
 
 export default function OrderTable({ orderes, type }: { orderes: Array<Object>, type: string }) {
     const [more, setMore] = useState(10);
-    const orderesFilter = Array.isArray(orderes) && orderes.filter(f => f['status'] === type || type === 'all');
+    const orderesFilter = Array.isArray(orderes) && orderes.filter(f => f['status'][f['status'].length -1]['status'] === type || type === 'all');
     const orderesSeeMore = () => {
         if (Array.isArray(orderesFilter)) {
             if (orderesFilter.length > more) {

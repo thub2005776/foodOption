@@ -10,6 +10,11 @@ export const getTopic = async () => {
     return res.data;
 }
 
+export const getTopicSum = async () => {
+    const res = await foodApi.get('/api/topic/sum');
+    return res.data;
+}
+
 export const getTopicById = async (id) => {
     const res = await foodApi.get(`/api/topic/${id}`);
     return res.data;
@@ -22,6 +27,11 @@ export const addTopicApi = async (topic) => {
 
 export const updateTopicApi = async (topic) => {
     const res = await foodApi.post(`/api/topic/${topic._id}`, topic);
+    return res.data;
+}
+
+export const topicStataticsApi = async (id) => {
+    const res = await foodApi.get(`/api/topic/sum/${id}`, id);
     return res.data;
 }
 

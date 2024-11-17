@@ -1,19 +1,26 @@
 import React, { useState } from 'react';
-import {  DateTimeDisplay, OrderDisplay, TimeLater } from '../../components';
+import {  DateTimeDisplay, OrderDisplay, ReviewItem, TimeLater } from '../../components';
+import { useQuery } from 'react-query';
+import { getReviewByCIdApi } from '../../api/reviewApi';
 
 
 export default function OrderForm({ check }: { check: Object }) {
-
+    const {data: review} = useQuery(check['createdAt']['$date'], () => getReviewByCIdApi(check['_id']['$oid']))
     const [address, setAddress] = useState(check['address']);
 
     return (
-        check &&
+        check && 
         <div className="mx-10">
             <div className='w-full'>
                 <p className='text-gray-600 font-semibold mb-6 text-2xl'>Thông tin món ăn</p>
                 <div className="mb-5">
                     <OrderDisplay order={check} />
                 </div>
+                {/* review */}
+
+                {Array.isArray(review) && review.map((item, i) => (
+                    <ReviewItem item={item} key={i} />
+                ))}
                 <p className='text-gray-600 font-semibold text-2xl'>
                     Phương thức thanh toán:
                     <span className=''>{check['payment'] === 'cash' ? ' Tiền mặt' : ' Chuyển khoản qua Paypal'}</span>

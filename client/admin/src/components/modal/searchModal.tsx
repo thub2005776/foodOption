@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { Modal } from 'antd';
-import { FoodView, ImportCouponView, ReviewItem} from "../../components";
+import { FoodView, ImportCouponView } from "../../components";
 
 export default function SearchModal({ type, data }: { type: string, data: Array<Object> }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -102,7 +102,7 @@ export default function SearchModal({ type, data }: { type: string, data: Array<
                             {Array.isArray(searchResult()) && searchResult().length > 0 && searchResult().slice(0, 3).map((item, i) => (
                                 (type === 'importcoupon' || type === 'order') ? <ImportCouponView key={i} type={type} impt={item} />
                                     : (type === 'food' || type === 'topic')?  <FoodView type={type} food={item} key={i} />
-                                    : type === 'review' && <ReviewItem key={i} item={item} />
+                                    : type === 'review' && <ImportCouponView key={i} type={'order'} impt={item} />
                             ))}
                         </div>
                     </div>

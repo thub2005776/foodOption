@@ -21,22 +21,21 @@ class Import_coupon(MethodView):
     def post(self):
         if request.json:
             updated = request.json.get("id")
+            document = import_coupon_model(request=request)
+            document['updatedAt'] = datetime.today()
             if updated:
                 query = {"_id": ObjectId(updated)}
+                
                 update = {
-                    "$set": import_coupon_model(request=request)
+                    "$set": document
                 }
-
-                update['updatedAt'] = datetime.today()
                 result = food_collection.find_one_and_update(
                     query, 
                     update=update, 
-                    upsert=True,
                 )
             else:
                 document = import_coupon_model(request=request)
                 document['createdAt'] = datetime.today()
-                document['updatedAt'] = datetime.today()
                 result = food_collection.insert_one(document)
             if result:
                 return 'successfull'
@@ -236,8 +235,63 @@ class Import_couppon_by__staff_id(MethodView):
         except:
             return "ID (ObjectId) pamram is required."
 
+
+class Import_couppon_backup(MethodView):
+    def get(self, id):
+        try:
+            if id and ObjectId(id):
+                query = {"editedID": id}
+                cursor = food_collection.find_one(query)
+                if cursor:
+                    return json.loads(json_util.dumps(cursor))
+                else:
+                    return "The import coupon don't exist."
+            else:
+                return "ID pamram is empty."
+        except:
+            return "ID (ObjectId) pamram is required."
+        
+    def post(self, id):
+        try:
+            if id and ObjectId(id):
+                query = {"editedID": ObjectId(id)}
+                document = import_coupon_model(request=request)
+                document['updatedAt'] = datetime.today()
+                if request.get_json:
+                    update = { "$set": document}
+                    result = food_collection.find_one_and_update(
+                        query, 
+                        update=update
+                    )
+                    if result:
+                        return "successfull"
+                    else:
+                        return "Can't update the import coupon. Try again."
+                else:
+                    return "Body of the request is empty."
+            else:
+                return "ID pamram is empty."
+        except:
+            return "ID (ObjectId) pamram is required."
+
+    def delete(self, id):
+        try:
+            if id and ObjectId(id):
+                query = {"editedID": id}
+                result = food_collection.delete_one(query)
+                if result:
+                    return "successfull"
+                else:
+                    return "Can't delete the import coupon. Try again."
+            else:
+                return "This is a DELETE request."
+        except:
+            return "ID (ObjectId) pamram is required."
+
 app.add_url_rule('/api/importcoupon', view_func=Import_coupon.as_view("Import_coupon"))
 app.add_url_rule('/api/importcoupon/<id>', view_func=Import_couppon_by_id.as_view("ImportCouponByID"))
 app.add_url_rule('/api/importcoupon/foodtype/<id>', view_func=Import_coupon_by_food_type_id.as_view("importCouponByFoodTypeID"))
 app.add_url_rule('/api/importcoupon/supplier/<id>', view_func=Import_couppon_by_id.as_view("ImportCouponBySupplierID"))
 app.add_url_rule('/api/importcoupon/staff/<id>', view_func=Import_couppon_by_id.as_view("ImportCouponByStaffID"))
+
+app.add_url_rule('/api/importcoupon/backup/<id>', view_func=Import_couppon_backup.as_view("ImportCouponBackup"))
