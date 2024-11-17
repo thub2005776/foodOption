@@ -37,6 +37,7 @@ export default function AccForm() {
     const [role, setRole] = useState(userAcc?.role ? userAcc['role'] : type);
     const [address, setAddress] = useState(userAcc?.address ? userAcc['address'] : '');
     const [actived, setActived] = useState(userAcc?.actived ? userAcc['actived'] : true);
+    const [roleDetail, setRoleDetail] = useState(userAcc?.roleDetail ? userAcc['roleDetail'] : '');
 
     const onChange: DatePickerProps['onChange'] = (date) => {
         setBirthday(date && date['$d'])
@@ -93,6 +94,7 @@ export default function AccForm() {
             actived: actived,
             createdAt: userAcc?.createdAt ? null : Date(),
             updatedAt: Date(),
+            roleDetail: roleDetail,
             type: String(role).toLocaleLowerCase(),
         }
 
@@ -256,6 +258,7 @@ export default function AccForm() {
                         />
                     </div>
                     <div className="mb-5">
+                        <div>
                         <label htmlFor="gender" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                             Chức vụ
                         </label>
@@ -288,7 +291,22 @@ export default function AccForm() {
                                     ))}
                                 </ul>
                             </div>}
+                        </div>
+
+                        <div>
+                        <label htmlFor="roleDetail" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Mô tả chức vụ (quyền hạn)
+                        </label>
+                        <input
+                            onChange={(e) => setRoleDetail(e.target.value)}
+                            type="text"
+                            id="roleDetail"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        />
+                        </div>
+                       
                     </div>
+
                 </div>
                 <div className="w-full">
                     <div className="mb-5">
