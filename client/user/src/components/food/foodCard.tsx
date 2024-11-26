@@ -34,14 +34,16 @@ export default function FoodCard({ food }: { food: Object }) {
     })
 
     const handleAddCart = () => {
-        const values = {
+        if(user) {
+            const values = {
             userID: user['_id'].$oid,
             foodID: food['_id'].$oid,
             element: { food: food, quantity: 1, note: '' },
             updatedAt: Date(),
         }
         addCart.mutate(values);
-
+        } else {alert("Hãy đăng nhập trước khi thêm vào giỏ hàng!")}
+        
     }
 
     const image = 'https://i.pinimg.com/564x/e0/62/8b/e0628ba2516d4000328adfe8d0ca2088.jpg';

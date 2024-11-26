@@ -129,7 +129,7 @@ def user_model(request):
         "createdAt": request.json.get("createdAt"),
         "updatedAt": request.json.get("updatedAt"),
         "actived": request.json.get("actived"),
-        "roleDetail": request.json.get("roleDetail"),
+        "roleDetail": request.json.get("roleDetail"), 
     }
 
     model = {key: value for key, value in model.items() if value is not None}

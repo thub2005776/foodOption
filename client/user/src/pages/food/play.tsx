@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FoodCard } from "../../components";
 import { useMutation } from "react-query";
 import { foodOptApi } from "../../api/foodApi";
+import { Tempt } from "../../components";
 
 export default function Play() {
     const types = [
@@ -11,10 +12,11 @@ export default function Play() {
         { label: 'Ăn vặt', key: '30' }
     ]
 
-    const [typeFood, setTypeFood] = useState(types[0].label);
+    const [typeFood, setTypeFood] = useState(types[0].key);
     const [vegatarian, setVegatarian] = useState(false)
     const [age, setAge] = useState('')
     const [food, setFood] = useState([])
+    const [temp, setTemp] = useState(30.0)
 
     const foodOpt = useMutation(
         foodOptApi, {
@@ -29,14 +31,20 @@ export default function Play() {
     }
     )
 
+    const handleTempt = (tempt:string) => {
+        setTemp(Number(tempt));
+        
+    }
+
     const handlePlay = () => {
         const data = {
-            age: age.length > 0 ? Number(age) : 18,
-            tempt: 30.6,
-            type: Number(typeFood),
+            age: age.length > 0 ? Number(age) : Math.floor(Math.random() * 100),
+            tempt: temp,
+            type: Number(typeFood)? Number(typeFood): 0,
             vegatarian: vegatarian ? 20 : 10,
         }
-
+        console.log(data);
+        
         foodOpt.mutate(data)
     }
 
@@ -56,6 +64,7 @@ export default function Play() {
                             className=" border border-gray-300  text-lg rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-fit  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             required />
                     </div>
+                    <Tempt temp={handleTempt}/>
 
                     <div className="w-1/3">
                         <h3 className="mb-4 font-semibold text-gray-900 dark:text-white">Chọn loại món bạn cần</h3>
